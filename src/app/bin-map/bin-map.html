@@ -1,0 +1,12 @@
+<google-map
+  height="100%"
+  width="100%"
+  [center]="center"
+  [options]="mapOptions">
+  @for (marker of mapMarkers(); track marker.coordX + '-' + marker.coordY) {
+    <map-advanced-marker
+      [position]="marker.position"
+      [title]="marker.type">
+    </map-advanced-marker>
+  }
+</google-map>

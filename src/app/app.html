@@ -4,11 +4,11 @@
       <h1 class="text-lg font-semibold ml-2">DSS</h1>
     </div>
   </p-toolbar>
-  <div class="flex">
+  <div class="flex h-full">
     <div class="w-64 p-4">
       <p-menu [model]="navItems" class="custom-menu"></p-menu>
     </div>
-    <div class="flex-1 p-6">
+    <div class="flex-1" [class.p-6]="!isBinMapRoute()">
       <router-outlet></router-outlet>
     </div>
   </div>
