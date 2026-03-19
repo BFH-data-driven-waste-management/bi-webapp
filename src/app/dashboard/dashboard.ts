@@ -46,8 +46,8 @@ export class Dashboard {
           },
           backgroundColor: (context: ScriptableContext<'bar'>) => {
             const style = getComputedStyle(document.documentElement);
-            const gradientStart = style.getPropertyValue('--color-sky-700').trim();
-            const gradientEnd = style.getPropertyValue('--color-sky-400').trim();
+            const gradientStart = style.getPropertyValue('--color-red-400').trim();
+            const gradientEnd = style.getPropertyValue('--color-red-100').trim();
 
             const chart = context.chart;
             const { ctx, chartArea } = chart;

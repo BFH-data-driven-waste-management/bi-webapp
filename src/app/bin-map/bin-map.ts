@@ -1,33 +1,61 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal, viewChild } from '@angular/core';
 import { BinService } from '../bin/bin.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { BinDTO, BinMapMarker } from '../bin/bin.dto';
 import { lv95ToLatLng } from '../maps/coordinates.utils';
-import { GoogleMap, MapAdvancedMarker } from '@angular/google-maps';
+import { GoogleMap, MapAdvancedMarker, MapInfoWindow } from '@angular/google-maps';
+import { Button, ButtonDirective, ButtonLabel } from 'primeng/button';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-bin-map',
-  imports: [GoogleMap, MapAdvancedMarker],
-  templateUrl: './bin-map.html'
+  imports: [
+    GoogleMap,
+    MapAdvancedMarker,
+    MapInfoWindow,
+    ButtonDirective,
+    ButtonLabel,
+    RouterLink,
+    Button,
+  ],
+  templateUrl: './bin-map.html',
 })
 export class BinMap {
   private readonly binService = inject(BinService);
 
   readonly bins = toSignal(this.binService.getBins(), { initialValue: [] as BinDTO[] });
 
-  readonly mapMarkers = computed<BinMapMarker[]>(() =>
+  readonly binMapMarkers = computed<BinMapMarker[]>(() =>
     this.bins().map((bin) => ({
       ...bin,
       position: lv95ToLatLng(bin.coordX, bin.coordY),
+      content: this.createBinIcon(),
     })),
   );
+  readonly selectedBin = signal<BinMapMarker | null>(null);
+  readonly infoWindow = viewChild.required(MapInfoWindow);
+
+  createBinIcon(): HTMLElement {
+    const el = document.createElement('span');
+    el.className = 'pi pi-trash text-white rounded bg-red-400 p-[3px] rounded';
+    return el;
+  }
+
+  openInfoWindow(marker: MapAdvancedMarker, bin: BinMapMarker): void {
+    this.selectedBin.set(bin);
+    this.infoWindow().open(marker);
+  }
+
+  closeInfoWindow(): void {
+    this.infoWindow().close();
+    this.selectedBin.set(null);
+  }
 
   readonly center: google.maps.LatLngLiteral = { lat: 47.142471, lng: 7.259719 };
 
   readonly mapOptions: google.maps.MapOptions = {
     zoom: 15,
     minZoom: 14,
-    colorScheme: google.maps.ColorScheme.DARK,
     mapTypeId: 'roadmap',
     disableDefaultUI: true,
     streetViewControl: false,

@@ -2,11 +2,50 @@
   height="100%"
   width="100%"
   [center]="center"
-  [options]="mapOptions">
-  @for (marker of mapMarkers(); track marker.coordX + '-' + marker.coordY) {
+  [options]="mapOptions"
+  (mapClick)="closeInfoWindow()">
+  @for (binMarker of binMapMarkers(); track binMarker.coordX + '-' + binMarker.coordY) {
     <map-advanced-marker
-      [position]="marker.position"
-      [title]="marker.type">
+      #markerElement="mapAdvancedMarker"
+      [content]="binMarker.content"
+      [position]="binMarker.position"
+      [title]="binMarker.type"
+      (mapClick)="openInfoWindow(markerElement, binMarker)">
     </map-advanced-marker>
   }
+  <map-info-window [options]="{ headerDisabled: true }">
+    @if (selectedBin(); as bin) {
+      <div class="relative">
+        <p-button
+          class="absolute top-0 right-0"
+          icon="pi pi-times"
+          ariaLabel="Close"
+          rounded="true"
+          text="true"
+          severity="secondary"
+          size="small"
+          (onClick)="closeInfoWindow()" />
+
+        <div class="p-2">
+          <div class="font-bold">
+            {{ bin.type }}
+          </div>
+
+          <div class="text-sm mt-3">
+            <div><strong>X:</strong> {{ bin.coordX }}</div>
+            <div><strong>Y:</strong> {{ bin.coordY }}</div>
+            <div><strong>Lat:</strong> {{ bin.position.lat }}</div>
+            <div><strong>Lng:</strong> {{ bin.position.lng }}</div>
+          </div>
+
+          <a class="mt-2"
+             [routerLink]="['/bins', bin.coordX + '-' + bin.coordY]"
+             pButton
+             severity="secondary">
+            <span pButtonLabel>Details</span>
+          </a>
+        </div>
+      </div>
+    }
+  </map-info-window>
 </google-map>

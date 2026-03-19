@@ -7,4 +7,5 @@ export interface BinDTO {
 
 export interface BinMapMarker extends BinDTO {
   position: google.maps.LatLngLiteral;
+  content: HTMLElement;
 }
