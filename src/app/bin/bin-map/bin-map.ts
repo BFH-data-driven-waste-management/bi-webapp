@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal, viewChild } from '@angular/core';
+import { Component, computed, inject, input, signal, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { GoogleMap, MapAdvancedMarker, MapInfoWindow } from '@angular/google-maps';
 import { Button, ButtonDirective, ButtonLabel } from 'primeng/button';
@@ -23,7 +23,7 @@ import { lv95ToLatLng } from '../../maps/coordinates.utils';
 export class BinMap {
   private readonly binService = inject(BinService);
 
-  readonly bins = toSignal(this.binService.getBins(), { initialValue: [] as BinDTO[] });
+  readonly bins = input.required<BinDTO[]>();
 
   readonly binMapMarkers = computed<BinMapMarker[]>(() =>
     this.bins().map((bin) => ({

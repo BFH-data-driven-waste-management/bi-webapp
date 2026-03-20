@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { Card } from 'primeng/card';
 import { UIChart } from 'primeng/chart';
 import { buildBaseBarOptions } from './chart-options';
@@ -11,12 +11,12 @@ import { BinDTO } from '../bin/bin.model';
   selector: 'app-dashboard',
   imports: [Card, UIChart],
   templateUrl: './dashboard.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Dashboard {
   private readonly binService = inject(BinService);
 
-  readonly bins = toSignal(this.binService.getBins(), { initialValue: [] as BinDTO[] });
+  bins = input.required<BinDTO[]>();
 
   readonly barOptions: ChartOptions<'bar'> = buildBaseBarOptions();
 
