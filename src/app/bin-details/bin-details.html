@@ -1,0 +1,27 @@
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6
+    [&_.p-card]:rounded-2xl
+    [&_.p-card]:border
+    [&_.p-card]:border-surface-300">
+
+  <p-card>
+    <div class="flex flex-col gap-3">
+      <div class="flex flex-col">
+        <strong>Typ</strong>
+        <span>{{ bin().type }}</span>
+      </div>
+
+      <div class="flex flex-col">
+        <strong>Koordinaten</strong>
+
+        <div class="flex gap-3">
+          <div>
+            <strong>X:</strong><span class="ml-1">{{ bin().coordX }}</span>
+          </div>
+          <div>
+            <strong>Y:</strong><span class="ml-1">{{ bin().coordY }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-card>
+</div>

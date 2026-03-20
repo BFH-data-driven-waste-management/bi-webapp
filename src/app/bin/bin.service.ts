@@ -13,4 +13,8 @@ export class BinService {
   getBins(): Observable<BinDTO[]> {
     return this.http.get<BinDTO[]>(this.apiUrl);
   }
+
+  getBinByCoords(coordX: number, coordY: number): Observable<BinDTO> {
+    return this.http.get<BinDTO>(this.apiUrl + `/${coordX}/${coordY}`);
+  }
 }
