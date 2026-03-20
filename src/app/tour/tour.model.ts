@@ -1,4 +1,4 @@
-import { BinDTO } from '../bin/bin.dto';
+import { BinDTO } from '../bin/bin.model';
 
 export interface TourDTO {
   id: number;

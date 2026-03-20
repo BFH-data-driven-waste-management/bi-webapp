@@ -1,11 +1,11 @@
 import { Component, computed, inject, signal, viewChild } from '@angular/core';
-import { BinService } from '../bin/bin.service';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { BinDTO, BinMapMarker } from '../bin/bin.dto';
-import { lv95ToLatLng } from '../maps/coordinates.utils';
 import { GoogleMap, MapAdvancedMarker, MapInfoWindow } from '@angular/google-maps';
 import { Button, ButtonDirective, ButtonLabel } from 'primeng/button';
 import { RouterLink } from '@angular/router';
+import { BinService } from '../bin.service';
+import { BinDTO, BinMapMarker } from '../bin.model';
+import { lv95ToLatLng } from '../../maps/coordinates.utils';
 
 @Component({
   selector: 'app-bin-map',

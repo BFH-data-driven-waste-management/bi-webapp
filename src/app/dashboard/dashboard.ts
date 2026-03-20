@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { Card } from 'primeng/card';
 import { UIChart } from 'primeng/chart';
-import { BinDTO } from '../bin/bin.dto';
 import { buildBaseBarOptions } from './chart-options';
 import { ChartData, ChartOptions, ScriptableContext } from 'chart.js'; // TODO chart.js needed?
 import { toSignal } from '@angular/core/rxjs-interop';
 import { BinService } from '../bin/bin.service';
+import { BinDTO } from '../bin/bin.model';
 
 @Component({
   selector: 'app-dashboard',

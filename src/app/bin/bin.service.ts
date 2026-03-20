@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { BinDTO } from './bin.dto';
 import { HttpClient } from '@angular/common/http';
+import { BinDTO } from './bin.model';
 
 @Injectable({
   providedIn: 'root',

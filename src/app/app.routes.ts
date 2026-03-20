@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
 import { Dashboard } from './dashboard/dashboard';
-import { BinMap } from './bin-map/bin-map';
-import { BinDetails } from './bin-details/bin-details';
 import { Tours } from './tour/tours';
 import { toursResolver } from './tour/tours-resolver';
-import { binResolver } from './bin-details/bin.resolver';
+import { BinMap } from './bin/bin-map/bin-map';
+import { BinDetails } from './bin/bin-details/bin-details';
+import { binResolver } from './bin/bin-details/bin.resolver';
 
 export const routes: Routes = [
   { path: '', component: Dashboard },
