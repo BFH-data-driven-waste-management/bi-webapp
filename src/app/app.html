@@ -5,10 +5,15 @@
     </div>
   </p-toolbar>
   <div class="flex h-full">
-    <div class="w-64 p-4">
-      <p-menu [model]="navItems" class="custom-menu"></p-menu>
+    <div class="flex flex-col">
+      <div class="w-64 p-4">
+        <p-menu [model]="navItems" class="custom-menu"></p-menu>
+      </div>
+      <div class="w-64 p-4">
+        <p-menu [model]="linkItems" class="custom-menu"></p-menu>
+      </div>
     </div>
-    <div class="flex-1" [class.p-6]="!isNoMarginRoute()">
+    <div class="flex-1" [ngClass]="routePaddingClass()">
       <router-outlet></router-outlet>
     </div>
   </div>
