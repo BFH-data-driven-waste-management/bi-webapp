@@ -1,4 +1,62 @@
-<p>tours works!</p>
-@for (tour of tours(); track tour.id){
-  <span>{{tour.id}}</span>
-}
+<div class="card">
+  <p-table
+    [value]="tours()"
+    [(selection)]="selectedTours"
+    (selectionChange)="onSelectionChange()"
+    dataKey="id"
+    [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template #header>
+      <tr>
+        <th style="width: 4rem">
+          <p-tableHeaderCheckbox />
+        </th>
+        <th class="w-[10%]">ID</th>
+        <th class="w-[15%]">Fahrzeugnummer</th>
+        <th class="w-[30%]">Gestartet am</th>
+        <th class="w-[30%]">Beendet am</th>
+        <th class="w-[15%]">Anzahl Eimervisiten</th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-tour>
+      <tr>
+        <td>
+          <p-tableCheckbox [value]="tour" [disabled]="tour.binVisits.length === 0" />
+        </td>
+        <td>{{ tour.id }}</td>
+        <td>{{ tour.licensePlate }}</td>
+        <td>{{ tour.startedAt }}</td>
+        <td>{{ tour.endedAt }}</td>
+        <td>{{ tour.binVisits.length }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<google-map
+  (zoomChanged)="canBeAligned = true"
+  (centerChanged)="canBeAligned = true"
+  height="50%"
+  width="100%"
+  [center]="center"
+  [options]="mapOptions">
+
+  @for (tour of tourPaths; track tour.tourId) {
+    <map-polyline [path]="tour.path"
+                  [options]="tour.options" />
+  }
+
+  @for (marker of markers; track marker.id) {
+    <map-advanced-marker
+      [position]="marker.position"
+      [title]="marker.title"
+      [content]="marker.content" />
+  }
+</google-map>
+
+<p-button
+  [disabled]="!canBeAligned"
+  severity="secondary"
+  (onClick)="alignMap()">
+  Alignieren
+</p-button>

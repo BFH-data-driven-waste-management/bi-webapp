@@ -34,12 +34,15 @@ export class App {
     },
   ];
 
-  readonly isBinMapRoute = toSignal( // TODO maybe there is a better solution
+  readonly noMarginRoutes = ['bin-map', 'tours'];
+
+  readonly isNoMarginRoute = toSignal(
+    // TODO maybe there is a better solution
     this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd),
-      map(() => this.router.url.startsWith('/bin-map')),
-      startWith(this.router.url.startsWith('/bin-map')),
+      map(() => this.noMarginRoutes.some((route) => this.router.url.startsWith(`/${route}`))),
+      startWith(this.noMarginRoutes.some((route) => this.router.url.startsWith(`/${route}`))),
     ),
-    { initialValue: this.router.url.startsWith('/bin-map') },
+    { initialValue: this.noMarginRoutes.some((route) => this.router.url.startsWith(`/${route}`)) },
   );
 }

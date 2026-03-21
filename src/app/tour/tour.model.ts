@@ -30,3 +30,16 @@ export enum VisitAction {
   EMPTIED = 'EMPTIED',
   NOT_EMPTIED = 'NOT_EMPTIED',
 }
+
+export type MapMarkerVm = {
+  id: string;
+  position: google.maps.LatLngLiteral;
+  title: string;
+  content: HTMLElement;
+};
+
+export type TourPathVm = {
+  tourId: number;
+  path: google.maps.LatLngLiteral[];
+  options: google.maps.PolylineOptions;
+};
