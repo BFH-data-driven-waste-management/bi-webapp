@@ -1,18 +1,24 @@
-import { Component, input, viewChild } from '@angular/core';
+import { AfterViewInit, Component, computed, input, OnInit, viewChild } from '@angular/core';
 import { GoogleMap, MapAdvancedMarker, MapPolyline } from '@angular/google-maps';
 import { TableModule } from 'primeng/table';
 import { Button } from 'primeng/button';
 import { BinVisitFullDTO, MapMarkerVm, TourDTO, TourPathVm } from './tour.model';
-import { lv95ToLatLng } from '../maps/coordinates.utils';
+import { Chip } from 'primeng/chip';
+import { ChDateTimePipe } from '../shared/pipes/ch-date-time.pipe';
+import { lv95ToLatLng } from '../shared/maps/coordinates';
 
 @Component({
   selector: 'app-tours',
-  imports: [TableModule, GoogleMap, MapAdvancedMarker, MapPolyline, Button],
+  imports: [TableModule, GoogleMap, MapAdvancedMarker, MapPolyline, Button, ChDateTimePipe, Chip],
   templateUrl: './tours.html',
 })
-export class Tours {
+export class Tours implements OnInit, AfterViewInit {
   readonly mapCmp = viewChild.required(GoogleMap);
   readonly tours = input.required<TourDTO[]>();
+  readonly sortedTours = computed(() =>
+    [...this.tours()].sort((a, b) => this.getEndedAtTimestamp(b) - this.getEndedAtTimestamp(a)),
+  );
+  readonly latestTour = computed(() => this.sortedTours()[0] ?? null);
 
   protected selectedTours: TourDTO[] = [];
   protected canBeAligned = false;
@@ -51,6 +57,27 @@ export class Tours {
     '#6366f1',
   ];
 
+  ngOnInit(): void {
+    const latestTour = this.latestTour();
+
+    if (!latestTour || latestTour.binVisits.length === 0) {
+      return;
+    }
+
+    this.selectedTours = [latestTour];
+    this.rebuildMapData();
+  }
+
+  ngAfterViewInit(): void {
+    if (this.selectedTours.length > 0) {
+      this.alignMap();
+    }
+  }
+
+  private getEndedAtTimestamp(tour: TourDTO): number {
+    return tour.endedAt ? Date.parse(tour.endedAt) : 0;
+  }
+
   protected onSelectionChange(): void {
     this.rebuildMapData();
     this.alignMap();
@@ -86,7 +113,9 @@ export class Tours {
     const map = this.mapCmp().googleMap;
     if (!map) return;
 
-    if (this.selectedTours.length === 0) {
+    const totalBinVisits = this.selectedTours.reduce((sum, tour) => sum + tour.binVisits.length, 0);
+
+    if (totalBinVisits === 0) {
       map.setCenter(this.center);
       map.setZoom(this.mapOptions.zoom ?? 14);
       this.canBeAligned = false;
@@ -101,7 +130,7 @@ export class Tours {
       }
     }
 
-    map.fitBounds(bounds, 48);
+    map.fitBounds(bounds, 20);
     this.canBeAligned = false;
   }
 
@@ -137,5 +166,9 @@ export class Tours {
     }
 
     return el;
+  }
+
+  rowClass(binVisitAmount: number) {
+    return { 'bg-gray-100': binVisitAmount === 0 };
   }
 }

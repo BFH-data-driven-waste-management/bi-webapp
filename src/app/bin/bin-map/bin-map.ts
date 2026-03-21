@@ -4,7 +4,7 @@ import { Button, ButtonDirective, ButtonLabel } from 'primeng/button';
 import { RouterLink } from '@angular/router';
 import { BinService } from '../bin.service';
 import { BinDTO, BinMapMarkerVM } from '../bin.model';
-import { lv95ToLatLng } from '../../maps/coordinates.utils';
+import { lv95ToLatLng } from '../../shared/maps/coordinates';
 
 @Component({
   selector: 'app-bin-map',

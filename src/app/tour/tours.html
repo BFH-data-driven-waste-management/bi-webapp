@@ -1,33 +1,37 @@
 <div class="card">
   <p-table
-    [value]="tours()"
+    [value]="sortedTours()"
     [(selection)]="selectedTours"
     (selectionChange)="onSelectionChange()"
+    selectionMode="multiple"
+    [metaKeySelection]="false"
     dataKey="id"
     [tableStyle]="{ 'min-width': '50rem' }">
     <ng-template #header>
       <tr>
-        <th style="width: 4rem">
-          <p-tableHeaderCheckbox />
-        </th>
-        <th class="w-[10%]">ID</th>
+        <th class="w-[20%]">ID</th>
         <th class="w-[15%]">Fahrzeugnummer</th>
-        <th class="w-[30%]">Gestartet am</th>
-        <th class="w-[30%]">Beendet am</th>
+        <th class="w-[25%]">Gestartet am</th>
+        <th class="w-[25%]">Beendet am</th>
         <th class="w-[15%]">Anzahl Eimervisiten</th>
       </tr>
     </ng-template>
 
-    <ng-template #body let-tour>
-      <tr>
-        <td>
-          <p-tableCheckbox [value]="tour" [disabled]="tour.binVisits.length === 0" />
+    <ng-template #body let-tour let-rowIndex="rowIndex">
+      @let amountBinVisits = tour.binVisits.length;
+      <tr [pSelectableRow]="tour"
+          [pSelectableRowIndex]="rowIndex"
+          [class]="rowClass(amountBinVisits)"
+          [pSelectableRowDisabled]="amountBinVisits === 0">
+        <td>{{ tour.id }}
+          @if (latestTour().id === tour.id) {
+            <p-chip class="ml-2 py-1 px-3 text-sm bg-red-200" label="Neueste" />
+          }
         </td>
-        <td>{{ tour.id }}</td>
         <td>{{ tour.licensePlate }}</td>
-        <td>{{ tour.startedAt }}</td>
-        <td>{{ tour.endedAt }}</td>
-        <td>{{ tour.binVisits.length }}</td>
+        <td>{{ tour.startedAt | chDateTime }}</td>
+        <td>{{ tour.endedAt | chDateTime }}</td> <!-- TODO a chip indicating automatic termination (01:00) might be great -->
+        <td>{{ amountBinVisits }}</td>
       </tr>
     </ng-template>
   </p-table>
