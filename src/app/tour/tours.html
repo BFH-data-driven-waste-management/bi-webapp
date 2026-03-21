@@ -9,8 +9,12 @@
     [(selection)]="selectedTours"
     (selectionChange)="onSelectionChange()"
     selectionMode="multiple"
-    [metaKeySelection]="false"
+    metaKeySelection="false"
     dataKey="id"
+    exportFilename="tours"
+    paginator
+    [rows]="4"
+    [rowsPerPageOptions]="[4, 6, 8, 10]"
     [tableStyle]="{ 'min-width': '50rem' }">
     <ng-template #header>
       <tr>
