@@ -1,6 +1,11 @@
 <div class="card">
+  <p-toolbar class="mt-4 flex justify-end">
+    <p-button label="Export" icon="pi pi-file-export" severity="secondary" (onClick)="dt.exportCSV()" />
+  </p-toolbar>
   <p-table
-    [value]="sortedTours()"
+    #dt
+    [columns]="columns"
+    [value]="tableRows()"
     [(selection)]="selectedTours"
     (selectionChange)="onSelectionChange()"
     selectionMode="multiple"
@@ -18,24 +23,27 @@
     </ng-template>
 
     <ng-template #body let-tour let-rowIndex="rowIndex">
-      @let amountBinVisits = tour.binVisits.length;
       <tr [pSelectableRow]="tour"
           [pSelectableRowIndex]="rowIndex"
-          [class]="rowClass(amountBinVisits)"
-          [pSelectableRowDisabled]="amountBinVisits === 0">
+          [class]="rowClass(tour.binVisitsAmount)"
+          [pSelectableRowDisabled]="tour.binVisitsAmount === 0">
         <td>{{ tour.id }}
           @if (latestTour().id === tour.id) {
             <p-chip class="ml-2 py-1 px-3 text-sm bg-red-200" label="Neueste" />
           }
         </td>
         <td>{{ tour.licensePlate }}</td>
-        <td>{{ tour.startedAt | chDateTime }}</td>
-        <td>{{ tour.endedAt | chDateTime }}</td> <!-- TODO a chip indicating automatic termination (01:00) might be great -->
-        <td>{{ amountBinVisits }}</td>
+        <td>{{ tour.startedAtLabel }}</td>
+        <td>{{ tour.endedAtLabel }}</td> <!-- TODO a chip indicating automatic termination (01:00) might be great -->
+        <td>{{ tour.binVisitsAmount }}</td>
       </tr>
     </ng-template>
   </p-table>
 </div>
+
+<p-toolbar class="my-4 justify-end">
+  <p-button label="Karte alignieren" icon="pi pi-map" severity="secondary" class="mr-2" [disabled]="!canBeAligned" (onClick)="alignMap()" />
+</p-toolbar>
 
 <google-map
   (zoomChanged)="canBeAligned = true"
@@ -57,10 +65,3 @@
       [content]="marker.content" />
   }
 </google-map>
-
-<p-button
-  [disabled]="!canBeAligned"
-  severity="secondary"
-  (onClick)="alignMap()">
-  Alignieren
-</p-button>

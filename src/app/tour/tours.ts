@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
   OnInit,
   viewChild,
@@ -10,24 +11,46 @@ import {
 import { GoogleMap, MapAdvancedMarker, MapPolyline } from '@angular/google-maps';
 import { TableModule } from 'primeng/table';
 import { Button } from 'primeng/button';
-import { BinVisitFullDTO, MapMarkerVm, TourDTO, TourPathVm } from './tour.model';
+import { BinVisitFullDTO, Column, MapMarkerVm, TourDTO, TourPathVm, TourVm } from './tour.model';
 import { Chip } from 'primeng/chip';
 import { ChDateTimePipe } from '../shared/pipes/ch-date-time.pipe';
 import { lv95ToLatLng } from '../shared/maps/coordinates';
+import { Toolbar } from 'primeng/toolbar';
 
 @Component({
   selector: 'app-tours',
-  imports: [TableModule, GoogleMap, MapAdvancedMarker, MapPolyline, Button, ChDateTimePipe, Chip],
+  imports: [TableModule, GoogleMap, MapAdvancedMarker, MapPolyline, Button, Chip, Toolbar],
   templateUrl: './tours.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Tours implements OnInit, AfterViewInit {
+  readonly chDateTimePipe = inject(ChDateTimePipe);
+
+  readonly columns: Column[] = [
+    { field: 'id', header: 'ID' },
+    { field: 'licensePlate', header: 'Fahrzeugnummer' },
+    { field: 'startedAtLabel', header: 'Startzeit' },
+    { field: 'endedAtLabel', header: 'Endzeit' },
+    { field: 'binVisitsAmount', header: 'Anzahl Behälterbesuche' },
+  ];
+
   readonly mapCmp = viewChild.required(GoogleMap);
+
   readonly tours = input.required<TourDTO[]>();
-  readonly sortedTours = computed(() =>
-    [...this.tours()].sort((a, b) => this.getEndedAtTimestamp(b) - this.getEndedAtTimestamp(a)),
+  readonly tableRows = computed<TourVm[]>(() =>
+    [...this.tours()]
+      .map(
+        (tour) =>
+          ({
+            ...tour,
+            binVisitsAmount: tour.binVisits.length,
+            startedAtLabel: this.chDateTimePipe.transform(tour.startedAt),
+            endedAtLabel: this.chDateTimePipe.transform(tour.endedAt),
+          }) as TourVm,
+      )
+      .sort((a, b) => this.getEndedAtTimestamp(b) - this.getEndedAtTimestamp(a)),
   );
-  readonly latestTour = computed(() => this.sortedTours()[0] ?? null);
+  readonly latestTour = computed(() => this.tableRows()[0] ?? null);
 
   protected selectedTours: TourDTO[] = [];
   protected canBeAligned = false;

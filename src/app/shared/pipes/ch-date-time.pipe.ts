@@ -1,18 +1,21 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Injectable, Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'chDateTime',
   standalone: true,
 })
+@Injectable({
+  providedIn: 'root',
+})
 export class ChDateTimePipe implements PipeTransform {
   private readonly formatter = new Intl.DateTimeFormat('de-CH', {
-      timeZone: 'Europe/Zurich',
-      weekday: 'short',
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    timeZone: 'Europe/Zurich',
+    weekday: 'short',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
   });
 
   transform(value: string | Date | null | undefined): string {

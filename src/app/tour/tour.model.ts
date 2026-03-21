@@ -31,6 +31,15 @@ export enum VisitAction {
   NOT_EMPTIED = 'NOT_EMPTIED',
 }
 
+/**
+ * Tour view model extending the dto with derived fields
+ */
+export interface TourVm extends TourDTO {
+  binVisitsAmount: number;
+  startedAtLabel: string;
+  endedAtLabel: string;
+}
+
 export type MapMarkerVm = {
   id: string;
   position: google.maps.LatLngLiteral;
@@ -43,3 +52,9 @@ export type TourPathVm = {
   path: google.maps.LatLngLiteral[];
   options: google.maps.PolylineOptions;
 };
+
+export interface Column {
+  // TODO maybe move to shared
+  field: string;
+  header: string;
+}
