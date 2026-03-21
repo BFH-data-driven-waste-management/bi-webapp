@@ -58,7 +58,7 @@ export class BinMap {
     minZoom: 14,
     mapTypeId: 'roadmap',
     disableDefaultUI: true,
-    streetViewControl: false,
+    streetViewControl: true,
     fullscreenControl: false,
     mapTypeControl: false,
     rotateControl: false,
