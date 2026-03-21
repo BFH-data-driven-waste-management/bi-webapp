@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
+import { TourDTO } from '../tour.model';
 
 @Component({
   selector: 'app-tour-details',
@@ -6,4 +7,6 @@ import { Component } from '@angular/core';
   templateUrl: './tour-details.html',
   styleUrl: './tour-details.css',
 })
-export class TourDetails {}
+export class TourDetails {
+  tour = input.required<TourDTO>();
+}

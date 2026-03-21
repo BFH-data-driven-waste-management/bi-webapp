@@ -13,4 +13,8 @@ export class TourService {
   getTours(): Observable<TourDTO[]> {
     return this.http.get<TourDTO[]>(this.apiUrl);
   }
+
+  getTourById(id: number): Observable<TourDTO> {
+    return this.http.get<TourDTO>(this.apiUrl + `/${id}`);
+  }
 }
