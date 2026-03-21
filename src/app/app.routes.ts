@@ -13,5 +13,5 @@ export const routes: Routes = [
   { path: 'bin-map', component: BinMap, resolve: { bins: binsResolver } },
   { path: 'bin/:coordX/:coordY', component: BinDetails, resolve: { bin: binResolver } },
   { path: 'tours-overview', component: ToursOverview, resolve: { tours: toursResolver } },
-  { path: 'tour/:id', component: TourDetails, resolve: { tours: tourResolver }},
+  { path: 'tour/:id', component: TourDetails, resolve: { tour: tourResolver }},
 ];
