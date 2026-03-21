@@ -1,7 +1,7 @@
 <div class="card">
   <p-toolbar class="mt-4 flex justify-end">
     @if (selectedTours.length === 1) {
-      <p-button label="Details" icon="pi pi-arrow-right" (onClick)="showTourDetails()" />
+      <p-button [label]="'Tour ' + selectedTours[0].id + ' anzeigen'" icon="pi pi-arrow-right" (onClick)="showTourDetails()" />
     }
     <p-button label="Export" icon="pi pi-file-export" severity="secondary" (onClick)="dt.exportCSV()" />
   </p-toolbar>
