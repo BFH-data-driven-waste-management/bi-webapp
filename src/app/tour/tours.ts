@@ -1,4 +1,12 @@
-import { AfterViewInit, Component, computed, input, OnInit, viewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  OnInit,
+  viewChild,
+} from '@angular/core';
 import { GoogleMap, MapAdvancedMarker, MapPolyline } from '@angular/google-maps';
 import { TableModule } from 'primeng/table';
 import { Button } from 'primeng/button';
@@ -11,6 +19,7 @@ import { lv95ToLatLng } from '../shared/maps/coordinates';
   selector: 'app-tours',
   imports: [TableModule, GoogleMap, MapAdvancedMarker, MapPolyline, Button, ChDateTimePipe, Chip],
   templateUrl: './tours.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Tours implements OnInit, AfterViewInit {
   readonly mapCmp = viewChild.required(GoogleMap);

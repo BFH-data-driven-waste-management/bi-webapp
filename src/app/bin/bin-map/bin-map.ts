@@ -1,8 +1,14 @@
-import { Component, computed, inject, input, signal, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { GoogleMap, MapAdvancedMarker, MapInfoWindow } from '@angular/google-maps';
 import { Button, ButtonDirective, ButtonLabel } from 'primeng/button';
 import { RouterLink } from '@angular/router';
-import { BinService } from '../bin.service';
 import { BinDTO, BinMapMarkerVM } from '../bin.model';
 import { lv95ToLatLng } from '../../shared/maps/coordinates';
 
@@ -18,10 +24,9 @@ import { lv95ToLatLng } from '../../shared/maps/coordinates';
     Button,
   ],
   templateUrl: './bin-map.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BinMap {
-  private readonly binService = inject(BinService);
-
   readonly bins = input.required<BinDTO[]>();
 
   readonly binMapMarkers = computed<BinMapMarkerVM[]>(() =>
