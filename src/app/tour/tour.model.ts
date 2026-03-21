@@ -7,6 +7,7 @@ export interface TourDTO {
   startedAt: string;
   endedAt: string | null;
   binVisits: BinVisitFullDTO[];
+  vehicleEmptyings: VehicleEmptyingDTO[];
 }
 
 export interface BinVisitFullDTO {
@@ -17,6 +18,12 @@ export interface BinVisitFullDTO {
   eventTimestamp: string;
   fillLevel: FillLevel;
   visitAction: VisitAction;
+}
+
+export interface VehicleEmptyingDTO {
+  id: number;
+  tourId: number;
+  emptyingTimestamp: string;
 }
 
 export enum FillLevel {
