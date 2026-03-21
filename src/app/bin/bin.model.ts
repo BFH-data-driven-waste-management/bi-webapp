@@ -5,7 +5,7 @@ export interface BinDTO {
   isMapped: boolean;
 }
 
-export interface BinMapMarker extends BinDTO {
+export interface BinMapMarkerVM extends BinDTO {
   position: google.maps.LatLngLiteral;
   content: HTMLElement;
 }

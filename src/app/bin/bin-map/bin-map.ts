@@ -1,10 +1,9 @@
 import { Component, computed, inject, input, signal, viewChild } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { GoogleMap, MapAdvancedMarker, MapInfoWindow } from '@angular/google-maps';
 import { Button, ButtonDirective, ButtonLabel } from 'primeng/button';
 import { RouterLink } from '@angular/router';
 import { BinService } from '../bin.service';
-import { BinDTO, BinMapMarker } from '../bin.model';
+import { BinDTO, BinMapMarkerVM } from '../bin.model';
 import { lv95ToLatLng } from '../../maps/coordinates.utils';
 
 @Component({
@@ -25,14 +24,14 @@ export class BinMap {
 
   readonly bins = input.required<BinDTO[]>();
 
-  readonly binMapMarkers = computed<BinMapMarker[]>(() =>
+  readonly binMapMarkers = computed<BinMapMarkerVM[]>(() =>
     this.bins().map((bin) => ({
       ...bin,
       position: lv95ToLatLng(bin.coordX, bin.coordY),
       content: this.createBinIcon(),
     })),
   );
-  readonly selectedBin = signal<BinMapMarker | null>(null);
+  readonly selectedBin = signal<BinMapMarkerVM | null>(null);
   readonly infoWindow = viewChild.required(MapInfoWindow);
 
   createBinIcon(): HTMLElement {
@@ -41,7 +40,7 @@ export class BinMap {
     return el;
   }
 
-  openInfoWindow(marker: MapAdvancedMarker, bin: BinMapMarker): void {
+  openInfoWindow(marker: MapAdvancedMarker, bin: BinMapMarkerVM): void {
     this.selectedBin.set(bin);
     this.infoWindow().open(marker);
   }
