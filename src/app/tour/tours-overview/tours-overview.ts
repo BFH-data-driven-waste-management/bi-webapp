@@ -11,19 +11,21 @@ import {
 import { GoogleMap, MapAdvancedMarker, MapPolyline } from '@angular/google-maps';
 import { TableModule } from 'primeng/table';
 import { Button } from 'primeng/button';
-import { BinVisitFullDTO, Column, MapMarkerVm, TourDTO, TourPathVm, TourVm } from './tour.model';
+import { BinVisitFullDTO, Column, MapMarkerVm, TourDTO, TourPathVm, TourVm } from '../tour.model';
 import { Chip } from 'primeng/chip';
-import { ChDateTimePipe } from '../shared/pipes/ch-date-time.pipe';
-import { lv95ToLatLng } from '../shared/maps/coordinates';
 import { Toolbar } from 'primeng/toolbar';
+import { ChDateTimePipe } from '../../shared/pipes/ch-date-time.pipe';
+import { lv95ToLatLng } from '../../shared/maps/coordinates';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tours',
   imports: [TableModule, GoogleMap, MapAdvancedMarker, MapPolyline, Button, Chip, Toolbar],
-  templateUrl: './tours.html',
+  templateUrl: './tours-overview.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Tours implements OnInit, AfterViewInit {
+export class ToursOverview implements OnInit, AfterViewInit {
+  readonly router = inject(Router);
   readonly chDateTimePipe = inject(ChDateTimePipe);
 
   readonly columns: Column[] = [
@@ -202,5 +204,9 @@ export class Tours implements OnInit, AfterViewInit {
 
   rowClass(binVisitAmount: number) {
     return { 'bg-gray-100': binVisitAmount === 0 };
+  }
+
+  protected showTourDetails() {
+    this.router.navigate(['/tour', this.selectedTours[0].id]).then(_ => {});
   }
 }

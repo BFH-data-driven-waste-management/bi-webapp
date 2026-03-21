@@ -31,7 +31,7 @@ export class App {
     {
       label: 'Touren',
       icon: 'pi pi-map',
-      routerLink: '/tours',
+      routerLink: '/tours-overview',
     },
   ];
 
