@@ -58,4 +58,18 @@
       </div>
     </div>
   </p-card>
+
+  <p-card header="Übervolle Mülleimer">
+    <div class="relative min-h-56">
+      <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+        <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500/15">
+          <i class="pi pi-exclamation-circle text-3xl text-red-400"></i>
+        </div>
+
+        <div class="text-6xl font-extrabold leading-none tracking-tight">
+          {{ overfullBins() }}
+        </div>
+      </div>
+    </div>
+  </p-card>
 </div>
