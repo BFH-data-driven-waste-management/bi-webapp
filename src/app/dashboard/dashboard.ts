@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { Card } from 'primeng/card';
 import { UIChart } from 'primeng/chart';
 import { buildBaseBarOptions } from './chart-options';
 import { ChartData, ChartOptions, ScriptableContext } from 'chart.js'; // TODO chart.js needed?
-import { BinService } from '../bin/bin.service';
 import { BinDTO } from '../bin/bin.model';
 
 @Component({
