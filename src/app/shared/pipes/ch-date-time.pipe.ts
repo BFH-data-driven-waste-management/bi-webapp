@@ -18,7 +18,14 @@ export class ChDateTimePipe implements PipeTransform {
     minute: '2-digit',
   });
 
-  transform(value: string | Date | null | undefined): string {
+  private readonly formatterTime = new Intl.DateTimeFormat('de-CH', {
+    timeZone: 'Europe/Zurich',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
+  transform(value: string | Date | null | undefined,
+            format: 'full' | 'time' = 'full'): string {
     if (!value) {
       return '';
     }
@@ -29,6 +36,6 @@ export class ChDateTimePipe implements PipeTransform {
       return '';
     }
 
-    return this.formatter.format(date);
+    return (format === 'time' ? this.formatterTime : this.formatter).format(date);
   }
 }
