@@ -17,6 +17,39 @@
 
     </div>
   </p-card>
+
+  <p-card
+    header="Zeitleiste"
+    [class.col-span-2]="timelineWithMueve() && tour().vehicleEmptyings.length > 2">
+    <div class="flex flex-col justify-between h-64">
+      <div class="flex flex-col mt-8">
+        <p-timeline
+          layout="horizontal"
+          align="left"
+          [value]="timeline()">
+          <ng-template #opposite let-event>
+            <div class="flex justify-start w-full">
+              <small class="text-surface-500">
+                {{ event.action }}
+              </small>
+            </div>
+          </ng-template>
+
+          <ng-template #content let-event>
+            {{ event.timestamp | chDateTime: 'time' }}
+          </ng-template>
+        </p-timeline>
+      </div>
+
+      <p-toggle-button
+        [ngModel]="timelineWithMueve()"
+        (ngModelChange)="timelineWithMueve.set($event)"
+        onLabel="Mit Müve"
+        offLabel="Mit Müve"
+        class="w-fit" />
+    </div>
+  </p-card>
+
   <p-card header="Mülleimer besucht">
     <div class="relative min-h-56">
       <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
@@ -40,20 +73,6 @@
 
         <div class="text-6xl font-extrabold leading-none tracking-tight">
           {{ emptyingsCount() }}
-        </div>
-      </div>
-    </div>
-  </p-card>
-
-  <p-card header="Müve-Besuche">
-    <div class="relative min-h-56">
-      <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500/15">
-          <i class="pi pi-truck text-3xl text-red-400"></i>
-        </div>
-
-        <div class="text-6xl font-extrabold leading-none tracking-tight">
-          {{ tour().vehicleEmptyings.length }}
         </div>
       </div>
     </div>

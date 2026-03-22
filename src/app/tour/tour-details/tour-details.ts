@@ -1,14 +1,17 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { FillLevel, TourDTO } from '../tour.model';
+import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
+import { FillLevel, TourDTO, TourTimelineItemVm } from '../tour.model';
 import { Card } from 'primeng/card';
 import { ChDateTimePipe } from '../../shared/pipes/ch-date-time.pipe';
 import { ChartData } from 'chart.js';
 import { UIChart } from 'primeng/chart';
 import { buildFillLevelPieOptions } from './chart-options';
+import { Timeline } from 'primeng/timeline';
+import { FormsModule } from '@angular/forms';
+import { ToggleButton } from 'primeng/togglebutton';
 
 @Component({
   selector: 'app-tour-details',
-  imports: [Card, ChDateTimePipe, UIChart],
+  imports: [Card, ChDateTimePipe, UIChart, Timeline, FormsModule, ToggleButton],
   templateUrl: './tour-details.html',
   styleUrl: './tour-details.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,18 +19,55 @@ import { buildFillLevelPieOptions } from './chart-options';
 export class TourDetails {
   readonly fillLevelPieOptions = buildFillLevelPieOptions();
 
-  tour = input.required<TourDTO>();
+  readonly tour = input.required<TourDTO>();
 
-  emptyingsCount = computed(
+  readonly timelineWithMueve = signal(false);
+
+  readonly timeline = computed<TourTimelineItemVm[]>(() => {
+    const tour = this.tour();
+
+    const items: TourTimelineItemVm[] = [
+      {
+        action: 'Tourstart',
+        timestamp: tour.startedAt,
+      },
+    ];
+
+    if (this.timelineWithMueve()) {
+      const sortedEmptyings = [...tour.vehicleEmptyings]
+        .sort(
+          (a, b) =>
+            new Date(a.emptyingTimestamp).getTime() - new Date(b.emptyingTimestamp).getTime(),
+        )
+        .map((emptying) => ({
+          action: 'Müve',
+          timestamp: emptying.emptyingTimestamp,
+        }));
+
+      items.push(...sortedEmptyings);
+    }
+
+    if (tour.endedAt) {
+      items.push({
+        action: 'Tourende',
+        timestamp: tour.endedAt,
+      });
+    }
+
+    return items;
+  });
+
+  readonly emptyingsCount = computed(
     () => this.tour().binVisits.filter((visit) => visit.visitAction === 'EMPTIED').length,
   );
 
-  overfullBins = computed(
+  readonly overfullBins = computed(
     () => this.tour().binVisits.filter((visit) => visit.fillLevel === 'OVERFULL').length,
   );
 
   readonly fillLevelPieData = computed<ChartData<'pie'>>(() => {
-    const order: FillLevel[] = [ // TODO maybe outsource
+    const order: FillLevel[] = [
+      // TODO maybe outsource
       FillLevel.OVERFULL,
       FillLevel.FULL,
       FillLevel.HALF_FULL,
@@ -70,10 +110,30 @@ export class TourDetails {
             }
 
             const redGradients = [
-              this.createPieGradient(ctx, chartArea, col('gray-900'), col('gray-500')),
-              this.createPieGradient(ctx, chartArea, col('red-600'), col('red-300')),
-              this.createPieGradient(ctx, chartArea, col('red-300'), col('red-200')),
-              this.createPieGradient(ctx, chartArea, col('gray-300'), col('gray-200')),
+              this.createPieGradient(
+                ctx,
+                chartArea,
+                style.getPropertyValue(`--color-gray-900`),
+                style.getPropertyValue(`--color-gray-500`),
+              ),
+              this.createPieGradient(
+                ctx,
+                chartArea,
+                style.getPropertyValue(`--color-red-600`),
+                style.getPropertyValue(`--color-red-300`),
+              ),
+              this.createPieGradient(
+                ctx,
+                chartArea,
+                style.getPropertyValue(`--color-red-300`),
+                style.getPropertyValue(`--color-red-200`),
+              ),
+              this.createPieGradient(
+                ctx,
+                chartArea,
+                style.getPropertyValue(`--color-gray-300`),
+                style.getPropertyValue(`--color-gray-200`),
+              ),
             ];
 
             return redGradients[context.dataIndex];

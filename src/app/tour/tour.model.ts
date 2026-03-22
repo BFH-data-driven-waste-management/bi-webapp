@@ -26,6 +26,11 @@ export interface VehicleEmptyingDTO {
   emptyingTimestamp: string;
 }
 
+export interface TourTimelineItemVm {
+  action: string;
+  timestamp: string;
+}
+
 export enum FillLevel {
   OVERFULL = 'OVERFULL',
   FULL = 'FULL',
