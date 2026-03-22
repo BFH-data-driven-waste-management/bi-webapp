@@ -3,6 +3,7 @@
     @if (selectedTours.length === 1) {
       <p-button [label]="'Tour ' + selectedTours[0].id + ' anzeigen'" icon="pi pi-arrow-right" (onClick)="showTourDetails()" />
     }
+    <p-button [disabled]="selectedTours.length === 0" label="Auswahl aufheben" icon="pi pi-times" severity="secondary" (onClick)="deselectAll()" />
     <p-button label="Export" icon="pi pi-file-export" severity="secondary" (onClick)="dt.exportCSV()" />
   </p-toolbar>
   <p-table

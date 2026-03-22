@@ -209,4 +209,9 @@ export class ToursOverview implements OnInit, AfterViewInit {
   protected showTourDetails() {
     this.router.navigate(['/tour', this.selectedTours[0].id]).then(_ => {});
   }
+
+  protected deselectAll() {
+    this.selectedTours = [];
+    this.onSelectionChange();
+  }
 }
