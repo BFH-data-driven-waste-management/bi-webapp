@@ -93,8 +93,7 @@ export class TourDetails {
     }
 
     const style = getComputedStyle(document.documentElement);
-    const col = (className: string) => style.getPropertyValue(`--color-${className}`).trim();
-    const gray = col('gray-900');
+    const gray = style.getPropertyValue(`--color-gray-900`);
 
     return {
       labels: order.map((level) => labels[level]),
@@ -106,7 +105,7 @@ export class TourDetails {
             const { ctx, chartArea } = chart;
 
             if (!chartArea) {
-              return col('red-200');
+              return style.getPropertyValue(`--color-red-200`);
             }
 
             const redGradients = [
