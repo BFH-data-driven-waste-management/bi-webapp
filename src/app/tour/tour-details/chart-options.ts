@@ -15,7 +15,7 @@ export function buildFillLevelPieOptions(): ChartOptions<'pie'> {
           color: gray,
         },
       },
-      tooltip: {
+      tooltip: { // TODO might better be outsourced (because reused for any chart)
         backgroundColor: bg,
         titleColor: gray,
         bodyColor: gray,
