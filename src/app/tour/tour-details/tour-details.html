@@ -59,6 +59,14 @@
     </div>
   </p-card>
 
+  <p-card header="Füllstandverteilung" class="rounded-lg">
+    <p-chart
+      type="pie"
+      [data]="fillLevelPieData()"
+      [options]="fillLevelPieOptions"
+      class="relative h-64 mt-4" />
+  </p-card>
+
   <p-card header="Übervolle Mülleimer">
     <div class="relative min-h-56">
       <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
