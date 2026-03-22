@@ -13,8 +13,6 @@ import { BinDTO } from '../bin/bin.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Dashboard {
-  private readonly binService = inject(BinService);
-
   bins = input.required<BinDTO[]>();
 
   readonly barOptions: ChartOptions<'bar'> = buildBaseBarOptions();
