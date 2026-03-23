@@ -144,7 +144,7 @@
           </a>
         </td>
         <td>{{ visit.eventTimestampLabel }}</td>
-        <td><p-tag [value]="visit.bin.type" [severity]="BIN_TYPE_TAG_SEVERITY" /></td>
+        <td><p-tag [value]="visit.bin.type" [severity]="BIN_TYPE_TAG_SEVERITY" /></td> <!-- TODO maybe there is a better solution to display-->
         <td><p-tag [value]="visit.fillLevelLabel" [class]="visit.fillLevelClass" /></td>
         <td><p-tag [value]="visit.visitActionLabel" [severity]="visit.visitActionSeverity" /></td>
       </tr>

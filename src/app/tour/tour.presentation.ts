@@ -11,7 +11,7 @@ export const BIN_VISIT_FILL_LEVEL_LABELS: Record<FillLevel, string> = {
   EMPTY_OR_ALMOST_EMPTY: 'Leer oder fast leer',
 };
 
-export const BIN_VISIT_FILL_LEVEL_TAG_CLASSES: Record<FillLevel, string> = {
+export const BIN_VISIT_FILL_LEVEL_TAG_CLASSES: Record<FillLevel, string> = { // TODO use in bar chart?
   OVERFULL: 'bg-gray-900 text-white',
   FULL: 'bg-red-600 text-white',
   HALF_FULL: 'bg-red-300 text-gray-900',

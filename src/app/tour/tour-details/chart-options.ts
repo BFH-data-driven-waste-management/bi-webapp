@@ -24,7 +24,7 @@ export function buildFillLevelPieOptions(): ChartOptions<'pie'> {
         cornerRadius: 10,
         padding: 12,
         callbacks: {
-          label: (context) => `${context.raw}`,
+          label: (context) => `Abs.: ${context.raw}`, // TODO display percentage?
         },
       },
     },
