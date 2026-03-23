@@ -43,6 +43,15 @@ export enum VisitAction {
   NOT_EMPTIED = 'NOT_EMPTIED',
 }
 
+export interface BinVisitVm extends BinVisitFullDTO {
+  coordinatesLabel: string;
+  eventTimestampLabel: string;
+  fillLevelLabel: string;
+  fillLevelClass: string;
+  visitActionLabel: string;
+  visitActionSeverity: 'success' | 'contrast';
+}
+
 /**
  * Tour view model extending the dto with derived fields
  */

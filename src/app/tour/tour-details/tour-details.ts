@@ -1,5 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
-import { FillLevel, TourDTO, TourTimelineItemVm } from '../tour.model';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { BinVisitVm, Column, FillLevel, TourDTO, TourTimelineItemVm } from '../tour.model';
+import {
+  BIN_TYPE_TAG_SEVERITY,
+  BIN_VISIT_ACTION_LABELS,
+  BIN_VISIT_ACTION_TAG_SEVERITIES,
+  BIN_VISIT_FILL_LEVEL_LABELS,
+  BIN_VISIT_FILL_LEVEL_TAG_CLASSES,
+} from '../tour.presentation';
 import { Card } from 'primeng/card';
 import { ChDateTimePipe } from '../../shared/pipes/ch-date-time.pipe';
 import { ChartData } from 'chart.js';
@@ -8,18 +15,49 @@ import { buildFillLevelPieOptions } from './chart-options';
 import { Timeline } from 'primeng/timeline';
 import { FormsModule } from '@angular/forms';
 import { ToggleButton } from 'primeng/togglebutton';
+import { TableModule } from 'primeng/table';
+import { Button } from 'primeng/button';
+import { Toolbar } from 'primeng/toolbar';
+import { RouterLink } from '@angular/router';
+import { Tag } from 'primeng/tag';
 
 @Component({
   selector: 'app-tour-details',
-  imports: [Card, ChDateTimePipe, UIChart, Timeline, FormsModule, ToggleButton],
+  imports: [
+    Card,
+    ChDateTimePipe,
+    UIChart,
+    Timeline,
+    FormsModule,
+    ToggleButton,
+    TableModule,
+    Button,
+    Toolbar,
+    RouterLink,
+    Tag,
+  ],
   templateUrl: './tour-details.html',
   styleUrl: './tour-details.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TourDetails {
+  readonly chDateTimePipe = inject(ChDateTimePipe);
+
   readonly fillLevelPieOptions = buildFillLevelPieOptions();
 
   readonly tour = input.required<TourDTO>();
+
+  /**
+   * A (static) column definition is needed for the export
+   */
+  readonly columns: Column[] = [
+    { field: 'id', header: 'ID' },
+    { field: 'coordinatesLabel', header: 'Eimer (Koordinaten)' },
+    { field: 'eventTimestampLabel', header: 'Zeitpunkt' },
+    { field: 'binTypeLabel', header: 'Behältertyp' },
+    { field: 'fillLevelLabel', header: 'Füllstand' },
+    { field: 'visitActionLabel', header: 'Aktion' },
+  ];
 
   readonly timelineWithMueve = signal(false);
 
@@ -67,19 +105,12 @@ export class TourDetails {
 
   readonly fillLevelPieData = computed<ChartData<'pie'>>(() => {
     const order: FillLevel[] = [
-      // TODO maybe outsource
+      // TODO maybe also outsource
       FillLevel.OVERFULL,
       FillLevel.FULL,
       FillLevel.HALF_FULL,
       FillLevel.EMPTY_OR_ALMOST_EMPTY,
     ];
-
-    const labels: Record<FillLevel, string> = {
-      OVERFULL: 'Übervoll',
-      FULL: 'Voll',
-      HALF_FULL: 'Halbvoll',
-      EMPTY_OR_ALMOST_EMPTY: 'Leer oder fast leer',
-    };
 
     const counts = {
       [FillLevel.OVERFULL]: 0,
@@ -96,7 +127,7 @@ export class TourDetails {
     const gray = style.getPropertyValue(`--color-gray-900`);
 
     return {
-      labels: order.map((level) => labels[level]),
+      labels: order.map((level) => BIN_VISIT_FILL_LEVEL_LABELS[level]),
       datasets: [
         {
           data: order.map((level) => counts[level]),
@@ -144,6 +175,18 @@ export class TourDetails {
     };
   });
 
+  readonly binVisitRows = computed<BinVisitVm[]>(() =>
+    this.tour().binVisits.map((visit) => ({
+      ...visit,
+      coordinatesLabel: `${visit.bin.coordX} / ${visit.bin.coordY}`,
+      eventTimestampLabel: this.chDateTimePipe.transform(visit.eventTimestamp),
+      fillLevelLabel: BIN_VISIT_FILL_LEVEL_LABELS[visit.fillLevel],
+      fillLevelClass: BIN_VISIT_FILL_LEVEL_TAG_CLASSES[visit.fillLevel],
+      visitActionLabel: BIN_VISIT_ACTION_LABELS[visit.visitAction],
+      visitActionSeverity: BIN_VISIT_ACTION_TAG_SEVERITIES[visit.visitAction],
+    })),
+  );
+
   private createPieGradient(
     ctx: CanvasRenderingContext2D,
     chartArea: { top: number; bottom: number },
@@ -155,4 +198,7 @@ export class TourDetails {
     gradient.addColorStop(1, end);
     return gradient;
   }
+
+  // for usage in template
+  protected readonly BIN_TYPE_TAG_SEVERITY = BIN_TYPE_TAG_SEVERITY;
 }

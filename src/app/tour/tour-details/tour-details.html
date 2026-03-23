@@ -100,3 +100,54 @@
     </div>
   </p-card>
 </div>
+
+<p-card header="Behälterbesuche" class="mt-6 mb-8 rounded-2xl border border-surface-300">
+  <p-toolbar class="mb-4 flex justify-end">
+    <p-button
+      label="Export"
+      icon="pi pi-file-export"
+      severity="secondary"
+      (onClick)="dt.exportCSV()"
+    />
+  </p-toolbar>
+
+  <p-table
+    #dt
+    [columns]="columns"
+    [value]="binVisitRows()"
+    [sortField]="'eventTimestamp'"
+    [sortOrder]="-1"
+    paginator
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    exportFilename="tour-bin-visits"
+    [tableStyle]="{ 'min-width': '64rem' }">
+    <!-- TODO a dynamic export filename with id or so might be useful -->
+    <ng-template #header>
+      <tr>
+        <th pSortableColumn="id">ID <p-sortIcon field="id" /></th>
+        <th>Eimer (Koordinaten)</th>
+        <th pSortableColumn="eventTimestamp">Zeitpunkt <p-sortIcon field="eventTimestamp" /></th>
+        <th pSortableColumn="bin.type">Behältertyp <p-sortIcon field="bin.type" /></th>
+        <th pSortableColumn="fillLevel">Füllstand <p-sortIcon field="fillLevel" /></th>
+        <th pSortableColumn="visitAction">Aktion <p-sortIcon field="visitAction" /></th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-visit>
+      <tr>
+        <td>{{ visit.id }}</td>
+        <td>
+          <a [routerLink]="['/bin', visit.bin.coordX, visit.bin.coordY]"
+            class="text-red-500 hover:text-red-400 underline underline-offset-2">
+            {{ visit.coordinatesLabel }}
+          </a>
+        </td>
+        <td>{{ visit.eventTimestampLabel }}</td>
+        <td><p-tag [value]="visit.bin.type" [severity]="BIN_TYPE_TAG_SEVERITY" /></td>
+        <td><p-tag [value]="visit.fillLevelLabel" [class]="visit.fillLevelClass" /></td>
+        <td><p-tag [value]="visit.visitActionLabel" [severity]="visit.visitActionSeverity" /></td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>
