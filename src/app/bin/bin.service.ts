@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { BinDTO } from './bin.model';
+import { BinDetailsDTO, BinDTO } from './bin.model';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +14,7 @@ export class BinService {
     return this.http.get<BinDTO[]>(this.apiUrl);
   }
 
-  getBinByCoords(coordX: number, coordY: number): Observable<BinDTO> {
-    return this.http.get<BinDTO>(this.apiUrl + `/${coordX}/${coordY}`);
+  getBinDetailsByCoords(coordX: number, coordY: number): Observable<BinDetailsDTO> {
+    return this.http.get<BinDetailsDTO>(this.apiUrl + `/${coordX}/${coordY}/details`);
   }
 }

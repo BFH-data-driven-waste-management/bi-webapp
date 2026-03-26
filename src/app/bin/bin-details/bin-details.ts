@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { Card } from 'primeng/card';
-import { BinDTO } from '../bin.model';
+import { BinDetailsDTO } from '../bin.model';
 
 @Component({
   selector: 'app-bin-details',
@@ -9,5 +9,5 @@ import { BinDTO } from '../bin.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BinDetails {
-  bin = input.required<BinDTO>();
+  bin = input.required<BinDetailsDTO>();
 }
