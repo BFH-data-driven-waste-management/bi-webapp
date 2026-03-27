@@ -40,7 +40,6 @@ import { IconValueCard } from '../../shared/components/icon-value-card/icon-valu
     IconValueCard,
   ],
   templateUrl: './tour-details.html',
-  styleUrl: './tour-details.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TourDetails {
