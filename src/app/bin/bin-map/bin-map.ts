@@ -41,7 +41,7 @@ export class BinMap {
 
   createBinIcon(): HTMLElement {
     const el = document.createElement('span');
-    el.className = 'pi pi-trash text-white rounded bg-red-400 p-[3px] rounded';
+    el.className = 'pi pi-trash text-white rounded-full bg-red-500 p-1 rounded';
     return el;
   }
 
