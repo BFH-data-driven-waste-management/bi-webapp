@@ -1,4 +1,5 @@
-<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 auto-rows-fr gap-6
+    [&_.p-card]:h-full
     [&_.p-card]:rounded-2xl
     [&_.p-card]:border
     [&_.p-card]:border-surface-300">
@@ -50,33 +51,15 @@
     </div>
   </p-card>
 
-  <p-card header="Mülleimer besucht">
-    <div class="relative min-h-56">
-      <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500/15">
-          <i class="pi pi-eye text-3xl text-red-400"></i>
-        </div>
+  <app-icon-value-card
+    header="Mülleimer besucht"
+    iconClass="pi pi-eye"
+    [value]="tour().binVisits.length" />
 
-        <div class="text-6xl font-extrabold leading-none tracking-tight">
-          {{ tour().binVisits.length }}
-        </div>
-      </div>
-    </div>
-  </p-card>
-
-  <p-card header="Mülleimer geleert">
-    <div class="relative min-h-56">
-      <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500/15">
-          <i class="pi pi-trash text-3xl text-red-400"></i>
-        </div>
-
-        <div class="text-6xl font-extrabold leading-none tracking-tight">
-          {{ emptyingsCount() }}
-        </div>
-      </div>
-    </div>
-  </p-card>
+  <app-icon-value-card
+    header="Mülleimer geleert"
+    iconClass="pi pi-trash"
+    [value]="emptyingsCount()" />
 
   <p-card header="Füllstandverteilung" class="rounded-lg">
     <p-chart
@@ -86,19 +69,10 @@
       class="relative h-64 mt-4" />
   </p-card>
 
-  <p-card header="Übervolle Mülleimer">
-    <div class="relative min-h-56">
-      <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500/15">
-          <i class="pi pi-exclamation-circle text-3xl text-red-400"></i>
-        </div>
-
-        <div class="text-6xl font-extrabold leading-none tracking-tight">
-          {{ overfullBins() }}
-        </div>
-      </div>
-    </div>
-  </p-card>
+  <app-icon-value-card
+    header="Übervolle Mülleimer"
+    iconClass="pi pi-exclamation-circle"
+    [value]="overfullBins()" />
 </div>
 
 <p-card header="Behälterbesuche" class="mt-6 mb-8 rounded-2xl border border-surface-300">

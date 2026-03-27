@@ -9,6 +9,7 @@ import { buildFillLevelOptions } from './chart-options';
 import { GoogleMap, MapAdvancedMarker } from '@angular/google-maps';
 import { lv95ToLatLng } from '../../shared/maps/coordinates';
 import { DateTimeService } from '../../shared/services/date-time.service';
+import { IconValueCard } from '../../shared/components/icon-value-card/icon-value-card';
 
 const WEEK_IN_MS = 7 * 24 * 60 * 60 * 1000; // TODO maybe outsource
 const FILL_LEVEL_BY_RANK: FillLevel[] = [
@@ -25,7 +26,7 @@ const FILL_LEVEL_RANK: Record<FillLevel, number> = {
 };
 @Component({
   selector: 'app-bin-details',
-  imports: [Card, UIChart, GoogleMap, MapAdvancedMarker],
+  imports: [Card, UIChart, GoogleMap, MapAdvancedMarker, IconValueCard],
   templateUrl: './bin-details.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

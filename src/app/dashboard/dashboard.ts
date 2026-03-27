@@ -4,10 +4,11 @@ import { UIChart } from 'primeng/chart';
 import { buildBaseBarOptions } from './chart-options';
 import { ChartData, ChartOptions, ScriptableContext } from 'chart.js'; // TODO chart.js needed?
 import { BinDTO } from '../bin/bin.model';
+import { IconValueCard } from '../shared/components/icon-value-card/icon-value-card';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [Card, UIChart],
+  imports: [Card, UIChart, IconValueCard],
   templateUrl: './dashboard.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

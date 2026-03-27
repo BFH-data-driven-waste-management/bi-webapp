@@ -21,6 +21,7 @@ import { Toolbar } from 'primeng/toolbar';
 import { RouterLink } from '@angular/router';
 import { Tag } from 'primeng/tag';
 import { DateTimeService } from '../../shared/services/date-time.service';
+import { IconValueCard } from '../../shared/components/icon-value-card/icon-value-card';
 
 @Component({
   selector: 'app-tour-details',
@@ -36,6 +37,7 @@ import { DateTimeService } from '../../shared/services/date-time.service';
     Toolbar,
     RouterLink,
     Tag,
+    IconValueCard,
   ],
   templateUrl: './tour-details.html',
   styleUrl: './tour-details.css',

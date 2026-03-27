@@ -1,4 +1,5 @@
-<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 auto-rows-fr gap-6
+    [&_.p-card]:h-full
     [&_.p-card]:rounded-2xl
     [&_.p-card]:border
     [&_.p-card]:border-surface-300">
@@ -46,31 +47,13 @@
     </div>
   </p-card>
 
-  <p-card header="Wetter Sensitivität">
-    <div class="relative min-h-56">
-      <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500/15">
-          <i class="pi pi-sun text-3xl text-red-400"></i>
-        </div>
+  <app-icon-value-card
+    header="Wetter Sensitivität"
+    iconClass="pi pi-sun"
+    value="0,77" />
 
-        <div class="text-6xl font-extrabold leading-none tracking-tight">
-          0,77
-        </div>
-      </div>
-    </div>
-  </p-card>
-
-  <p-card header="Event Sensitivtät">
-    <div class="relative min-h-56">
-      <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500/15">
-          <i class="pi pi-calendar text-3xl text-red-400"></i>
-        </div>
-
-        <div class="text-6xl font-extrabold leading-none tracking-tight">
-          0,23
-        </div>
-      </div>
-    </div>
-  </p-card>
+  <app-icon-value-card
+    header="Event Sensitivtät"
+    iconClass="pi pi-calendar"
+    value="0,23" />
 </div>
