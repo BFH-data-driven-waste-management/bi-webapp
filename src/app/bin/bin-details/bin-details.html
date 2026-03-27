@@ -33,7 +33,7 @@
     </div>
   </p-card>
 
-  <p-card header="Standort" class="2xl:col-span-2">
+  <p-card header="Standort">
     <div class="h-64">
       <google-map
         height="100%"
@@ -43,6 +43,34 @@
         <map-advanced-marker
           [position]="binPosition()"/>
       </google-map>
+    </div>
+  </p-card>
+
+  <p-card header="Wetter Sensitivität">
+    <div class="relative min-h-56">
+      <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+        <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500/15">
+          <i class="pi pi-sun text-3xl text-red-400"></i>
+        </div>
+
+        <div class="text-6xl font-extrabold leading-none tracking-tight">
+          0,77
+        </div>
+      </div>
+    </div>
+  </p-card>
+
+  <p-card header="Event Sensitivtät">
+    <div class="relative min-h-56">
+      <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+        <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500/15">
+          <i class="pi pi-calendar text-3xl text-red-400"></i>
+        </div>
+
+        <div class="text-6xl font-extrabold leading-none tracking-tight">
+          0,23
+        </div>
+      </div>
     </div>
   </p-card>
 </div>
