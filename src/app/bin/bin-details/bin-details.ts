@@ -7,6 +7,8 @@ import { FillLevel } from '../../tour/tour.model';
 import { ChartData, ChartOptions, ScriptableContext } from 'chart.js';
 import { ChDateTimeService } from '../../shared/pipes/ch-date-time.service';
 import { buildFillLevelOptions } from './chart-options';
+import { GoogleMap, MapAdvancedMarker } from '@angular/google-maps';
+import { lv95ToLatLng } from '../../shared/maps/coordinates';
 
 const WEEK_IN_MS = 7 * 24 * 60 * 60 * 1000; // TODO maybe outsource
 const FILL_LEVEL_BY_RANK: FillLevel[] = [
@@ -23,13 +25,28 @@ const FILL_LEVEL_RANK: Record<FillLevel, number> = {
 };
 @Component({
   selector: 'app-bin-details',
-  imports: [Card, UIChart],
+  imports: [Card, UIChart, GoogleMap, MapAdvancedMarker],
   templateUrl: './bin-details.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BinDetails {
-  bin = input.required<BinDetailsDTO>();
-  private readonly chDateTimeService = inject(ChDateTimeService);
+  readonly chDateTimeService = inject(ChDateTimeService);
+  readonly bin = input.required<BinDetailsDTO>();
+  readonly binPosition = computed(() => lv95ToLatLng(this.bin().coordX, this.bin().coordY));
+
+  readonly mapOptions: google.maps.MapOptions = {
+    zoom: 17,
+    minZoom: 12,
+    mapTypeId: 'roadmap',
+    disableDefaultUI: true,
+    streetViewControl: false,
+    fullscreenControl: false,
+    mapTypeControl: false,
+    rotateControl: false,
+    cameraControl: false,
+    keyboardShortcuts: false,
+    mapId: 'BIN_DETAILS_MAP_ID',
+  };
 
   readonly fillLevelOptions: ChartOptions<'line'> = buildFillLevelOptions({
     weekInMs: WEEK_IN_MS,

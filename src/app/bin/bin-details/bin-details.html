@@ -32,4 +32,17 @@
       </div>
     </div>
   </p-card>
+
+  <p-card header="Standort" class="2xl:col-span-2">
+    <div class="h-64">
+      <google-map
+        height="100%"
+        width="100%"
+        [center]="binPosition()"
+        [options]="mapOptions">
+        <map-advanced-marker
+          [position]="binPosition()"/>
+      </google-map>
+    </div>
+  </p-card>
 </div>
