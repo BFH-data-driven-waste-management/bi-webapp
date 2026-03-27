@@ -189,7 +189,7 @@ export class ToursOverview implements OnInit, AfterViewInit {
   private createBinIcon(index: number, last: boolean): HTMLElement {
     const el = document.createElement('span');
     el.className =
-      'h-7 rounded-lg bg-gray-700 text-white text-base font-bold flex items-center justify-center leading-none px-2 min-w-7';
+      'h-7 rounded-full bg-gray-700 text-white text-base font-bold flex items-center justify-center leading-none px-2 min-w-7';
 
     if (index === 0) {
       el.textContent = 'Start';
