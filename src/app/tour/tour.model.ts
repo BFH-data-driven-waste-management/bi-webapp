@@ -10,6 +10,14 @@ export interface TourDTO {
   vehicleEmptyings: VehicleEmptyingDTO[];
 }
 
+export interface PageDTO<T> { // TODO maybe move to shared
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+}
+
 export interface BinVisitFullDTO {
   id: number;
   tourId: number;

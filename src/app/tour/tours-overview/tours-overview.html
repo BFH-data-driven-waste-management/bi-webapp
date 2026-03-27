@@ -1,9 +1,9 @@
 <div class="card">
   <p-toolbar class="mt-4 flex justify-end">
-    @if (selectedTours.length === 1) {
-      <p-button [label]="'Tour ' + selectedTours[0].id + ' anzeigen'" icon="pi pi-arrow-right" (onClick)="showTourDetails()" />
+    @if (selectedToursAcrossPages.length === 1) {
+      <p-button [label]="'Tour ' + selectedToursAcrossPages[0].id + ' anzeigen'" icon="pi pi-arrow-right" (onClick)="showTourDetails()" />
     }
-    <p-button [disabled]="selectedTours.length === 0" label="Auswahl aufheben" icon="pi pi-times" severity="secondary" (onClick)="deselectAll()" />
+    <p-button [disabled]="selectedToursAcrossPages.length === 0" label="Auswahl aufheben" icon="pi pi-times" severity="secondary" (onClick)="deselectAll()" />
     <p-button label="Export" icon="pi pi-file-export" severity="secondary" (onClick)="dt.exportCSV()" />
   </p-toolbar>
   <p-table
@@ -17,8 +17,11 @@
     dataKey="id"
     exportFilename="tours"
     paginator
-    [rows]="4"
-    [rowsPerPageOptions]="[4, 6, 8, 10]"
+    [lazy]="true"
+    (onLazyLoad)="onPageChange($event)"
+    [rows]="rows()"
+    [rowsPerPageOptions]="[4, 8, 12]"
+    [totalRecords]="totalRecords()"
     [tableStyle]="{ 'min-width': '50rem' }">
     <ng-template #header>
       <tr>
@@ -36,7 +39,7 @@
           [class]="rowClass(tour.binVisitsAmount)"
           [pSelectableRowDisabled]="tour.binVisitsAmount === 0">
         <td>{{ tour.id }}
-          @if (latestTour().id === tour.id) {
+          @if (latestTourIdFromFirstPage() === tour.id) {
             <p-chip class="ml-2 py-1 px-3 text-sm bg-red-200" label="Neueste" />
           }
         </td>

@@ -12,6 +12,6 @@ export const routes: Routes = [
   { path: 'dashboard', redirectTo: '', pathMatch: 'full' },
   { path: 'bin-map', component: BinMap, resolve: { bins: binsResolver } },
   { path: 'bin/:coordX/:coordY', component: BinDetails, resolve: { bin: binResolver } },
-  { path: 'tours-overview', component: ToursOverview, resolve: { tours: toursResolver } },
-  { path: 'tour/:id', component: TourDetails, resolve: { tour: tourResolver }},
+  { path: 'tours-overview', component: ToursOverview, resolve: { firstPage: toursResolver } },
+  { path: 'tour/:id', component: TourDetails, resolve: { tour: tourResolver } },
 ];
