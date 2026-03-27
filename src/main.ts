@@ -1,7 +1,11 @@
+import { registerLocaleData } from '@angular/common';
+import localeDeCh from '@angular/common/locales/de-CH';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { App } from './app/app';
 import { environment } from './environments/environment';
+
+registerLocaleData(localeDeCh);
 
 function loadGoogleMaps(apiKey: string): Promise<void> {
   const existingScript = document.getElementById('google-maps-script');

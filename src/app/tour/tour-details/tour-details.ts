@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { BinVisitVm, Column, FillLevel, TourDTO, TourTimelineItemVm } from '../tour.model';
 import {
   BIN_TYPE_TAG_SEVERITY,
@@ -8,7 +9,6 @@ import {
   BIN_VISIT_FILL_LEVEL_TAG_CLASSES,
 } from '../tour.presentation';
 import { Card } from 'primeng/card';
-import { ChDateTimePipe } from '../../shared/pipes/ch-date-time.pipe';
 import { ChartData } from 'chart.js';
 import { UIChart } from 'primeng/chart';
 import { buildFillLevelPieOptions } from './chart-options';
@@ -20,12 +20,13 @@ import { Button } from 'primeng/button';
 import { Toolbar } from 'primeng/toolbar';
 import { RouterLink } from '@angular/router';
 import { Tag } from 'primeng/tag';
+import { DateTimeService } from '../../shared/services/date-time.service';
 
 @Component({
   selector: 'app-tour-details',
   imports: [
     Card,
-    ChDateTimePipe,
+    DatePipe,
     UIChart,
     Timeline,
     FormsModule,
@@ -41,8 +42,7 @@ import { Tag } from 'primeng/tag';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TourDetails {
-  readonly chDateTimePipe = inject(ChDateTimePipe);
-
+  readonly dateTimeService = inject(DateTimeService);
   readonly fillLevelPieOptions = buildFillLevelPieOptions();
 
   readonly tour = input.required<TourDTO>();
@@ -179,7 +179,7 @@ export class TourDetails {
     this.tour().binVisits.map((visit) => ({
       ...visit,
       coordinatesLabel: `${visit.bin.coordX} / ${visit.bin.coordY}`,
-      eventTimestampLabel: this.chDateTimePipe.transform(visit.eventTimestamp),
+      eventTimestampLabel: this.dateTimeService.format(visit.eventTimestamp),
       fillLevelLabel: BIN_VISIT_FILL_LEVEL_LABELS[visit.fillLevel],
       fillLevelClass: BIN_VISIT_FILL_LEVEL_TAG_CLASSES[visit.fillLevel],
       visitActionLabel: BIN_VISIT_ACTION_LABELS[visit.visitAction],

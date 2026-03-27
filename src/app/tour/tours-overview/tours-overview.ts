@@ -23,8 +23,8 @@ import {
 } from '../tour.model';
 import { Chip } from 'primeng/chip';
 import { Toolbar } from 'primeng/toolbar';
-import { ChDateTimeService } from '../../shared/pipes/ch-date-time.service';
 import { lv95ToLatLng } from '../../shared/maps/coordinates';
+import { DateTimeService } from '../../shared/services/date-time.service';
 import { Router } from '@angular/router';
 import { TourService } from '../tour.service';
 
@@ -36,8 +36,8 @@ import { TourService } from '../tour.service';
 })
 export class ToursOverview implements OnInit, AfterViewInit {
   readonly router = inject(Router);
-  readonly chDateTimeService = inject(ChDateTimeService);
   readonly tourService = inject(TourService);
+  readonly dateTimeService = inject(DateTimeService);
 
   readonly columns: Column[] = [
     { field: 'id', header: 'ID' },
@@ -60,8 +60,8 @@ export class ToursOverview implements OnInit, AfterViewInit {
         ({
           ...tour,
           binVisitsAmount: tour.binVisits.length,
-          startedAtLabel: this.chDateTimeService.format(tour.startedAt),
-          endedAtLabel: this.chDateTimeService.format(tour.endedAt),
+          startedAtLabel: this.dateTimeService.format(tour.startedAt),
+          endedAtLabel: this.dateTimeService.format(tour.endedAt),
         }) as TourVm,
     ),
   );

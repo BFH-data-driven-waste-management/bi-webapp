@@ -5,10 +5,10 @@ import { BinDetailsDTO } from '../bin.model';
 import { BIN_VISIT_FILL_LEVEL_LABELS } from '../../tour/tour.presentation';
 import { FillLevel } from '../../tour/tour.model';
 import { ChartData, ChartOptions, ScriptableContext } from 'chart.js';
-import { ChDateTimeService } from '../../shared/pipes/ch-date-time.service';
 import { buildFillLevelOptions } from './chart-options';
 import { GoogleMap, MapAdvancedMarker } from '@angular/google-maps';
 import { lv95ToLatLng } from '../../shared/maps/coordinates';
+import { DateTimeService } from '../../shared/services/date-time.service';
 
 const WEEK_IN_MS = 7 * 24 * 60 * 60 * 1000; // TODO maybe outsource
 const FILL_LEVEL_BY_RANK: FillLevel[] = [
@@ -30,7 +30,7 @@ const FILL_LEVEL_RANK: Record<FillLevel, number> = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BinDetails {
-  readonly chDateTimeService = inject(ChDateTimeService);
+  readonly dateTimeService = inject(DateTimeService);
   readonly bin = input.required<BinDetailsDTO>();
   readonly binPosition = computed(() => lv95ToLatLng(this.bin().coordX, this.bin().coordY));
 
@@ -50,7 +50,7 @@ export class BinDetails {
 
   readonly fillLevelOptions: ChartOptions<'line'> = buildFillLevelOptions({
     weekInMs: WEEK_IN_MS,
-    formatDate: (timestamp) => this.chDateTimeService.format(new Date(timestamp), 'date'),
+    formatDate: (timestamp) => this.dateTimeService.format(timestamp, 'date'),
     toFillLevelLabel: (fillLevelRank) =>
       BIN_VISIT_FILL_LEVEL_LABELS[FILL_LEVEL_BY_RANK[fillLevelRank]],
   });

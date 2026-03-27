@@ -12,7 +12,7 @@
 
       <div class="flex flex-col">
         <strong>Datum</strong>
-        <span>{{ tour().startedAt | chDateTime }}</span>
+        <span>{{ tour().startedAt | date: 'EEE, dd.MM.y, HH:mm':'Europe/Zurich':'de-CH' }}</span>
       </div>
 
     </div>
@@ -36,7 +36,7 @@
           </ng-template>
 
           <ng-template #content let-event>
-            {{ event.timestamp | chDateTime: 'time' }}
+            {{ event.timestamp | date: 'HH:mm':'Europe/Zurich':'de-CH' }}
           </ng-template>
         </p-timeline>
       </div>
