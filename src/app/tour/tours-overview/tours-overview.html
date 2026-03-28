@@ -53,6 +53,12 @@
 </div>
 
 <p-toolbar class="my-4 justify-end">
+  <p-button
+    [label]="showMueve ? 'Müve ausblenden' : 'Müve anzeigen'"
+    [icon]="showMueve ? 'pi pi-eye-slash' : 'pi pi-eye'"
+    severity="secondary"
+    class="mr-2"
+    (onClick)="toggleMueve()" />
   <p-button label="Karte alignieren" icon="pi pi-map" severity="secondary" class="mr-2" [disabled]="!canBeAligned" (onClick)="alignMap()" />
 </p-toolbar>
 

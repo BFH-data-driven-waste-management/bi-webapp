@@ -75,6 +75,7 @@ export class ToursOverview implements OnInit, AfterViewInit {
   protected canBeAligned = false;
   protected markers: MapMarkerVm[] = [];
   protected tourPaths: TourPathVm[] = [];
+  protected showMueve = false;
 
   protected readonly center: google.maps.LatLngLiteral = {
     lat: 47.142471,
@@ -195,10 +196,13 @@ export class ToursOverview implements OnInit, AfterViewInit {
 
     this.selectedToursAcrossPages.forEach((tour, index) => {
       const sortedTimeline = this.getSortedTimelineItems(tour);
+      const timelineForMap = this.showMueve
+        ? sortedTimeline
+        : sortedTimeline.filter((timelineItem) => timelineItem.type === 'binVisit');
 
-      this.markers.push(...this.buildMarkersForTour(tour, sortedTimeline));
+      this.markers.push(...this.buildMarkersForTour(tour, timelineForMap));
 
-      const path = sortedTimeline.map((timelineItem) =>
+      const path = timelineForMap.map((timelineItem) =>
         timelineItem.type === 'binVisit'
           ? lv95ToLatLng(timelineItem.bin.coordX, timelineItem.bin.coordY)
           : this.muevePosition,
@@ -219,12 +223,19 @@ export class ToursOverview implements OnInit, AfterViewInit {
     });
   }
 
+  protected toggleMueve(): void {
+    this.showMueve = !this.showMueve;
+    this.rebuildMapData();
+    this.alignMap();
+  }
+
   protected alignMap(): void {
     const map = this.mapCmp().googleMap;
     if (!map) return;
 
     const totalTimelineItems = this.selectedToursAcrossPages.reduce(
-      (sum, tour) => sum + tour.binVisits.length + tour.vehicleEmptyings.length,
+      (sum, tour) =>
+        sum + tour.binVisits.length + (this.showMueve ? tour.vehicleEmptyings.length : 0),
       0,
     );
 
@@ -243,7 +254,8 @@ export class ToursOverview implements OnInit, AfterViewInit {
       }
     }
 
-    if (this.selectedToursAcrossPages.some((tour) => tour.vehicleEmptyings.length > 0)) {
+    if (this.showMueve &&
+      this.selectedToursAcrossPages.some((tour) => tour.vehicleEmptyings.length > 0)) {
       bounds.extend(this.muevePosition);
     }
 
