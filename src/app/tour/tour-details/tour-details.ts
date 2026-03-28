@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { BinVisitVm, Column, FillLevel, TourDTO, TourTimelineItemVm } from '../tour.model';
+import { BinVisitVm, Column, FillLevel, TourDTO, SimpleTourTimelineItemVm } from '../tour.model';
 import {
   BIN_TYPE_TAG_SEVERITY,
   BIN_VISIT_ACTION_LABELS,
@@ -62,10 +62,10 @@ export class TourDetails {
 
   readonly timelineWithMueve = signal(false);
 
-  readonly timeline = computed<TourTimelineItemVm[]>(() => {
+  readonly timeline = computed<SimpleTourTimelineItemVm[]>(() => {
     const tour = this.tour();
 
-    const items: TourTimelineItemVm[] = [
+    const items: SimpleTourTimelineItemVm[] = [
       {
         action: 'Tourstart',
         timestamp: tour.startedAt,

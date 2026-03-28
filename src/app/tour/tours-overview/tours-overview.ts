@@ -13,12 +13,12 @@ import { GoogleMap, MapAdvancedMarker, MapPolyline } from '@angular/google-maps'
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { Button } from 'primeng/button';
 import {
-  BinVisitFullDTO,
   Column,
   MapMarkerVm,
   PageDTO,
   TourDTO,
   TourPathVm,
+  TourTimelineItem,
   TourVm,
 } from '../tour.model';
 import { Chip } from 'primeng/chip';
@@ -35,6 +35,9 @@ import { TourService } from '../tour.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToursOverview implements OnInit, AfterViewInit {
+  private readonly markerClass = 'pi text-white rounded-full p-1 rounded';
+  private readonly muevePosition: google.maps.LatLngLiteral = { lat: 47.120678, lng: 7.257629 };
+
   readonly router = inject(Router);
   readonly tourService = inject(TourService);
   readonly dateTimeService = inject(DateTimeService);
@@ -174,7 +177,9 @@ export class ToursOverview implements OnInit, AfterViewInit {
   }
 
   private syncCurrentPageSelection(currentPageTours: TourDTO[]): void {
-    this.selectedTours = currentPageTours.filter((tour) => this.selectedTourAcrossPagesMap.has(tour.id));
+    this.selectedTours = currentPageTours.filter((tour) =>
+      this.selectedTourAcrossPagesMap.has(tour.id),
+    );
   }
 
   private setCrossPageSelection(tours: TourDTO[]): void {
@@ -189,11 +194,15 @@ export class ToursOverview implements OnInit, AfterViewInit {
     this.tourPaths = [];
 
     this.selectedToursAcrossPages.forEach((tour, index) => {
-      const sortedVisits = this.getSortedVisits(tour);
+      const sortedTimeline = this.getSortedTimelineItems(tour);
 
-      this.markers.push(...this.buildMarkersForTour(tour, sortedVisits));
+      this.markers.push(...this.buildMarkersForTour(tour, sortedTimeline));
 
-      const path = sortedVisits.map((visit) => lv95ToLatLng(visit.bin.coordX, visit.bin.coordY));
+      const path = sortedTimeline.map((timelineItem) =>
+        timelineItem.type === 'binVisit'
+          ? lv95ToLatLng(timelineItem.bin.coordX, timelineItem.bin.coordY)
+          : this.muevePosition,
+      );
 
       if (path.length > 1) {
         this.tourPaths.push({
@@ -214,12 +223,12 @@ export class ToursOverview implements OnInit, AfterViewInit {
     const map = this.mapCmp().googleMap;
     if (!map) return;
 
-    const totalBinVisits = this.selectedToursAcrossPages.reduce(
-      (sum, tour) => sum + tour.binVisits.length,
+    const totalTimelineItems = this.selectedToursAcrossPages.reduce(
+      (sum, tour) => sum + tour.binVisits.length + tour.vehicleEmptyings.length,
       0,
     );
 
-    if (totalBinVisits === 0) {
+    if (totalTimelineItems === 0) {
       map.setCenter(this.center);
       map.setZoom(this.mapOptions.zoom ?? 14);
       this.canBeAligned = false;
@@ -234,32 +243,70 @@ export class ToursOverview implements OnInit, AfterViewInit {
       }
     }
 
+    if (this.selectedToursAcrossPages.some((tour) => tour.vehicleEmptyings.length > 0)) {
+      bounds.extend(this.muevePosition);
+    }
+
     map.fitBounds(bounds, 20);
     this.canBeAligned = false;
   }
 
   /**
-   * This returns a sorted copy of the binsVisits array (in ES2023, there would be a corresponding "toSorted")
+   * This returns all timeline items (bin visits, vehicle emptyings) sorted by timestamp ascending.
    */
-  private getSortedVisits(tour: TourDTO): BinVisitFullDTO[] {
-    return [...tour.binVisits].sort(
-      (a, b) => Date.parse(a.eventTimestamp) - Date.parse(b.eventTimestamp),
+  private getSortedTimelineItems(tour: TourDTO): TourTimelineItem[] {
+    const timelineItems: TourTimelineItem[] = [
+      ...tour.binVisits.map((binVisit) => ({
+        ...binVisit,
+        type: 'binVisit' as const,
+      })),
+      ...tour.vehicleEmptyings.map((vehicleEmptying) => ({
+        ...vehicleEmptying,
+        type: 'vehicleEmptying' as const,
+      })),
+    ];
+
+    return timelineItems.sort(
+      (a, b) =>
+        Date.parse(this.getTimelineItemTimestamp(a)) - Date.parse(this.getTimelineItemTimestamp(b)),
     );
   }
 
-  private buildMarkersForTour(tour: TourDTO, visits: BinVisitFullDTO[]): MapMarkerVm[] {
-    return visits.map((visit, index) => ({
-      id: `${tour.id} - ${visit.id}`,
-      position: lv95ToLatLng(visit.bin.coordX, visit.bin.coordY),
-      title: `${visit.bin.type} - ${visit.fillLevel} - ${visit.visitAction}`,
-      content: this.createBinIcon(index, index === visits.length - 1),
-    }));
+  private buildMarkersForTour(tour: TourDTO, timelineItems: TourTimelineItem[]): MapMarkerVm[] {
+    const totalBinVisits = timelineItems.filter(
+      (timelineItem) => timelineItem.type === 'binVisit',
+    ).length;
+    let currentBinVisitIndex = 0;
+
+    return timelineItems.map((timelineItem) => {
+      if (timelineItem.type === 'vehicleEmptying') {
+        return {
+          id: `${tour.id}-vehicleEmptying-${timelineItem.id}`,
+          position: this.muevePosition,
+          title: `Müve - ${this.dateTimeService.format(timelineItem.emptyingTimestamp)}`,
+          content: this.createVehicleEmptyingIcon(),
+        };
+      }
+
+      const marker = {
+        id: `${tour.id}-binVisit-${timelineItem.id}`,
+        position: lv95ToLatLng(timelineItem.bin.coordX, timelineItem.bin.coordY),
+        title: `${timelineItem.bin.type} - ${timelineItem.fillLevel} - ${timelineItem.visitAction}`,
+        content: this.createBinIcon(
+          currentBinVisitIndex,
+          currentBinVisitIndex === totalBinVisits - 1,
+        ),
+      };
+
+      currentBinVisitIndex += 1;
+      return marker;
+    });
   }
 
   private createBinIcon(index: number, last: boolean): HTMLElement {
     const el = document.createElement('span');
     el.className =
-      'h-7 rounded-full bg-gray-700 text-white text-base font-bold flex items-center justify-center leading-none px-2 min-w-7';
+      'h-7 rounded-full bg-black text-white text-base font-bold flex items-center justify-center leading-none px-2 min-w-7';
 
     if (index === 0) {
       el.textContent = 'Start';
@@ -270,6 +317,18 @@ export class ToursOverview implements OnInit, AfterViewInit {
     }
 
     return el;
+  }
+
+  private createVehicleEmptyingIcon(): HTMLElement {
+    const el = document.createElement('span');
+    el.className = `${this.markerClass} pi-building bg-black`;
+    return el;
+  }
+
+  private getTimelineItemTimestamp(timelineItem: TourTimelineItem): string {
+    return timelineItem.type === 'binVisit'
+      ? timelineItem.eventTimestamp
+      : timelineItem.emptyingTimestamp;
   }
 
   rowClass(binVisitAmount: number) {

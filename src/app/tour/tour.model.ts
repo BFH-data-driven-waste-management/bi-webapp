@@ -34,7 +34,11 @@ export interface VehicleEmptyingDTO {
   emptyingTimestamp: string;
 }
 
-export interface TourTimelineItemVm {
+export type TourTimelineItem =
+  | (BinVisitFullDTO & { type: 'binVisit' })
+  | (VehicleEmptyingDTO & { type: 'vehicleEmptying' });
+
+export interface SimpleTourTimelineItemVm {
   action: string;
   timestamp: string;
 }
