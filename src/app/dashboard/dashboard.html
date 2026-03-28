@@ -12,4 +12,29 @@
   <p-card header="Eimertyp-Verteilung" class="rounded-lg">
     <p-chart class="relative h-64 mt-4" type="bar" [data]="barData()" [options]="barOptions" />
   </p-card>
+
+  <app-icon-value-card
+    header="Besuche (7d)"
+    value="1312"/>
+
+  <app-icon-value-card
+    header="Leerungen (7d)"
+    value="789"/>
+
+  <app-icon-value-card
+    header="Leerungsquote (7d)"
+    value="60.14%"/>
+
+  <app-icon-value-card
+    header="Anteil Besuche mit niedrigem Füllstand (90d)"
+    value="9.3%"/>
+
+  <app-icon-value-card
+    header="Anteil Leerungen mit niedrigem Füllstand (90d)"
+    value="9.3%"/>
+
+  <app-icon-value-card
+    header="Übervolle Mülleimer (30d)"
+    icon="exclamation-circle"
+    value="0"/>
 </div>
