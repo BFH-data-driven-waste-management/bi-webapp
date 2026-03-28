@@ -27,6 +27,28 @@ import { lv95ToLatLng } from '../../shared/maps/coordinates';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BinMap {
+  private readonly markerClass = 'pi text-white rounded-full p-1 rounded';
+
+  readonly mueveMarker: {
+    position: google.maps.LatLngLiteral;
+    title: string;
+    content: HTMLElement;
+  } = {
+    position: { lat: 47.120678, lng: 7.257629 },
+    title: 'MÜVE Biel-Seeland AG',
+    content: this.createBuildingIcon(),
+  };
+
+  readonly strasseninspektoratMarker: {
+    position: google.maps.LatLngLiteral;
+    title: string;
+    content: HTMLElement;
+  } = {
+    position: { lat: 47.125467, lng: 7.259864 },
+    title: 'Strasseninspektorat',
+    content: this.createBuildingIcon(),
+  };
+
   readonly bins = input.required<BinDTO[]>();
 
   readonly binMapMarkers = computed<BinMapMarkerVM[]>(() =>
@@ -41,7 +63,13 @@ export class BinMap {
 
   createBinIcon(): HTMLElement {
     const el = document.createElement('span');
-    el.className = 'pi pi-trash text-white rounded-full bg-red-500 p-1 rounded';
+    el.className = `${this.markerClass} pi-trash bg-red-500`;
+    return el;
+  }
+
+  createBuildingIcon(): HTMLElement {
+    const el = document.createElement('span');
+    el.className = `${this.markerClass} pi-building bg-black`;
     return el;
   }
 

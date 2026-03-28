@@ -13,6 +13,19 @@
       (mapClick)="openInfoWindow(markerElement, binMarker)">
     </map-advanced-marker>
   }
+
+  <map-advanced-marker
+    [zIndex]="2"
+    [content]="mueveMarker.content"
+    [position]="mueveMarker.position"
+    [title]="mueveMarker.title" />
+
+  <map-advanced-marker
+    [zIndex]="2"
+    [content]="strasseninspektoratMarker.content"
+    [position]="strasseninspektoratMarker.position"
+    [title]="strasseninspektoratMarker.title" />
+
   <map-info-window [options]="{ headerDisabled: true }">
     @if (selectedBin(); as bin) {
       <div class="relative">
