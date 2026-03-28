@@ -12,6 +12,7 @@ import {
 import { GoogleMap, MapAdvancedMarker, MapPolyline } from '@angular/google-maps';
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { Button } from 'primeng/button';
+import { FormsModule } from '@angular/forms';
 import {
   Column,
   MapMarkerVm,
@@ -23,6 +24,7 @@ import {
 } from '../tour.model';
 import { Chip } from 'primeng/chip';
 import { Toolbar } from 'primeng/toolbar';
+import { ToggleButton } from 'primeng/togglebutton';
 import { lv95ToLatLng } from '../../shared/maps/coordinates';
 import { DateTimeService } from '../../shared/services/date-time.service';
 import { Router } from '@angular/router';
@@ -30,7 +32,17 @@ import { TourService } from '../tour.service';
 
 @Component({
   selector: 'app-tours',
-  imports: [TableModule, GoogleMap, MapAdvancedMarker, MapPolyline, Button, Chip, Toolbar],
+  imports: [
+    TableModule,
+    GoogleMap,
+    MapAdvancedMarker,
+    MapPolyline,
+    Button,
+    Chip,
+    Toolbar,
+    FormsModule,
+    ToggleButton,
+  ],
   templateUrl: './tours-overview.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -223,8 +235,8 @@ export class ToursOverview implements OnInit, AfterViewInit {
     });
   }
 
-  protected toggleMueve(): void {
-    this.showMueve = !this.showMueve;
+  protected toggleMueve(showMueve: boolean): void {
+    this.showMueve = showMueve;
     this.rebuildMapData();
     this.alignMap();
   }
