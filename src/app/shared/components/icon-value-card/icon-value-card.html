@@ -1,13 +1,25 @@
 <p-card [header]="header()">
   <div class="relative h-full min-h-64">
     <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-      <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500/15">
-        <i [class]="iconClass() + ' text-3xl text-red-400'"></i>
-      </div>
+      @if (iconClass(); as iconClass) {
+        <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500/15">
+          <i [class]="iconClass + ' text-3xl text-red-400'"></i>
+        </div>
+      }
 
       <div class="text-6xl font-extrabold leading-none tracking-tight">
         {{ value() }}
       </div>
+
+      @if (secondaryValue(); as secondaryValue) {
+        <div class="mt-4 flex items-center gap-2 text-lg font-semibold">
+          @if (secondaryIconClass(); as secondaryIconClass) {
+            <i [class]="secondaryIconClass"></i>
+          }
+
+          <span>{{ secondaryValue }}</span>
+        </div>
+      }
     </div>
   </div>
 </p-card>

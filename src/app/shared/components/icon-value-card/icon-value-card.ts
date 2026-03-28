@@ -9,6 +9,8 @@ import { Card } from 'primeng/card';
 })
 export class IconValueCard {
   readonly header = input.required<string>();
-  readonly iconClass = input.required<string>();
+  readonly iconClass = input<string>();
   readonly value = input.required<string | number>();
+  readonly secondaryValue = input<string | number>();
+  readonly secondaryIconClass = input<string>();
 }
