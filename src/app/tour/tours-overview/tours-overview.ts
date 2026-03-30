@@ -48,7 +48,7 @@ import { TourService } from '../tour.service';
 })
 export class ToursOverview implements OnInit, AfterViewInit {
   private readonly markerClass = 'pi text-white rounded-full p-1 rounded';
-  private readonly muevePosition: google.maps.LatLngLiteral = { lat: 47.120678, lng: 7.257629 };
+  private readonly muevePosition: google.maps.LatLngLiteral = { lat: 47.120678, lng: 7.257629 }; // TODO move to central constants file?
 
   readonly router = inject(Router);
   readonly tourService = inject(TourService);
