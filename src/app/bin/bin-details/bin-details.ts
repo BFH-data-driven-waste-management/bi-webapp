@@ -78,10 +78,12 @@ export class BinDetails {
       datasets: [
         {
           label: 'Füllstand',
-          data: visits.map((visit) => ({
-            x: new Date(visit.eventTimestamp).getTime(),
-            y: FILL_LEVEL_RANK[visit.fillLevel] ?? 0,
-          })).slice(-30), // TODO slicing might be a temp solution
+          data: visits
+            .map((visit) => ({
+              x: new Date(visit.eventTimestamp).getTime(),
+              y: FILL_LEVEL_RANK[visit.fillLevel] ?? 0,
+            }))
+            .slice(-30), // TODO slicing might be a temp solution
           borderColor: style.getPropertyValue('--color-red-500').trim(),
           backgroundColor: (context: ScriptableContext<'line'>) =>
             this.buildGradient(context, style),
@@ -95,7 +97,15 @@ export class BinDetails {
     };
   });
 
-  // see https://angular.dev/guide/signals/resource
+  /**
+   * This is a convenience feature with relatively small overhead.
+   * We load other Google Maps stuff logically in the frontend, so fetching the location here (for each bin's details invocation) is consistent and acceptable.
+   * An alternative would be to fetch the location for each bin on bin master data import, which is immutable for the rest of the day.
+   * This, however, would include fetching data for bins that are never queried on that day.
+   *
+   * @see https://angular.dev/guide/signals/resource
+   */
+
   readonly locationResource = resource({
     params: () => {
       const position = this.binPosition();
@@ -121,15 +131,16 @@ export class BinDetails {
           return params.fallback;
         }
 
-        const route = first.address_components
-          .find((component) => component.types.includes('route'))?.long_name ?? '';
+        const route =
+          first.address_components.find((component) => component.types.includes('route'))
+            ?.long_name ?? '';
 
         const streetNumber =
-          first.address_components
-            .find((component) => component.types.includes('street_number'))?.long_name ?? '';
+          first.address_components.find((component) => component.types.includes('street_number'))
+            ?.long_name ?? '';
 
-        return route ?
-          `${route}${(streetNumber ? ` ${streetNumber}` : '')}`
+        return route
+          ? `${route}${streetNumber ? ` ${streetNumber}` : ''}`
           : first.formatted_address;
       } catch {
         return params.fallback;
