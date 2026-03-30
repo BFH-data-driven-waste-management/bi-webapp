@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  resource,
+} from '@angular/core';
 import { Card } from 'primeng/card';
 import { UIChart } from 'primeng/chart';
 import { BinDetailsDTO } from '../bin.model';
@@ -10,6 +17,9 @@ import { GoogleMap, MapAdvancedMarker } from '@angular/google-maps';
 import { lv95ToLatLng } from '../../shared/maps/coordinates';
 import { DateTimeService } from '../../shared/services/date-time.service';
 import { IconValueCard } from '../../shared/components/icon-value-card/icon-value-card';
+import { Button } from 'primeng/button';
+import { Location } from '@angular/common';
+import { Skeleton } from 'primeng/skeleton';
 
 const WEEK_IN_MS = 7 * 24 * 60 * 60 * 1000; // TODO maybe outsource
 const FILL_LEVEL_BY_RANK: FillLevel[] = [
@@ -26,11 +36,12 @@ const FILL_LEVEL_RANK: Record<FillLevel, number> = {
 };
 @Component({
   selector: 'app-bin-details',
-  imports: [Card, UIChart, GoogleMap, MapAdvancedMarker, IconValueCard],
+  imports: [Card, UIChart, GoogleMap, MapAdvancedMarker, IconValueCard, Button, Skeleton],
   templateUrl: './bin-details.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BinDetails {
+  private readonly location = inject(Location);
   readonly dateTimeService = inject(DateTimeService);
   readonly bin = input.required<BinDetailsDTO>();
   readonly binPosition = computed(() => lv95ToLatLng(this.bin().coordX, this.bin().coordY));
@@ -70,12 +81,12 @@ export class BinDetails {
           data: visits.map((visit) => ({
             x: new Date(visit.eventTimestamp).getTime(),
             y: FILL_LEVEL_RANK[visit.fillLevel] ?? 0,
-          })),
+          })).slice(-30), // TODO slicing might be a temp solution
           borderColor: style.getPropertyValue('--color-red-500').trim(),
           backgroundColor: (context: ScriptableContext<'line'>) =>
             this.buildGradient(context, style),
           borderWidth: 3,
-          tension: 0.35,
+          tension: 0, // TODO whole interpolation stuff
           fill: 'origin',
           pointRadius: 3,
           pointHoverRadius: 5,
@@ -83,6 +94,51 @@ export class BinDetails {
       ],
     };
   });
+
+  // see https://angular.dev/guide/signals/resource
+  readonly locationResource = resource({
+    params: () => {
+      const position = this.binPosition();
+      return {
+        lat: position.lat,
+        lng: position.lng,
+        fallback: `${this.bin().coordX} / ${this.bin().coordY}`,
+      };
+    },
+    loader: async ({ params }) => {
+      if (typeof google === 'undefined' || !google.maps?.Geocoder) {
+        return params.fallback;
+      }
+
+      try {
+        const geocoder = new google.maps.Geocoder();
+        const { results } = await geocoder.geocode({
+          location: { lat: params.lat, lng: params.lng },
+        });
+
+        const first = results[0];
+        if (!first) {
+          return params.fallback;
+        }
+
+        const route = first.address_components
+          .find((component) => component.types.includes('route'))?.long_name ?? '';
+
+        const streetNumber =
+          first.address_components
+            .find((component) => component.types.includes('street_number'))?.long_name ?? '';
+
+        return route ?
+          `${route}${(streetNumber ? ` ${streetNumber}` : '')}`
+          : first.formatted_address;
+      } catch {
+        return params.fallback;
+      }
+    },
+  });
+
+  readonly locationLabel = computed(() => this.locationResource.value() ?? '');
+  readonly locationLoading = computed(() => this.locationResource.isLoading());
 
   private buildGradient(
     context: ScriptableContext<'line'>,
@@ -100,5 +156,9 @@ export class BinDetails {
     gradient.addColorStop(0.7, style.getPropertyValue('--color-red-300'));
     gradient.addColorStop(1, style.getPropertyValue('--color-red-500'));
     return gradient;
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 }
