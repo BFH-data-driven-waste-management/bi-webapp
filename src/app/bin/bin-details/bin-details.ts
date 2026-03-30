@@ -102,6 +102,7 @@ export class BinDetails {
    * We load other Google Maps stuff logically in the frontend, so fetching the location here (for each bin's details invocation) is consistent and acceptable.
    * An alternative would be to fetch the location for each bin on bin master data import, which is immutable for the rest of the day.
    * This, however, would include fetching data for bins that are never queried on that day.
+   * TODO caching (bin coordinates are immutable until next bin master data import, i.e. for one day) and document: fetching location here on demand and cache for a day is fine
    *
    * @see https://angular.dev/guide/signals/resource
    */
