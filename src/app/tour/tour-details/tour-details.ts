@@ -21,7 +21,8 @@ import { Toolbar } from 'primeng/toolbar';
 import { RouterLink } from '@angular/router';
 import { Tag } from 'primeng/tag';
 import { DateTimeService } from '../../shared/services/date-time.service';
-import { IconValueCard } from '../../shared/components/icon-value-card/icon-value-card';
+import { SimpleMetricCard } from '../../shared/components/simple-metric-card/simple-metric-card';
+import { TrendMetricCard } from '../../shared/components/trend-metric-card/trend-metric-card';
 
 @Component({
   selector: 'app-tour-details',
@@ -37,7 +38,8 @@ import { IconValueCard } from '../../shared/components/icon-value-card/icon-valu
     Toolbar,
     RouterLink,
     Tag,
-    IconValueCard,
+    SimpleMetricCard,
+    TrendMetricCard,
   ],
   templateUrl: './tour-details.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

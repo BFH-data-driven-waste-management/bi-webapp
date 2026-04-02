@@ -2,15 +2,13 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { Card } from 'primeng/card';
 
 @Component({
-  selector: 'app-icon-value-card',
+  selector: 'app-simple-metric-card',
   imports: [Card],
-  templateUrl: './icon-value-card.html',
+  templateUrl: './simple-metric-card.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class IconValueCard {
+export class SimpleMetricCard {
   readonly header = input.required<string>();
-  readonly icon = input<string>();
+  readonly icon = input.required<string>();
   readonly value = input.required<string | number>();
-  readonly secondaryValue = input<string | number>();
-  readonly secondaryIcon = input<string>();
 }

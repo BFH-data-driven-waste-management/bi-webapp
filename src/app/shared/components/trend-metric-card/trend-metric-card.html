@@ -1,0 +1,12 @@
+<p-card [header]="header()" class="relative">
+  <div class="absolute inset-4 flex flex-col h-full min-h-64 items-center justify-center">
+    <div class="text-6xl font-extrabold tracking-tight">
+      {{ value() }}
+    </div>
+
+    <div class="mt-4 flex items-center gap-2 text-lg font-semibold">
+      <i [class]="'pi pi-' + secondaryIcon()"></i>
+      <span>{{ secondaryValue() }}</span>
+    </div>
+  </div>
+</p-card>

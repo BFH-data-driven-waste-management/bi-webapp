@@ -4,11 +4,12 @@ import { UIChart } from 'primeng/chart';
 import { buildBaseBarOptions } from './chart-options';
 import { ChartData, ChartOptions, ScriptableContext } from 'chart.js'; // TODO chart.js needed?
 import { BinDTO } from '../bin/bin.model';
-import { IconValueCard } from '../shared/components/icon-value-card/icon-value-card';
+import { SimpleMetricCard } from '../shared/components/simple-metric-card/simple-metric-card';
+import { TrendMetricCard } from '../shared/components/trend-metric-card/trend-metric-card';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [Card, UIChart, IconValueCard],
+  imports: [Card, UIChart, SimpleMetricCard, TrendMetricCard],
   templateUrl: './dashboard.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

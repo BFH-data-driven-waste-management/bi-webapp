@@ -61,23 +61,23 @@
     </div>
   </p-card>
 
-  <app-icon-value-card
+  <app-simple-metric-card
     header="Mülleimer besucht"
-    icon="pi pi-eye"
+    icon="eye"
     [value]="tour().binVisits.length" />
 
-  <app-icon-value-card
+  <app-simple-metric-card
     header="Mülleimer geleert"
-    icon="pi pi-trash"
+    icon="trash"
     [value]="emptyingsCount()" />
 
-  <app-icon-value-card
+  <app-trend-metric-card
     header="Anteil Mülleimer geleert"
     value="49.2%"
     secondaryValue="+3.5%"
     secondaryIcon="arrow-up-right"/>
 
-  <app-icon-value-card
+  <app-trend-metric-card
     header="Anteil Besuche mit niedrigem Füllstand"
     value="10.2%"
     secondaryValue="+3.5%"
@@ -91,9 +91,9 @@
       class="relative h-64 mt-4" />
   </p-card>
 
-  <app-icon-value-card
+  <app-simple-metric-card
     header="Übervolle Mülleimer"
-    icon="pi pi-exclamation-circle"
+    icon="exclamation-circle"
     [value]="overfullBins()" />
 </div>
 

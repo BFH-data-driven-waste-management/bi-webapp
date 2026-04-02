@@ -5,45 +5,45 @@
     [&_.p-card]:border
     [&_.p-card]:border-surface-300">
 
-  <app-icon-value-card
+  <app-simple-metric-card
     header="Aktive Eimer"
-    icon="pi pi-trash"
+    icon="trash"
     [value]="bins().length" />
   <p-card header="Eimertyp-Verteilung" class="rounded-lg">
     <p-chart class="relative h-64 mt-4" type="bar" [data]="barData()" [options]="barOptions" />
   </p-card>
 
-  <app-icon-value-card
+  <app-trend-metric-card
     header="Besuche (7d)"
     value="1312"
     secondaryIcon="arrow-up-right"
     secondaryValue=" "/><!--TODO: display value or solve displaying ivon without value -->
 
-  <app-icon-value-card
+  <app-trend-metric-card
     header="Leerungen (7d)"
     value="789"
     secondaryIcon="arrow-down-right"
     secondaryValue=" "/>
 
-  <app-icon-value-card
+  <app-trend-metric-card
     header="Leerungsquote (7d)"
     value="60.14%"
     secondaryIcon="arrow-down-right"
     secondaryValue=" "/>
 
-  <app-icon-value-card
+  <app-trend-metric-card
     header="Anteil Besuche mit niedrigem Füllstand (90d)"
     value="9.3%"
     secondaryIcon="arrow-up-right"
     secondaryValue=" "/>
 
-  <app-icon-value-card
+  <app-trend-metric-card
     header="Anteil Leerungen mit niedrigem Füllstand (90d)"
     value="6.7%"
     secondaryIcon="arrow-up-right"
     secondaryValue=" "/>
 
-  <app-icon-value-card
+  <app-simple-metric-card
     header="Übervolle Mülleimer (30d)"
     icon="exclamation-circle"
     value="0"/>

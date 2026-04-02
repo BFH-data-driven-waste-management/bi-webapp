@@ -16,7 +16,8 @@ import { buildFillLevelOptions } from './chart-options';
 import { GoogleMap, MapAdvancedMarker } from '@angular/google-maps';
 import { lv95ToLatLng } from '../../shared/maps/coordinates';
 import { DateTimeService } from '../../shared/services/date-time.service';
-import { IconValueCard } from '../../shared/components/icon-value-card/icon-value-card';
+import { SimpleMetricCard } from '../../shared/components/simple-metric-card/simple-metric-card';
+import { TrendMetricCard } from '../../shared/components/trend-metric-card/trend-metric-card';
 import { Button } from 'primeng/button';
 import { Location } from '@angular/common';
 import { Skeleton } from 'primeng/skeleton';
@@ -36,7 +37,7 @@ const FILL_LEVEL_RANK: Record<FillLevel, number> = {
 };
 @Component({
   selector: 'app-bin-details',
-  imports: [Card, UIChart, GoogleMap, MapAdvancedMarker, IconValueCard, Button, Skeleton],
+  imports: [Card, UIChart, GoogleMap, MapAdvancedMarker, SimpleMetricCard, TrendMetricCard, Button, Skeleton],
   templateUrl: './bin-details.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
