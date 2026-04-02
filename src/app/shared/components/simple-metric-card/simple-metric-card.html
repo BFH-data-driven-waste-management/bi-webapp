@@ -4,8 +4,12 @@
       <i [class]="'pi pi-' + icon() + ' text-3xl text-red-400'"></i>
     </div>
 
-    <div class="text-6xl font-extrabold tracking-tight">
-      {{ value() }}
-    </div>
+    @if (loading()) {
+      <p-skeleton width="8rem" height="3.5rem" />
+    } @else {
+      <div class="text-6xl font-extrabold tracking-tight">
+        {{ value() }}
+      </div>
+    }
   </div>
 </p-card>

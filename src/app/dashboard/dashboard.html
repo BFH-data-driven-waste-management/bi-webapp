@@ -16,32 +16,28 @@
   <app-trend-metric-card
     header="Besuche (7d)"
     value="1312"
-    secondaryIcon="arrow-up-right"
-    secondaryValue=" "/><!--TODO: display value or solve displaying ivon without value -->
+    [trendValue]="0"/>
 
   <app-trend-metric-card
     header="Leerungen (7d)"
     value="789"
-    secondaryIcon="arrow-down-right"
-    secondaryValue=" "/>
+    [loading]="true"
+    [trendValue]="0"/>
 
   <app-trend-metric-card
     header="Leerungsquote (7d)"
     value="60.14%"
-    secondaryIcon="arrow-down-right"
-    secondaryValue=" "/>
+    [trendValue]="0"/>
 
   <app-trend-metric-card
     header="Anteil Besuche mit niedrigem Füllstand (90d)"
     value="9.3%"
-    secondaryIcon="arrow-up-right"
-    secondaryValue=" "/>
+    [trendValue]="0"/>
 
   <app-trend-metric-card
     header="Anteil Leerungen mit niedrigem Füllstand (90d)"
     value="6.7%"
-    secondaryIcon="arrow-up-right"
-    secondaryValue=" "/>
+    [trendValue]="0"/>
 
   <app-simple-metric-card
     header="Übervolle Mülleimer (30d)"
