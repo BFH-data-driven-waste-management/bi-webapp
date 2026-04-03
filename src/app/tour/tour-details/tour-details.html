@@ -73,13 +73,15 @@
 
   <app-trend-metric-card
     header="Anteil Mülleimer geleert"
-    value="49.2%"
-    [trendValue]="3.5"/>
+    [value]="0.492"
+    [percent]="true"
+    [trendValue]="0.035"/>
 
   <app-trend-metric-card
     header="Anteil Besuche mit niedrigem Füllstand"
-    value="10.2%"
-    [trendValue]="3.5"/>
+    [value]="0.102"
+    [percent]="true"
+    [trendValue]="0.035"/>
 
   <p-card header="Füllstandverteilung" class="rounded-lg">
     <p-chart

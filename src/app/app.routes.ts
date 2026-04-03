@@ -8,7 +8,7 @@ import { TourDetails } from './tour/tour-details/tour-details';
 import { binResolver, binsResolver } from './bin/bin.resolver';
 
 export const routes: Routes = [
-  { path: '', component: Dashboard, resolve: { bins: binsResolver } },
+  { path: '', component: Dashboard },
   { path: 'dashboard', redirectTo: '', pathMatch: 'full' },
   { path: 'bin-map', component: BinMap, resolve: { bins: binsResolver } },
   { path: 'bin/:coordX/:coordY', component: BinDetails, resolve: { bin: binResolver } },

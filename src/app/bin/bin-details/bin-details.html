@@ -71,36 +71,38 @@
 
   <app-trend-metric-card
     header="⌀ wöchentliche Besuche (letzte 90 Tage)"
-    value="3,14"
-    [trendValue]="3.2"/>
+    [value]="3.14"
+    [trendValue]="0.032"/>
 
   <app-trend-metric-card
     header="⌀ wöchentliche Leerungen (letzte 90 Tage)"
-    value="1,23"
-    [trendValue]="2.7"/>
+    [value]="1.23"
+    [trendValue]="0.027"/>
 
   <app-simple-metric-card
     header="Rang nach Leerungen (letzte 90 Tage)"
     icon="list"
-    value="2" />
+    [value]="2" />
 
   <app-simple-metric-card
     header="Wetter Sensitivität"
     icon="sun"
-    value="0,77" />
+    [value]="0.77" />
 
   <app-simple-metric-card
     header="Event Sensitivtät"
     icon="calendar"
-    value="0,23" />
+    [value]="0.23" />
 
   <app-simple-metric-card
     header="Anteil Besuche mit niedrigem Füllstand (90d)"
     icon="sort-down-fill"
-    value="18,7%"/>
+    [value]="0.187"
+    [percent]="true"/>
 
   <app-simple-metric-card
     header="Anteil Nichtleerungen"
     icon="sort-up-fill"
-    value="30%"/>
+    [value]="0.3"
+    [percent]="true"/>
 </div>

@@ -1,41 +1,46 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Card } from 'primeng/card';
 import { UIChart } from 'primeng/chart';
+import { Skeleton } from 'primeng/skeleton';
 import { buildBaseBarOptions } from './chart-options';
-import { ChartData, ChartOptions, ScriptableContext } from 'chart.js'; // TODO chart.js needed?
-import { BinDTO } from '../bin/bin.model';
+import { ChartData, ChartOptions, ScriptableContext } from 'chart.js';
+import { DashboardResponseDTO } from './dashboard.model';
 import { SimpleMetricCard } from '../shared/components/simple-metric-card/simple-metric-card';
 import { TrendMetricCard } from '../shared/components/trend-metric-card/trend-metric-card';
+import { DashboardService } from './dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [Card, UIChart, SimpleMetricCard, TrendMetricCard],
+  imports: [Card, UIChart, Skeleton, SimpleMetricCard, TrendMetricCard],
   templateUrl: './dashboard.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Dashboard {
-  bins = input.required<BinDTO[]>();
+export class Dashboard implements OnInit {
+  private readonly dashboardService = inject(DashboardService);
+
+  readonly loading = signal(true);
+  readonly dashboardData = signal<DashboardResponseDTO | null>(null);
 
   readonly barOptions: ChartOptions<'bar'> = buildBaseBarOptions();
 
   readonly barData = computed<ChartData<'bar'>>(() => {
-    const counts: Record<string, number> = {};
-
-    for (const bin of this.bins()) {
-      if (bin.type === 'TEST_BIN') {
-        continue;
-      }
-      const type = bin.type?.trim() || 'Unknown';
-      counts[type] = (counts[type] ?? 0) + 1;
+    const dashboard = this.dashboardData();
+    if (!dashboard) {
+      return {
+        labels: [],
+        datasets: [{ data: [] }],
+      };
     }
 
-    const entries = Object.entries(counts).sort(([a], [b]) => a.localeCompare(b));
+    const entries = [...dashboard.installedBins.countOfBinType]
+      .filter((entry) => entry.type !== 'TEST_BIN')
+      .sort((a, b) => a.type.localeCompare(b.type));
 
     return {
-      labels: entries.map(([type]) => type),
+      labels: entries.map((entry) => entry.type),
       datasets: [
         {
-          data: entries.map(([, count]) => count),
+          data: entries.map((entry) => entry.count),
           borderRadius: {
             topLeft: 8,
             topRight: 8,
@@ -65,4 +70,16 @@ export class Dashboard {
       ],
     };
   });
+
+  ngOnInit(): void {
+    this.dashboardService.getDashboard().subscribe({
+      next: (dashboardResponse) => {
+        this.dashboardData.set(dashboardResponse);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+      },
+    });
+  }
 }

@@ -6,41 +6,57 @@
     [&_.p-card]:border-surface-300">
 
   <app-simple-metric-card
-    header="Aktive Eimer"
+    header="Installierte Eimer"
     icon="trash"
-    [value]="bins().length" />
+    [loading]="loading()"
+    [value]="dashboardData()?.installedBins?.total" />
+
   <p-card header="Eimertyp-Verteilung" class="rounded-lg">
-    <p-chart class="relative h-64 mt-4" type="bar" [data]="barData()" [options]="barOptions" />
+    @if (loading()) {
+      <div class="px-4 pt-4">
+        <p-skeleton width="100%" height="16rem" />
+      </div>
+    } @else {
+      <p-chart class="relative h-64 mt-4" type="bar" [data]="barData()" [options]="barOptions" />
+    }
   </p-card>
 
   <app-trend-metric-card
     header="Besuche (7d)"
-    value="1312"
-    [trendValue]="0"/>
+    [loading]="loading()"
+    [value]="dashboardData()?.visits7d?.value"
+    [trendValue]="dashboardData()?.visits7d?.deltaRelative ?? 0"/>
 
   <app-trend-metric-card
     header="Leerungen (7d)"
-    value="789"
-    [loading]="true"
-    [trendValue]="0"/>
+    [loading]="loading()"
+    [value]="dashboardData()?.emptyings7d?.value"
+    [trendValue]="dashboardData()?.emptyings7d?.deltaRelative ?? 0"/>
 
   <app-trend-metric-card
     header="Leerungsquote (7d)"
-    value="60.14%"
-    [trendValue]="0"/>
+    [loading]="loading()"
+    [value]="dashboardData()?.emptyingRate7d?.value"
+    [percent]="true"
+    [trendValue]="dashboardData()?.emptyingRate7d?.deltaRelative ?? 0"/>
 
   <app-trend-metric-card
     header="Anteil Besuche mit niedrigem Füllstand (90d)"
-    value="9.3%"
-    [trendValue]="0"/>
+    [loading]="loading()"
+    [value]="dashboardData()?.lowFillVisitShare90d?.value"
+    [percent]="true"
+    [trendValue]="dashboardData()?.lowFillVisitShare90d?.deltaRelative ?? 0"/>
 
   <app-trend-metric-card
     header="Anteil Leerungen mit niedrigem Füllstand (90d)"
-    value="6.7%"
-    [trendValue]="0"/>
+    [loading]="loading()"
+    [value]="dashboardData()?.lowFillEmptyingShare90d?.value"
+    [percent]="true"
+    [trendValue]="dashboardData()?.lowFillEmptyingShare90d?.deltaRelative ?? 0"/>
 
   <app-simple-metric-card
     header="Übervolle Mülleimer (30d)"
     icon="exclamation-circle"
-    value="0"/>
+    [loading]="loading()"
+    [value]="dashboardData()?.overfullEvents30d?.value"/>
 </div>

@@ -8,7 +8,13 @@
       <p-skeleton width="8rem" height="3.5rem" />
     } @else {
       <div class="text-6xl font-extrabold tracking-tight">
-        {{ value() }}
+        @if (value() != null) {
+          @if (percent()) {
+            {{ value() | percent: '1.0-2' : 'de-CH' }}
+          } @else {
+            {{ value() | number: '1.0-2' : 'de-CH' }}
+          }
+        }
       </div>
     }
   </div>
