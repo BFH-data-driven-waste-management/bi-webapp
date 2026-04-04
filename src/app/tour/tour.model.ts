@@ -1,41 +1,40 @@
-import { BinDTO } from '../bin/bin.model';
-
 export interface TourDTO {
   id: number;
-  vehicleId: number;
   licensePlate: string; // TODO this name is semantically wrong
+  vehicleEmptyingCount: number | null;
   startedAt: string;
   endedAt: string | null;
-  binVisits: BinVisitFullDTO[];
+  binVisits: BinVisitDTO[];
   vehicleEmptyings: VehicleEmptyingDTO[];
 }
 
 export interface PageDTO<T> { // TODO maybe move to shared
   content: T[];
+  page: number;
+  size: number;
   totalElements: number;
   totalPages: number;
-  size: number;
-  number: number;
 }
 
-export interface BinVisitFullDTO {
+export interface BinVisitDTO {
   id: number;
-  tourId: number;
-  clientEventId: string;
-  bin: BinDTO;
+  sequenceInTour: number;
   eventTimestamp: string;
   fillLevel: FillLevel;
   visitAction: VisitAction;
+  binCoordX: number;
+  binCoordY: number;
+  binType: string;
 }
 
 export interface VehicleEmptyingDTO {
   id: number;
-  tourId: number;
-  emptyingTimestamp: string;
+  sequenceInTour: number;
+  eventTimestamp: string;
 }
 
 export type TourTimelineItem =
-  | (BinVisitFullDTO & { type: 'binVisit' })
+  | (BinVisitDTO & { type: 'binVisit' })
   | (VehicleEmptyingDTO & { type: 'vehicleEmptying' });
 
 export interface SimpleTourTimelineItemVm {
@@ -55,9 +54,10 @@ export enum VisitAction {
   NOT_EMPTIED = 'NOT_EMPTIED',
 }
 
-export interface BinVisitVm extends BinVisitFullDTO {
+export interface BinVisitVm extends BinVisitDTO {
   coordinatesLabel: string;
   eventTimestampLabel: string;
+  binTypeLabel: string;
   fillLevelLabel: string;
   fillLevelClass: string;
   visitActionLabel: string;

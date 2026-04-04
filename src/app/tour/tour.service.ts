@@ -8,7 +8,7 @@ import { PageDTO, TourDTO } from './tour.model';
 })
 export class TourService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:8080/api/tours';
+  private readonly apiUrl = 'http://localhost:8081/api/tours';
 
   getTours(page = 0, size = 4): Observable<PageDTO<TourDTO>> {
     return this.http.get<PageDTO<TourDTO>>(this.apiUrl, {

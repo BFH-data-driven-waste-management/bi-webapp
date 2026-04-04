@@ -4,7 +4,6 @@ import {
   Component,
   computed,
   inject,
-  input,
   OnInit,
   signal,
   viewChild,
@@ -13,19 +12,10 @@ import { GoogleMap, MapAdvancedMarker, MapPolyline } from '@angular/google-maps'
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { Button } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
-import {
-  Column,
-  MapMarkerVm,
-  PageDTO,
-  TourDTO,
-  TourPathVm,
-  TourTimelineItem,
-  TourVm,
-} from '../tour.model';
+import { Column, MapMarkerVm, TourDTO, TourPathVm, TourTimelineItem, TourVm } from '../tour.model';
 import { Chip } from 'primeng/chip';
 import { Toolbar } from 'primeng/toolbar';
 import { ToggleButton } from 'primeng/togglebutton';
-import { lv95ToLatLng } from '../../shared/maps/coordinates';
 import { DateTimeService } from '../../shared/services/date-time.service';
 import { Router } from '@angular/router';
 import { TourService } from '../tour.service';
@@ -64,7 +54,6 @@ export class ToursOverview implements OnInit, AfterViewInit {
 
   readonly mapCmp = viewChild.required(GoogleMap);
 
-  readonly firstPage = input.required<PageDTO<TourDTO>>();
   readonly tours = signal<TourDTO[]>([]);
   readonly totalRecords = signal(0);
   readonly rows = signal(4);
@@ -121,15 +110,21 @@ export class ToursOverview implements OnInit, AfterViewInit {
     '#6366f1',
   ];
 
+  // TODO maybe centralize
+  private toLatLng(coordX: number, coordY: number): google.maps.LatLngLiteral {
+    return { lat: coordX, lng: coordY };
+  }
+
   ngOnInit(): void {
-    const initialPage = this.firstPage();
-    this.tours.set(initialPage.content);
-    this.totalRecords.set(initialPage.totalElements);
-    this.rows.set(initialPage.size);
-    this.latestTourIdFromFirstPage.set(initialPage.content[0]?.id ?? null);
-    this.setCrossPageSelection(this.getDefaultSelection(initialPage.content, initialPage.number));
-    this.syncCurrentPageSelection(initialPage.content);
-    this.rebuildMapData();
+    this.tourService.getTours().subscribe((initialPage) => {
+      this.tours.set(initialPage.content);
+      this.totalRecords.set(initialPage.totalElements);
+      this.rows.set(initialPage.size);
+      this.latestTourIdFromFirstPage.set(initialPage.content[0]?.id ?? null);
+      this.setCrossPageSelection(this.getDefaultSelection(initialPage.content, initialPage.page));
+      this.syncCurrentPageSelection(initialPage.content);
+      this.rebuildMapData();
+    });
   }
 
   ngAfterViewInit(): void {
@@ -157,7 +152,7 @@ export class ToursOverview implements OnInit, AfterViewInit {
       this.totalRecords.set(pageResult.totalElements);
       this.rows.set(pageResult.size);
       if (this.selectedTourAcrossPagesMap.size === 0) {
-        this.setCrossPageSelection(this.getDefaultSelection(pageResult.content, pageResult.number));
+        this.setCrossPageSelection(this.getDefaultSelection(pageResult.content, pageResult.page));
       }
       this.syncCurrentPageSelection(pageResult.content);
       this.rebuildMapData();
@@ -216,7 +211,7 @@ export class ToursOverview implements OnInit, AfterViewInit {
 
       const path = timelineForMap.map((timelineItem) =>
         timelineItem.type === 'binVisit'
-          ? lv95ToLatLng(timelineItem.bin.coordX, timelineItem.bin.coordY)
+          ? this.toLatLng(timelineItem.binCoordX, timelineItem.binCoordY)
           : this.muevePosition,
       );
 
@@ -262,7 +257,7 @@ export class ToursOverview implements OnInit, AfterViewInit {
 
     for (const tour of this.selectedToursAcrossPages) {
       for (const visit of tour.binVisits) {
-        bounds.extend(lv95ToLatLng(visit.bin.coordX, visit.bin.coordY));
+        bounds.extend(this.toLatLng(visit.binCoordX, visit.binCoordY));
       }
     }
 
@@ -307,15 +302,15 @@ export class ToursOverview implements OnInit, AfterViewInit {
         return {
           id: `${tour.id}-vehicleEmptying-${timelineItem.id}`,
           position: this.muevePosition,
-          title: `Müve - ${this.dateTimeService.format(timelineItem.emptyingTimestamp)}`,
+          title: `Müve - ${this.dateTimeService.format(timelineItem.eventTimestamp)}`,
           content: this.createVehicleEmptyingIcon(),
         };
       }
 
       const marker = {
         id: `${tour.id}-binVisit-${timelineItem.id}`,
-        position: lv95ToLatLng(timelineItem.bin.coordX, timelineItem.bin.coordY),
-        title: `${timelineItem.bin.type} - ${timelineItem.fillLevel} - ${timelineItem.visitAction}`,
+        position: this.toLatLng(timelineItem.binCoordX, timelineItem.binCoordY),
+        title: `${timelineItem.binType} - ${timelineItem.fillLevel} - ${timelineItem.visitAction}`,
         content: this.createBinIcon(
           currentBinVisitIndex,
           currentBinVisitIndex === totalBinVisits - 1,
@@ -352,7 +347,7 @@ export class ToursOverview implements OnInit, AfterViewInit {
   private getTimelineItemTimestamp(timelineItem: TourTimelineItem): string {
     return timelineItem.type === 'binVisit'
       ? timelineItem.eventTimestamp
-      : timelineItem.emptyingTimestamp;
+      : timelineItem.eventTimestamp;
   }
 
   rowClass(binVisitAmount: number) {
