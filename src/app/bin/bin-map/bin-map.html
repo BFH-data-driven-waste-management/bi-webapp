@@ -4,7 +4,7 @@
   [center]="center"
   [options]="mapOptions"
   (mapClick)="closeInfoWindow()">
-  @for (binMarker of binMapMarkers(); track binMarker.coordX + '-' + binMarker.coordY) {
+  @for (binMarker of binMapMarkers(); track binMarker.binId) {
     <map-advanced-marker
       #markerElement="mapAdvancedMarker"
       [content]="binMarker.content"
@@ -45,14 +45,14 @@
           </div>
 
           <div class="text-sm mt-3">
-            <div><strong>X:</strong> {{ bin.coordX }}</div>
-            <div><strong>Y:</strong> {{ bin.coordY }}</div>
+            <div><strong>X:</strong> {{ bin.coordX2056 }}</div>
+            <div><strong>Y:</strong> {{ bin.coordY2056 }}</div>
             <div><strong>Lat:</strong> {{ bin.position.lat }}</div>
             <div><strong>Lng:</strong> {{ bin.position.lng }}</div>
           </div>
 
           <a class="mt-2"
-             [routerLink]="['/bin', bin.coordX, bin.coordY]"
+             [routerLink]="['/bin', bin.coordX2056, bin.coordY2056]"
              pButton
              severity="secondary">
             <span pButtonLabel>Details</span>

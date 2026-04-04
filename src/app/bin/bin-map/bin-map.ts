@@ -2,15 +2,16 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  input,
+  inject,
   signal,
   viewChild,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { GoogleMap, MapAdvancedMarker, MapInfoWindow } from '@angular/google-maps';
 import { Button, ButtonDirective, ButtonLabel } from 'primeng/button';
 import { RouterLink } from '@angular/router';
-import { BinDTO, BinMapMarkerVM } from '../bin.model';
-import { lv95ToLatLng } from '../../shared/maps/coordinates';
+import { BinMapMarkerVM } from '../bin.model';
+import { BinService } from '../bin.service';
 
 @Component({
   selector: 'app-bin-map',
@@ -27,6 +28,7 @@ import { lv95ToLatLng } from '../../shared/maps/coordinates';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BinMap {
+  private readonly binService = inject(BinService);
   private readonly markerClass = 'pi text-white rounded-full p-1 rounded';
 
   readonly mueveMarker: {
@@ -49,12 +51,12 @@ export class BinMap {
     content: this.createBuildingIcon(),
   };
 
-  readonly bins = input.required<BinDTO[]>();
+  readonly bins = toSignal(this.binService.getBins(), { initialValue: [] });
 
   readonly binMapMarkers = computed<BinMapMarkerVM[]>(() =>
     this.bins().map((bin) => ({
       ...bin,
-      position: lv95ToLatLng(bin.coordX, bin.coordY),
+      position: { lat: bin.coordX4326, lng: bin.coordY4326 },
       content: this.createBinIcon(),
     })),
   );
