@@ -135,10 +135,14 @@
       <tr>
         <td>{{ visit.id }}</td>
         <td>
-          <a [routerLink]="['/bin', visit.bin.coordX, visit.bin.coordY]"
-            class="text-red-500 hover:text-red-400 underline underline-offset-2">
-            {{ visit.coordinatesLabel }}
-          </a>
+          @if (visit.bin.binId) { <!-- FIXME this does not work yet... binvisits has no bin id right now -->
+            <a [routerLink]="['/bin', visit.bin.binId]"
+              class="text-red-500 hover:text-red-400 underline underline-offset-2">
+              {{ visit.coordinatesLabel }}
+            </a>
+          } @else {
+            <span>{{ visit.coordinatesLabel }}</span>
+          }
         </td>
         <td>{{ visit.eventTimestampLabel }}</td>
         <td><p-tag [value]="visit.bin.type" [severity]="BIN_TYPE_TAG_SEVERITY" /></td> <!-- TODO maybe there is a better solution to display-->

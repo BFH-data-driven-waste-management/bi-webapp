@@ -1,48 +1,19 @@
 import { ChartOptions } from 'chart.js';
 
-type FillLevelOptionsArgs = {
-  weekInMs: number;
-  formatDate: (timestamp: number) => string;
-  toFillLevelLabel: (fillLevelRank: number) => string;
+type FillTrendOptionsArgs = {
+  toFillLevelLabel: (fillLevelScore: number) => string;
 };
 
-export function buildFillLevelOptions({
-  weekInMs,
-  formatDate,
+export function buildFillTrendOptions({
   toFillLevelLabel,
-}: FillLevelOptionsArgs): ChartOptions<'line'> {
+}: FillTrendOptionsArgs): ChartOptions<'line'> {
   const style = getComputedStyle(document.documentElement);
-  const gray = style.getPropertyValue('--color-gray-600').trim();
   const bg = style.getPropertyValue('--p-content-background').trim();
+  const gray = style.getPropertyValue('--color-gray-600').trim();
 
   return {
+    responsive: true,
     maintainAspectRatio: false,
-    scales: {
-      y: {
-        min: 0,
-        max: 3,
-        ticks: {
-          stepSize: 1,
-          color: gray,
-          callback: (value) => toFillLevelLabel(value as number),
-        },
-        grid: {
-          color: style.getPropertyValue('--p-content-border-color').trim(),
-        },
-      },
-      x: {
-        type: 'linear',
-        ticks: {
-          color: gray,
-          autoSkip: true,
-          stepSize: weekInMs,
-          callback: (value) => formatDate(value as number),
-        },
-        grid: {
-          color: style.getPropertyValue('--p-content-border-color').trim(),
-        },
-      },
-    },
     plugins: {
       legend: {
         display: false,
@@ -57,8 +28,34 @@ export function buildFillLevelOptions({
         padding: 12,
         displayColors: false,
         callbacks: {
-          title: (contexts) => formatDate((contexts[0].parsed.x as number)),
           label: (context) => toFillLevelLabel(context.parsed.y as number),
+        },
+      },
+    },
+    scales: {
+      x: {
+        border: {
+          display: false,
+        },
+        grid: {
+          display: false,
+        },
+        ticks: {
+          color: gray,
+          maxRotation: 0,
+          minRotation: 0,
+        },
+      },
+      y: {
+        min: 0,
+        max: 1,
+        border: {
+          display: false,
+        },
+        ticks: {
+          stepSize: 1 / 3,
+          color: gray,
+          callback: (value) => toFillLevelLabel(value as number),
         },
       },
     },

@@ -3,49 +3,53 @@ import {
   Component,
   computed,
   inject,
-  input,
+  OnInit,
   resource,
+  signal,
 } from '@angular/core';
 import { Card } from 'primeng/card';
 import { UIChart } from 'primeng/chart';
-import { BinDetailsDTO } from '../bin.model';
-import { BIN_VISIT_FILL_LEVEL_LABELS } from '../../tour/tour.presentation';
-import { FillLevel } from '../../tour/tour.model';
+import { BinDetailsResponseDTO } from '../bin.model';
 import { ChartData, ChartOptions, ScriptableContext } from 'chart.js';
-import { buildFillLevelOptions } from './chart-options';
 import { GoogleMap, MapAdvancedMarker } from '@angular/google-maps';
-import { lv95ToLatLng } from '../../shared/maps/coordinates';
-import { DateTimeService } from '../../shared/services/date-time.service';
 import { SimpleMetricCard } from '../../shared/components/simple-metric-card/simple-metric-card';
 import { TrendMetricCard } from '../../shared/components/trend-metric-card/trend-metric-card';
 import { Button } from 'primeng/button';
 import { Location } from '@angular/common';
 import { Skeleton } from 'primeng/skeleton';
+import { BinService } from '../bin.service';
+import { ActivatedRoute } from '@angular/router';
+import { buildFillTrendOptions } from './chart-options';
 
-const WEEK_IN_MS = 7 * 24 * 60 * 60 * 1000; // TODO maybe outsource
-const FILL_LEVEL_BY_RANK: FillLevel[] = [
-  FillLevel.EMPTY_OR_ALMOST_EMPTY,
-  FillLevel.HALF_FULL,
-  FillLevel.FULL,
-  FillLevel.OVERFULL,
-];
-const FILL_LEVEL_RANK: Record<FillLevel, number> = {
-  [FillLevel.EMPTY_OR_ALMOST_EMPTY]: 0,
-  [FillLevel.HALF_FULL]: 1,
-  [FillLevel.FULL]: 2,
-  [FillLevel.OVERFULL]: 3,
-};
 @Component({
   selector: 'app-bin-details',
-  imports: [Card, UIChart, GoogleMap, MapAdvancedMarker, SimpleMetricCard, TrendMetricCard, Button, Skeleton],
+  imports: [
+    Card,
+    UIChart,
+    GoogleMap,
+    MapAdvancedMarker,
+    SimpleMetricCard,
+    TrendMetricCard,
+    Button,
+    Skeleton,
+  ],
   templateUrl: './bin-details.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BinDetails {
+export class BinDetails implements OnInit {
   private readonly location = inject(Location);
-  readonly dateTimeService = inject(DateTimeService);
-  readonly bin = input.required<BinDetailsDTO>();
-  readonly binPosition = computed(() => lv95ToLatLng(this.bin().coordX, this.bin().coordY));
+  private readonly binService = inject(BinService);
+  private readonly route = inject(ActivatedRoute);
+
+  readonly loading = signal(true);
+  readonly bin = signal<BinDetailsResponseDTO | null>(null);
+  readonly binPosition = computed(() => {
+    const bin = this.bin();
+    if (!bin) {
+      return { lat: 47.142471, lng: 7.259719 }; // TODO this is the center, maybe put to constants file
+    }
+    return { lat: bin.coordX4326, lng: bin.coordY4326 };
+  });
 
   readonly mapOptions: google.maps.MapOptions = {
     zoom: 17,
@@ -61,38 +65,33 @@ export class BinDetails {
     mapId: 'BIN_DETAILS_MAP_ID',
   };
 
-  readonly fillLevelOptions: ChartOptions<'line'> = buildFillLevelOptions({
-    weekInMs: WEEK_IN_MS,
-    formatDate: (timestamp) => this.dateTimeService.format(timestamp, 'date'),
-    toFillLevelLabel: (fillLevelRank) =>
-      BIN_VISIT_FILL_LEVEL_LABELS[FILL_LEVEL_BY_RANK[fillLevelRank]],
+  readonly fillLevelOptions: ChartOptions<'line'> = buildFillTrendOptions({
+    toFillLevelLabel: (value) => this.toFillLevelLabel(value),
   });
 
   readonly fillLevelData = computed<ChartData<'line'>>(() => {
-    const visits = [...(this.bin().visits ?? [])].sort(
-      (a, b) => new Date(a.eventTimestamp).getTime() - new Date(b.eventTimestamp).getTime(),
-    );
+    const bin = this.bin();
+    if (!bin) {
+      return { labels: [], datasets: [{ data: [] }] };
+    }
 
     const style = getComputedStyle(document.documentElement);
+    const trend = [...(bin.fillTrend12m ?? [])]
+      .sort((a, b) => a.dateKey - b.dateKey); // TODO is sorting needed?
 
     return {
+      labels: trend.map((entry) => this.formatDateKey(entry.dateKey)),
       datasets: [
         {
-          label: 'Füllstand',
-          data: visits
-            .map((visit) => ({
-              x: new Date(visit.eventTimestamp).getTime(),
-              y: FILL_LEVEL_RANK[visit.fillLevel] ?? 0,
-            }))
-            .slice(-30), // TODO slicing might be a temp solution
+          label: 'Fülltrend (12 Monate)',
+          data: trend.map((entry) => Number(entry.count)),
           borderColor: style.getPropertyValue('--color-red-500').trim(),
           backgroundColor: (context: ScriptableContext<'line'>) =>
             this.buildGradient(context, style),
-          borderWidth: 3,
-          tension: 0, // TODO whole interpolation stuff
-          fill: 'origin',
-          pointRadius: 3,
-          pointHoverRadius: 5,
+          fill: true,
+          tension: 0.35,
+          pointRadius: 2,
+          pointHoverRadius: 4,
         },
       ],
     };
@@ -110,11 +109,12 @@ export class BinDetails {
 
   readonly locationResource = resource({
     params: () => {
+      const bin = this.bin();
       const position = this.binPosition();
       return {
         lat: position.lat,
         lng: position.lng,
-        fallback: `${this.bin().coordX} / ${this.bin().coordY}`,
+        fallback: bin ? `${bin.coordX2056} / ${bin.coordY2056}` : '',
       };
     },
     loader: async ({ params }) => {
@@ -152,6 +152,47 @@ export class BinDetails {
 
   readonly locationLabel = computed(() => this.locationResource.value() ?? '');
   readonly locationLoading = computed(() => this.locationResource.isLoading());
+
+  // TODO this is a bit of a hack... verify
+  private toFillLevelLabel(fillLevelScore: number): string {
+    if (fillLevelScore <= 0.25) {
+      return 'Leer oder fast leer';
+    }
+    if (fillLevelScore <= 0.5) {
+      return 'Halbvoll';
+    }
+    if (fillLevelScore <= 0.75) {
+      return 'Voll';
+    }
+    return 'Übervoll';
+  }
+
+  // TODO centralize if reused?
+  private formatDateKey(dateKey: number): string {
+    const value = String(dateKey);
+    if (value.length !== 8) {
+      return value;
+    }
+    return `${value.slice(4, 6)}.${value.slice(0, 4)}`;
+  }
+
+  ngOnInit(): void {
+    const binId = Number(this.route.snapshot.paramMap.get('id'));
+    if (!Number.isFinite(binId)) {
+      this.loading.set(false);
+      return;
+    }
+
+    this.binService.getBinDetailsById(binId).subscribe({
+      next: (binDetailsResponse) => {
+        this.bin.set(binDetailsResponse);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+      },
+    });
+  }
 
   private buildGradient(
     context: ScriptableContext<'line'>,

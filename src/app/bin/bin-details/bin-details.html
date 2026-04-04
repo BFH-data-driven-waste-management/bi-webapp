@@ -1,7 +1,7 @@
 <div class="mb-6 flex items-end justify-between gap-6"> <!-- TODO maybe outsource to dedicated header component -->
   <div class="flex items-end gap-4">
     <h2 class="text-7xl font-extrabold tracking-tight text-gray-600">Behälter</h2>
-    @if (locationLoading()) {
+    @if (loading() || locationLoading()) {
       <p-skeleton width="14rem" height="2rem" />
     } @else {
       <p class="text-2xl font-black tracking-tight text-gray-500">{{ locationLabel() }}</p>
@@ -21,88 +21,109 @@
     [&_.p-card]:border
     [&_.p-card]:border-surface-300">
 
-  <p-card header="Füllstände" class="col-span-full">
-    <p-chart
-      type="line"
-      [data]="fillLevelData()"
-      [options]="fillLevelOptions"
-      class="h-64 mt-2" />
+  <p-card header="Füllstand-Trend" class="col-span-full">
+    @if (loading()) {
+      <p-skeleton height="16rem"/>
+    } @else {
+      <p-chart
+        type="line"
+        [data]="fillLevelData()"
+        [options]="fillLevelOptions"
+        class="h-64 mt-2" />
+    }
   </p-card>
 
   <p-card>
-    <div class="flex flex-col gap-3">
-      <div class="flex flex-col">
-        <strong>Typ</strong>
-        <span>{{ bin().type }}</span>
+    @if (loading()) {
+      <div class="flex flex-col gap-3">
+        <p-skeleton width="10rem" height="1.5rem" /> <!-- TODO mabe show skeleton below labels -->
+        <p-skeleton width="14rem" height="1.5rem" />
+        <p-skeleton width="12rem" height="1.5rem" />
       </div>
+    } @else {
+      <div class="flex flex-col gap-3">
+        <div class="flex flex-col">
+          <strong>Typ</strong>
+          <span>{{ bin()?.binType }}</span>
+        </div>
 
-      <div class="flex flex-col">
-        <strong>Koordinaten</strong>
+        <div class="flex flex-col">
+          <strong>Koordinaten</strong>
 
-        <div class="flex gap-3">
-          <div>
-            <strong>X:</strong><span class="ml-1">{{ bin().coordX }}</span>
-          </div>
-          <div>
-            <strong>Y:</strong><span class="ml-1">{{ bin().coordY }}</span>
+          <div class="flex gap-3">
+            <div>
+              <strong>X:</strong><span class="ml-1">{{ bin()?.coordX2056 }}</span>
+            </div>
+            <div>
+              <strong>Y:</strong><span class="ml-1">{{ bin()?.coordY2056 }}</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="flex flex-col">
-        <strong>Strasse</strong>
-        <span>{{ locationLabel() }}</span>
+        <div class="flex flex-col">
+          <strong>Strasse</strong>
+          <span>{{ locationLabel() }}</span>
+        </div>
       </div>
-    </div>
+    }
   </p-card>
 
   <p-card header="Standort">
     <div class="h-64">
-      <google-map
-        height="100%"
-        width="100%"
-        [center]="binPosition()"
-        [options]="mapOptions">
-        <map-advanced-marker
-          [position]="binPosition()"/>
-      </google-map>
+      @if (loading()) {
+        <p-skeleton height="100%"/>
+      } @else {
+        <google-map
+          height="100%"
+          width="100%"
+          [center]="binPosition()"
+          [options]="mapOptions">
+          <map-advanced-marker
+            [position]="binPosition()" />
+        </google-map>
+      }
     </div>
   </p-card>
 
   <app-trend-metric-card
     header="⌀ wöchentliche Besuche (letzte 90 Tage)"
-    [value]="3.14"
-    [trendValue]="0.032"/>
+    [loading]="loading()"
+    [value]="bin()?.binDayFeaturesResponse?.baselineAvgVisitsPerWeek90d ?? 0" /> <!-- TODO trend? -->
 
   <app-trend-metric-card
     header="⌀ wöchentliche Leerungen (letzte 90 Tage)"
-    [value]="1.23"
-    [trendValue]="0.027"/>
+    [loading]="loading()"
+    [value]="bin()?.binDayFeaturesResponse?.baselineAvgEmptyingsPerWeek90d ?? 0" /> <!-- TODO trend? -->
 
   <app-simple-metric-card
     header="Rang nach Leerungen (letzte 90 Tage)"
     icon="list"
-    [value]="2" />
+    [loading]="loading()"
+    [value]="bin()?.binDayFeaturesResponse?.emptyingRank90d ?? 0" />
 
   <app-simple-metric-card
     header="Wetter Sensitivität"
     icon="sun"
-    [value]="0.77" />
+    [loading]="loading()"
+    [value]="bin()?.binDayFeaturesResponse?.weatherSensitivityScore ?? 0" />
 
   <app-simple-metric-card
     header="Event Sensitivtät"
     icon="calendar"
-    [value]="0.23" />
+    [loading]="loading()"
+    [value]="bin()?.binDayFeaturesResponse?.eventSensitivityScore ?? 0" />
 
   <app-simple-metric-card
     header="Anteil Besuche mit niedrigem Füllstand (90d)"
     icon="sort-down-fill"
-    [value]="0.187"
-    [percent]="true"/>
+    [loading]="loading()"
+    [value]="bin()?.binDayFeaturesResponse?.lowFillVisitRatio90d ?? 0"
+    [percent]="true" />
 
   <app-simple-metric-card
     header="Anteil Nichtleerungen"
     icon="sort-up-fill"
-    [value]="0.3"
-    [percent]="true"/>
+    [loading]="loading()"
+    [value]="bin()?.binDayFeaturesResponse?.notEmptiedRatio90d ?? 0"
+    [percent]="true" />
 </div>

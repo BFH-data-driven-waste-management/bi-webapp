@@ -1,22 +1,21 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
-import { BinDetailsDTO, BinDTO, BinMapResponseDTO } from './bin.model';
+import { BinDetailsResponseDTO, BinMapResponseDTO } from './bin.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BinService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:8080/api/bins';
+  private readonly binDetailsApiUrl = 'http://localhost:8081/api/bins/bindetails';
   private readonly binMapApiUrl = 'http://localhost:8081/api/bins/binmap';
 
   getBins(): Observable<BinMapResponseDTO[]> {
     return this.http.get<BinMapResponseDTO[]>(this.binMapApiUrl);
   }
 
-  getBinDetailsByCoords(coordX: number, coordY: number): Observable<BinDetailsDTO> {
-    return this.http.get<BinDetailsDTO>(this.apiUrl + `/${coordX}/${coordY}/details`);
+  getBinDetailsById(binId: number): Observable<BinDetailsResponseDTO> {
+    return this.http.get<BinDetailsResponseDTO>(`${this.binDetailsApiUrl}/${binId}`);
   }
 }
