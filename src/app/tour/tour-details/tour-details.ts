@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { BinVisitVm, Column, FillLevel, TourDTO, SimpleTourTimelineItemVm } from '../tour.model';
 import {
@@ -18,11 +18,13 @@ import { ToggleButton } from 'primeng/togglebutton';
 import { TableModule } from 'primeng/table';
 import { Button } from 'primeng/button';
 import { Toolbar } from 'primeng/toolbar';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Tag } from 'primeng/tag';
 import { DateTimeService } from '../../shared/services/date-time.service';
 import { SimpleMetricCard } from '../../shared/components/simple-metric-card/simple-metric-card';
 import { TrendMetricCard } from '../../shared/components/trend-metric-card/trend-metric-card';
+import { TourService } from '../tour.service';
+import { Skeleton } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-tour-details',
@@ -40,24 +42,46 @@ import { TrendMetricCard } from '../../shared/components/trend-metric-card/trend
     Tag,
     SimpleMetricCard,
     TrendMetricCard,
+    Skeleton,
   ],
   templateUrl: './tour-details.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TourDetails {
   readonly dateTimeService = inject(DateTimeService);
+  readonly route = inject(ActivatedRoute);
+  readonly tourService = inject(TourService);
   readonly fillLevelPieOptions = buildFillLevelPieOptions();
 
-  readonly tour = input.required<TourDTO>();
+  readonly tour = signal<TourDTO | null>(null);
+  readonly loading = signal(true);
+
+  constructor() {
+    const tourId = Number(this.route.snapshot.paramMap.get('id'));
+    if (!Number.isNaN(tourId)) {
+      this.tourService.getTourById(tourId).subscribe({
+        next: (tour) => {
+          this.tour.set(tour);
+          this.loading.set(false);
+        },
+        error: () => {
+          this.loading.set(false);
+        },
+      });
+      return;
+    }
+
+    this.loading.set(false);
+  }
 
   /**
    * A (static) column definition is needed for the export
    */
   readonly columns: Column[] = [
-    { field: 'id', header: 'ID' },
-    { field: 'coordinatesLabel', header: 'Eimer (Koordinaten)' },
+    { field: 'id', header: 'Besuchs-ID' },
+    { field: 'binId', header: 'Eimer-ID' },
     { field: 'eventTimestampLabel', header: 'Zeitpunkt' },
-    { field: 'binTypeLabel', header: 'Behältertyp' },
+    { field: 'binType', header: 'Behältertyp' },
     { field: 'fillLevelLabel', header: 'Füllstand' },
     { field: 'visitActionLabel', header: 'Aktion' },
   ];
@@ -66,6 +90,9 @@ export class TourDetails {
 
   readonly timeline = computed<SimpleTourTimelineItemVm[]>(() => {
     const tour = this.tour();
+    if (!tour) {
+      return [];
+    }
 
     const items: SimpleTourTimelineItemVm[] = [
       {
@@ -78,11 +105,11 @@ export class TourDetails {
       const sortedEmptyings = [...tour.vehicleEmptyings]
         .sort(
           (a, b) =>
-            new Date(a.emptyingTimestamp).getTime() - new Date(b.emptyingTimestamp).getTime(),
+            new Date(a.eventTimestamp).getTime() - new Date(b.eventTimestamp).getTime(),
         )
         .map((emptying) => ({
           action: 'Müve',
-          timestamp: emptying.emptyingTimestamp,
+          timestamp: emptying.eventTimestamp,
         }));
 
       items.push(...sortedEmptyings);
@@ -97,14 +124,6 @@ export class TourDetails {
 
     return items;
   });
-
-  readonly emptyingsCount = computed(
-    () => this.tour().binVisits.filter((visit) => visit.visitAction === 'EMPTIED').length,
-  );
-
-  readonly overfullBins = computed(
-    () => this.tour().binVisits.filter((visit) => visit.fillLevel === 'OVERFULL').length,
-  );
 
   readonly fillLevelPieData = computed<ChartData<'pie'>>(() => {
     const order: FillLevel[] = [
@@ -179,9 +198,8 @@ export class TourDetails {
   });
 
   readonly binVisitRows = computed<BinVisitVm[]>(() =>
-    this.tour().binVisits.map((visit) => ({
+    (this.tour()?.binVisits ?? []).map((visit) => ({
       ...visit,
-      coordinatesLabel: `${visit.bin.coordX} / ${visit.bin.coordY}`,
       eventTimestampLabel: this.dateTimeService.format(visit.eventTimestamp),
       fillLevelLabel: BIN_VISIT_FILL_LEVEL_LABELS[visit.fillLevel],
       fillLevelClass: BIN_VISIT_FILL_LEVEL_TAG_CLASSES[visit.fillLevel],

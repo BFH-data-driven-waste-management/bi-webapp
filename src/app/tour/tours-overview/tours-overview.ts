@@ -12,7 +12,15 @@ import { GoogleMap, MapAdvancedMarker, MapPolyline } from '@angular/google-maps'
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { Button } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
-import { Column, MapMarkerVm, TourDTO, TourPathVm, TourTimelineItem, TourVm } from '../tour.model';
+import {
+  Column,
+  MapMarkerVm,
+  TourDTO,
+  TourOverviewDTO,
+  TourPathVm,
+  TourTimelineItem,
+  TourVm,
+} from '../tour.model';
 import { Chip } from 'primeng/chip';
 import { Toolbar } from 'primeng/toolbar';
 import { ToggleButton } from 'primeng/togglebutton';
@@ -54,7 +62,7 @@ export class ToursOverview implements OnInit, AfterViewInit {
 
   readonly mapCmp = viewChild.required(GoogleMap);
 
-  readonly tours = signal<TourDTO[]>([]);
+  readonly tours = signal<TourOverviewDTO[]>([]);
   readonly totalRecords = signal(0);
   readonly rows = signal(4);
   readonly latestTourIdFromFirstPage = signal<number | null>(null);
@@ -70,8 +78,8 @@ export class ToursOverview implements OnInit, AfterViewInit {
     ),
   );
 
-  protected selectedTours: TourDTO[] = [];
-  private readonly selectedTourAcrossPagesMap = new Map<number, TourDTO>();
+  protected selectedTours: TourOverviewDTO[] = [];
+  private readonly selectedTourAcrossPagesMap = new Map<number, TourOverviewDTO>();
 
   protected canBeAligned = false;
   protected markers: MapMarkerVm[] = [];
@@ -133,7 +141,7 @@ export class ToursOverview implements OnInit, AfterViewInit {
     }
   }
 
-  protected get selectedToursAcrossPages(): TourDTO[] {
+  protected get selectedToursAcrossPages(): TourOverviewDTO[] {
     return [...this.selectedTourAcrossPagesMap.values()];
   }
 
@@ -160,7 +168,7 @@ export class ToursOverview implements OnInit, AfterViewInit {
     });
   }
 
-  private getDefaultSelection(tours: TourDTO[], pageNumber: number): TourDTO[] {
+  private getDefaultSelection(tours: TourOverviewDTO[], pageNumber: number): TourOverviewDTO[] {
     if (pageNumber !== 0) {
       return [];
     }
@@ -184,13 +192,13 @@ export class ToursOverview implements OnInit, AfterViewInit {
     }
   }
 
-  private syncCurrentPageSelection(currentPageTours: TourDTO[]): void {
+  private syncCurrentPageSelection(currentPageTours: TourOverviewDTO[]): void {
     this.selectedTours = currentPageTours.filter((tour) =>
       this.selectedTourAcrossPagesMap.has(tour.id),
     );
   }
 
-  private setCrossPageSelection(tours: TourDTO[]): void {
+  private setCrossPageSelection(tours: TourOverviewDTO[]): void {
     this.selectedTourAcrossPagesMap.clear();
     for (const tour of tours) {
       this.selectedTourAcrossPagesMap.set(tour.id, tour);
@@ -273,7 +281,7 @@ export class ToursOverview implements OnInit, AfterViewInit {
   /**
    * This returns all timeline items (bin visits, vehicle emptyings) sorted by timestamp ascending.
    */
-  private getSortedTimelineItems(tour: TourDTO): TourTimelineItem[] {
+  private getSortedTimelineItems(tour: TourOverviewDTO): TourTimelineItem[] {
     const timelineItems: TourTimelineItem[] = [
       ...tour.binVisits.map((binVisit) => ({
         ...binVisit,
@@ -291,7 +299,7 @@ export class ToursOverview implements OnInit, AfterViewInit {
     );
   }
 
-  private buildMarkersForTour(tour: TourDTO, timelineItems: TourTimelineItem[]): MapMarkerVm[] {
+  private buildMarkersForTour(tour: TourOverviewDTO, timelineItems: TourTimelineItem[]): MapMarkerVm[] {
     const totalBinVisits = timelineItems.filter(
       (timelineItem) => timelineItem.type === 'binVisit',
     ).length;

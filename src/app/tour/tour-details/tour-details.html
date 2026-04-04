@@ -1,5 +1,6 @@
 <div class="mb-6 flex items-end justify-between gap-6"> <!-- TODO maybe outsource to dedicated header component -->
-  <h2 class="text-7xl font-extrabold tracking-tight text-gray-600">Tour {{ tour().id }}</h2>
+  <h2 class="text-7xl font-extrabold tracking-tight text-gray-600">Tour {{ tour()?.id ?? '...' }}</h2>
+  <!-- TODO maybe also use skeleton for id above -->
   <p-button
     severity="secondary"
     [outlined]="true"
@@ -15,41 +16,56 @@
     [&_.p-card]:border-surface-300">
 
   <p-card>
-    <div class="flex flex-col gap-3">
-      <div class="flex flex-col">
-        <strong>ID</strong>
-        <span>{{ tour().id }}</span>
+    @if (loading()) {
+      <div class="flex flex-col gap-3">
+        <p-skeleton width="8rem" height="0.875rem" class="mt-2" />
+        <p-skeleton width="11rem" height="1rem" />
+        <p-skeleton width="7rem" height="0.875rem" class="mt-2" />
+        <p-skeleton width="15rem" height="1rem" />
       </div>
+    } @else {
+      <div class="flex flex-col gap-3">
+        <div class="flex flex-col">
+          <strong>ID</strong>
+          <span>{{ tour()?.id ?? '' }}</span>
+        </div>
 
-      <div class="flex flex-col">
-        <strong>Datum</strong>
-        <span>{{ tour().startedAt | date: 'EEE, dd.MM.y, HH:mm':'Europe/Zurich':'de-CH' }}</span>
+        <div class="flex flex-col">
+          <strong>Datum</strong>
+          <span>{{ tour()?.startedAt | date: 'EEE, dd.MM.y, HH:mm':'Europe/Zurich':'de-CH' }}</span> <!-- TODO centralize time constants -->
+        </div>
+
       </div>
-
-    </div>
+    }
   </p-card>
 
   <p-card
     header="Zeitleiste"
-    [class.col-span-2]="timelineWithMueve() && tour().vehicleEmptyings.length > 2">
+    [class.col-span-2]="timelineWithMueve() && (tour()?.vehicleEmptyings?.length ?? 0) > 2">
     <div class="flex flex-col justify-between h-64">
       <div class="flex flex-col mt-8">
-        <p-timeline
-          layout="horizontal"
-          align="left"
-          [value]="timeline()">
-          <ng-template #opposite let-event>
-            <div class="flex justify-start w-full">
-              <small class="text-surface-500">
-                {{ event.action }}
-              </small>
-            </div>
-          </ng-template>
+        @if (loading()) {
+          <div class="h-24 flex items-center justify-center">
+            <p-skeleton width="70%" height="1.25rem" />
+          </div>
+        } @else {
+          <p-timeline
+            layout="horizontal"
+            align="left"
+            [value]="timeline()">
+            <ng-template #opposite let-event>
+              <div class="flex justify-start w-full">
+                <small class="text-surface-500">
+                  {{ event.action }}
+                </small>
+              </div>
+            </ng-template>
 
-          <ng-template #content let-event>
-            {{ event.timestamp | date: 'HH:mm':'Europe/Zurich':'de-CH' }}
-          </ng-template>
-        </p-timeline>
+            <ng-template #content let-event>
+              {{ event.timestamp | date: 'HH:mm':'Europe/Zurich':'de-CH' }}
+            </ng-template>
+          </p-timeline>
+        }
       </div>
 
       <p-toggle-button
@@ -64,37 +80,48 @@
   <app-simple-metric-card
     header="Mülleimer besucht"
     icon="eye"
-    [value]="tour().binVisits.length" />
+    [value]="tour()?.visitCount ?? 0"
+    [loading]="loading()" />
 
   <app-simple-metric-card
     header="Mülleimer geleert"
     icon="trash"
-    [value]="emptyingsCount()" />
+    [value]="this.tour()?.emptiedVisitCount ?? 0"
+    [loading]="loading()" />
 
   <app-trend-metric-card
     header="Anteil Mülleimer geleert"
     [value]="0.492"
     [percent]="true"
-    [trendValue]="0.035"/>
+    [trendValue]="0.035"
+    [loading]="loading()"/>
 
   <app-trend-metric-card
     header="Anteil Besuche mit niedrigem Füllstand"
     [value]="0.102"
     [percent]="true"
-    [trendValue]="0.035"/>
+    [trendValue]="0.035"
+    [loading]="loading()"/>
 
   <p-card header="Füllstandverteilung" class="rounded-lg">
-    <p-chart
-      type="pie"
-      [data]="fillLevelPieData()"
-      [options]="fillLevelPieOptions"
-      class="relative h-64 mt-4" />
+    @if (loading()) {
+      <div class="h-64 mt-2 flex items-center justify-center">
+        <p-skeleton shape="circle" size="13rem" />
+      </div>
+    } @else {
+      <p-chart
+        type="pie"
+        [data]="fillLevelPieData()"
+        [options]="fillLevelPieOptions"
+        class="relative h-64 mt-4" />
+    }
   </p-card>
 
   <app-simple-metric-card
     header="Übervolle Mülleimer"
     icon="exclamation-circle"
-    [value]="overfullBins()" />
+    [value]="this.tour()?.overfullVisitCount ?? 0"
+    [loading]="loading()" />
 </div>
 
 <p-card header="Behälterbesuche" class="mt-6 mb-8 rounded-2xl border border-surface-300">
@@ -122,10 +149,10 @@
     <!-- TODO a dynamic export filename with id or so might be useful -->
     <ng-template #header>
       <tr>
-        <th pSortableColumn="id">ID <p-sortIcon field="id" /></th>
-        <th>Eimer (Koordinaten)</th>
+        <th class="w-[10%]" pSortableColumn="id">Besuchs-ID <p-sortIcon field="id" /></th>
+        <th class="w-[10%]" pSortableColumn="binId">Behälter-ID <p-sortIcon field="binId" /></th>
         <th pSortableColumn="eventTimestamp">Zeitpunkt <p-sortIcon field="eventTimestamp" /></th>
-        <th pSortableColumn="bin.type">Behältertyp <p-sortIcon field="bin.type" /></th>
+        <th pSortableColumn="binType">Behältertyp <p-sortIcon field="binType" /></th>
         <th pSortableColumn="fillLevel">Füllstand <p-sortIcon field="fillLevel" /></th>
         <th pSortableColumn="visitAction">Aktion <p-sortIcon field="visitAction" /></th>
       </tr>
@@ -135,17 +162,17 @@
       <tr>
         <td>{{ visit.id }}</td>
         <td>
-          @if (visit.bin.binId) { <!-- FIXME this does not work yet... binvisits has no bin id right now -->
-            <a [routerLink]="['/bin', visit.bin.binId]"
+          @if (visit.binId) {
+            <a [routerLink]="['/bin', visit.binId]"
               class="text-red-500 hover:text-red-400 underline underline-offset-2">
-              {{ visit.coordinatesLabel }}
+              {{ visit.binId }}
             </a>
           } @else {
-            <span>{{ visit.coordinatesLabel }}</span>
+            <span>{{ visit.binId }}</span>
           }
         </td>
         <td>{{ visit.eventTimestampLabel }}</td>
-        <td><p-tag [value]="visit.bin.type" [severity]="BIN_TYPE_TAG_SEVERITY" /></td> <!-- TODO maybe there is a better solution to display-->
+        <td><p-tag [value]="visit.binType" [severity]="BIN_TYPE_TAG_SEVERITY" /></td> <!-- TODO maybe there is a better solution to display-->
         <td><p-tag [value]="visit.fillLevelLabel" [class]="visit.fillLevelClass" /></td>
         <td><p-tag [value]="visit.visitActionLabel" [severity]="visit.visitActionSeverity" /></td>
       </tr>

@@ -1,11 +1,27 @@
 export interface TourDTO {
   id: number;
-  licensePlate: string; // TODO this name is semantically wrong
+  licensePlate: string;
+  visitCount: number | null; // TODO why nulls?
+  emptiedVisitCount: number | null;
+  notEmptiedVisitCount: number | null;
+  lowFillVisitCount: number | null;
+  highFillVisitCount: number | null;
+  overfullVisitCount: number | null;
   vehicleEmptyingCount: number | null;
   startedAt: string;
   endedAt: string | null;
   binVisits: BinVisitDTO[];
   vehicleEmptyings: VehicleEmptyingDTO[];
+}
+
+export interface TourOverviewDTO {
+  id: number;
+  licensePlate: string;
+  vehicleEmptyingCount: number | null;
+  startedAt: string;
+  endedAt: string | null;
+  vehicleEmptyings: VehicleEmptyingDTO[];
+  binVisits: BinVisitDTO[];
 }
 
 export interface PageDTO<T> { // TODO maybe move to shared
@@ -18,6 +34,7 @@ export interface PageDTO<T> { // TODO maybe move to shared
 
 export interface BinVisitDTO {
   id: number;
+  binId: number;
   sequenceInTour: number;
   eventTimestamp: string;
   fillLevel: FillLevel;
@@ -55,9 +72,7 @@ export enum VisitAction {
 }
 
 export interface BinVisitVm extends BinVisitDTO {
-  coordinatesLabel: string;
   eventTimestampLabel: string;
-  binTypeLabel: string;
   fillLevelLabel: string;
   fillLevelClass: string;
   visitActionLabel: string;
