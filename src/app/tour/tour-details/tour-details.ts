@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+  computed,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
 import { BinVisitVm, Column, FillLevel, TourDTO, SimpleTourTimelineItemVm } from '../tour.model';
 import {
@@ -25,6 +34,7 @@ import { SimpleMetricCard } from '../../shared/components/simple-metric-card/sim
 import { TrendMetricCard } from '../../shared/components/trend-metric-card/trend-metric-card';
 import { TourService } from '../tour.service';
 import { Skeleton } from 'primeng/skeleton';
+import { distinctUntilChanged, EMPTY, map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-tour-details',
@@ -47,7 +57,8 @@ import { Skeleton } from 'primeng/skeleton';
   templateUrl: './tour-details.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TourDetails {
+export class TourDetails implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
   readonly dateTimeService = inject(DateTimeService);
   readonly route = inject(ActivatedRoute);
   readonly tourService = inject(TourService);
@@ -56,10 +67,24 @@ export class TourDetails {
   readonly tour = signal<TourDTO | null>(null);
   readonly loading = signal(true);
 
-  constructor() {
-    const tourId = Number(this.route.snapshot.paramMap.get('id'));
-    if (!Number.isNaN(tourId)) {
-      this.tourService.getTourById(tourId).subscribe({
+  ngOnInit(): void {
+    this.route.paramMap
+      .pipe(
+        map((params) => Number(params.get('id'))),
+        distinctUntilChanged(),
+        switchMap((tourId) => {
+          if (!Number.isFinite(tourId)) {
+            this.loading.set(false);
+            this.tour.set(null);
+            return EMPTY;
+          }
+
+          this.loading.set(true);
+          return this.tourService.getTourById(tourId);
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
         next: (tour) => {
           this.tour.set(tour);
           this.loading.set(false);
@@ -68,10 +93,6 @@ export class TourDetails {
           this.loading.set(false);
         },
       });
-      return;
-    }
-
-    this.loading.set(false);
   }
 
   /**

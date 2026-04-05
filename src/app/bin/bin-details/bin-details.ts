@@ -2,11 +2,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   inject,
   OnInit,
   resource,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Card } from 'primeng/card';
 import { UIChart } from 'primeng/chart';
 import { BinDetailsResponseDTO } from '../bin.model';
@@ -20,6 +22,7 @@ import { Skeleton } from 'primeng/skeleton';
 import { BinService } from '../bin.service';
 import { ActivatedRoute } from '@angular/router';
 import { buildFillTrendOptions } from './chart-options';
+import { distinctUntilChanged, EMPTY, map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-bin-details',
@@ -37,6 +40,7 @@ import { buildFillTrendOptions } from './chart-options';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BinDetails implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
   private readonly location = inject(Location);
   private readonly binService = inject(BinService);
   private readonly route = inject(ActivatedRoute);
@@ -76,8 +80,7 @@ export class BinDetails implements OnInit {
     }
 
     const style = getComputedStyle(document.documentElement);
-    const trend = [...(bin.fillTrend12m ?? [])]
-      .sort((a, b) => a.dateKey - b.dateKey); // TODO is sorting needed?
+    const trend = [...(bin.fillTrend12m ?? [])].sort((a, b) => a.dateKey - b.dateKey); // TODO is sorting needed?
 
     return {
       labels: trend.map((entry) => this.formatDateKey(entry.dateKey)),
@@ -153,6 +156,34 @@ export class BinDetails implements OnInit {
   readonly locationLabel = computed(() => this.locationResource.value() ?? '');
   readonly locationLoading = computed(() => this.locationResource.isLoading());
 
+  ngOnInit(): void {
+    this.route.paramMap
+      .pipe(
+        map((params) => Number(params.get('id'))),
+        distinctUntilChanged(),
+        switchMap((binId) => {
+          if (!Number.isFinite(binId)) {
+            this.loading.set(false);
+            this.bin.set(null);
+            return EMPTY;
+          }
+
+          this.loading.set(true);
+          return this.binService.getBinDetailsById(binId);
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: (binDetailsResponse) => {
+          this.bin.set(binDetailsResponse);
+          this.loading.set(false);
+        },
+        error: () => {
+          this.loading.set(false);
+        },
+      });
+  }
+
   // TODO this is a bit of a hack... verify
   private toFillLevelLabel(fillLevelScore: number): string {
     if (fillLevelScore <= 0.25) {
@@ -177,24 +208,6 @@ export class BinDetails implements OnInit {
     const month = dateKey.toString().slice(4, 6);
     const day = dateKey.toString().slice(6, 8);
     return `${day}.${month}.${year}`;
-  }
-
-  ngOnInit(): void {
-    const binId = Number(this.route.snapshot.paramMap.get('id'));
-    if (!Number.isFinite(binId)) {
-      this.loading.set(false);
-      return;
-    }
-
-    this.binService.getBinDetailsById(binId).subscribe({
-      next: (binDetailsResponse) => {
-        this.bin.set(binDetailsResponse);
-        this.loading.set(false);
-      },
-      error: () => {
-        this.loading.set(false);
-      },
-    });
   }
 
   private buildGradient(
