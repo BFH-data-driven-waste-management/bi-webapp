@@ -24,14 +24,6 @@ export interface TourOverviewDTO {
   binVisits: BinVisitDTO[];
 }
 
-export interface PageDTO<T> { // TODO maybe move to shared
-  content: T[];
-  page: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
-}
-
 export interface BinVisitDTO {
   id: number;
   binId: number;

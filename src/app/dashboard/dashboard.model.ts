@@ -1,4 +1,4 @@
-import { KpiMetricResponseDTO } from '../shared/models/kpi-metric.model';
+import { KpiMetricResponseDTO } from '../shared/models/common.model';
 
 export interface DashboardResponseDTO {
   installedBins: InstalledBinsResponseDTO;

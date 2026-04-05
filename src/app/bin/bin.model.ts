@@ -1,4 +1,4 @@
-import { KpiMetricResponseDTO } from '../shared/models/kpi-metric.model';
+import { KpiMetricResponseDTO } from '../shared/models/common.model';
 
 export interface BinMapResponseDTO {
   binId: number;
@@ -13,6 +13,17 @@ export interface BinMapResponseDTO {
 export interface BinMapMarkerVM extends BinMapResponseDTO {
   position: google.maps.LatLngLiteral;
   content: HTMLElement;
+}
+
+export interface BinListResponseDTO {
+  binId: number;
+  type: string;
+  isActive: boolean;
+  avgWeeklyVisits90d: number;
+  lowFillVisitRatio90d: number;
+  overfullVisitRatio90d: number;
+  coordX2056: number;
+  coordY2056: number;
 }
 
 export interface BinDetailsResponseDTO {

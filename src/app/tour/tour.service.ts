@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { PageDTO, TourDTO, TourOverviewDTO } from './tour.model';
+import { TourDTO, TourOverviewDTO } from './tour.model';
+import { PageDTO } from '../shared/models/common.model';
 
 @Injectable({
   providedIn: 'root',
