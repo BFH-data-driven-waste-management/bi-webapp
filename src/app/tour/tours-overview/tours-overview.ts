@@ -274,7 +274,7 @@ export class ToursOverview implements OnInit, AfterViewInit {
       bounds.extend(this.muevePosition);
     }
 
-    map.fitBounds(bounds, 20);
+    map.fitBounds(bounds, 10);
     this.canBeAligned = false;
   }
 
