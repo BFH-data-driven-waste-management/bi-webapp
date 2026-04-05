@@ -15,7 +15,6 @@ import { FormsModule } from '@angular/forms';
 import {
   Column,
   MapMarkerVm,
-  TourDTO,
   TourOverviewDTO,
   TourPathVm,
   TourTimelineItem,
