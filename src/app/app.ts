@@ -25,8 +25,13 @@ export class App {
     },
     {
       label: 'Behälterkarte',
-      icon: 'pi pi-trash',
+      icon: 'pi pi-map',
       routerLink: '/bin-map',
+    },
+    {
+      label: 'Behälterliste',
+      icon: 'pi pi-list',
+      routerLink: '/bin-list',
     },
     {
       label: 'Touren',
