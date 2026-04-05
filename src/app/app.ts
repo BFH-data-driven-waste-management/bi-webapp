@@ -34,7 +34,7 @@ export class App {
       routerLink: '/bin-map',
     },
     {
-      label: 'Behälterliste',
+      label: 'Behälterliste', // TODO eventuell umbenennen in Behälteroptimierung?
       icon: 'pi pi-list',
       routerLink: '/bin-list',
     },
