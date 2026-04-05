@@ -1,1 +1,42 @@
-<p>bin-list works!</p>
+<div class="card">
+  <p-table
+    [value]="bins()"
+    dataKey="binId"
+    paginator
+    [lazy]="true"
+    (onLazyLoad)="onPageChange($event)"
+    [rows]="rows"
+    [rowsPerPageOptions]="[20]"
+    [totalRecords]="totalRecords()"
+    [tableStyle]="{ 'min-width': '55rem' }">
+
+    <ng-template #header>
+      <tr>
+        <th class="w-[12%]">Behälter-ID</th>
+        <th class="w-[15%]">Typ</th>
+        <th class="w-[7%]">Aktiv</th>
+        <th class="w-[18%]">Koordinaten 2056</th>
+        <th class="w-[18%]">Ø Besuche/Woche (90d)</th>
+        <th class="w-[15%]">Low-Fill-Quote (90d)</th>
+        <th class="w-[15%]">Overfull-Quote (90d)</th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-bin>
+      <tr>
+        <td>
+          <a [routerLink]="['/bin', bin.binId]"
+             class="text-red-500 hover:text-red-400 underline underline-offset-2">
+            {{ bin.binId }}
+          </a>
+        </td>
+        <td>{{ bin.type }}</td>
+        <td>{{ bin.isActive ? 'Ja' : 'Nein' }}</td>
+        <td>{{ bin.coordX2056 }} / {{ bin.coordY2056 }}</td>
+        <td>{{ bin.avgWeeklyVisits90d | number: '1.0-2' }}</td>
+        <td>{{ bin.lowFillVisitRatio90d | number: '1.0-4' }}</td>
+        <td>{{ bin.overfullVisitRatio90d | number: '1.0-4' }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
