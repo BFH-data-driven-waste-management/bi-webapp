@@ -39,9 +39,12 @@
           size="small"
           (onClick)="closeInfoWindow()" />
 
-        <div class="p-2">
+        <div class="p-2 mr-8">
           <div class="font-bold">
             {{ bin.type }}
+            @if (!bin.isActive){
+              <span>(inaktiv)</span>
+            }
           </div>
 
           <div class="text-sm mt-3">

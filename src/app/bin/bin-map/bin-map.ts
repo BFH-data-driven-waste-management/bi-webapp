@@ -10,7 +10,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { GoogleMap, MapAdvancedMarker, MapInfoWindow } from '@angular/google-maps';
 import { Button, ButtonDirective, ButtonLabel } from 'primeng/button';
 import { RouterLink } from '@angular/router';
-import { BinMapMarkerVM } from '../bin.model';
+import { BinMapMarkerVM, BinMapResponseDTO } from '../bin.model';
 import { BinService } from '../bin.service';
 
 @Component({
@@ -57,15 +57,15 @@ export class BinMap {
     this.bins().map((bin) => ({
       ...bin,
       position: { lat: bin.coordX4326, lng: bin.coordY4326 },
-      content: this.createBinIcon(),
+      content: this.createBinIcon(bin),
     })),
   );
   readonly selectedBin = signal<BinMapMarkerVM | null>(null);
   readonly infoWindow = viewChild.required(MapInfoWindow);
 
-  createBinIcon(): HTMLElement {
+  createBinIcon(bin: BinMapResponseDTO): HTMLElement {
     const el = document.createElement('span');
-    el.className = `${this.markerClass} pi-trash bg-red-500`;
+    el.className = `${this.markerClass} pi-trash ${bin.isActive ? 'bg-red-500' : 'bg-gray-400'}`;
     return el;
   }
 

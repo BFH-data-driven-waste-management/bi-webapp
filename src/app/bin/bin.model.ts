@@ -1,11 +1,3 @@
-export interface BinDTO {
-  binId?: number;
-  coordX: number;
-  coordY: number;
-  type: string;
-  isMapped: boolean;
-}
-
 export interface BinMapResponseDTO {
   binId: number;
   type: string;
