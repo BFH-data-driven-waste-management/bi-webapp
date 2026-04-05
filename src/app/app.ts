@@ -25,7 +25,7 @@ export class App {
     },
     {
       label: 'Touren',
-      icon: 'pi pi-map',
+      icon: 'pi pi-truck',
       routerLink: '/tours-overview',
     },
     {
