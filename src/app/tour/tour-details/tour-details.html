@@ -89,18 +89,18 @@
     [value]="this.tour()?.emptiedVisitCount ?? 0"
     [loading]="loading()" />
 
-  <app-trend-metric-card
+  <app-simple-metric-card
     header="Anteil Mülleimer geleert"
     [value]="0.492"
     [percent]="true"
-    [trendValue]="0.035"
+    [icon]="'chart-pie'"
     [loading]="loading()"/>
 
-  <app-trend-metric-card
+  <app-simple-metric-card
     header="Anteil Besuche mit niedrigem Füllstand"
     [value]="0.102"
     [percent]="true"
-    [trendValue]="0.035"
+    [icon]="'chart-pie'"
     [loading]="loading()"/>
 
   <p-card header="Füllstandverteilung" class="rounded-lg">

@@ -1,3 +1,5 @@
+import { KpiMetricResponseDTO } from '../shared/models/kpi-metric.model';
+
 export interface DashboardResponseDTO {
   installedBins: InstalledBinsResponseDTO;
   visits7d: KpiMetricResponseDTO;
@@ -18,7 +20,3 @@ export interface CountOfBinTypeResponseDTO {
   count: number;
 }
 
-export interface KpiMetricResponseDTO {
-  value: number;
-  deltaRelative: number;
-}

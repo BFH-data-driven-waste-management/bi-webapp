@@ -88,12 +88,14 @@
   <app-trend-metric-card
     header="⌀ wöchentliche Besuche (letzte 90 Tage)"
     [loading]="loading()"
-    [value]="bin()?.binDayFeaturesResponse?.baselineAvgVisitsPerWeek90d ?? 0" /> <!-- TODO trend? -->
+    [value]="bin()?.binDayFeaturesResponse?.baselineAvgVisitsPerWeek90d?.value"
+    [trendValue]="bin()?.binDayFeaturesResponse?.baselineAvgVisitsPerWeek90d?.deltaRelative" />
 
   <app-trend-metric-card
     header="⌀ wöchentliche Leerungen (letzte 90 Tage)"
     [loading]="loading()"
-    [value]="bin()?.binDayFeaturesResponse?.baselineAvgEmptyingsPerWeek90d ?? 0" /> <!-- TODO trend? -->
+    [value]="bin()?.binDayFeaturesResponse?.baselineAvgEmptyingsPerWeek90d?.value"
+    [trendValue]="bin()?.binDayFeaturesResponse?.baselineAvgEmptyingsPerWeek90d?.deltaRelative" />
 
   <app-simple-metric-card
     header="Rang nach Leerungen (letzte 90 Tage)"

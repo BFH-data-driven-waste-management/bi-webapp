@@ -31,7 +31,6 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Tag } from 'primeng/tag';
 import { DateTimeService } from '../../shared/services/date-time.service';
 import { SimpleMetricCard } from '../../shared/components/simple-metric-card/simple-metric-card';
-import { TrendMetricCard } from '../../shared/components/trend-metric-card/trend-metric-card';
 import { TourService } from '../tour.service';
 import { Skeleton } from 'primeng/skeleton';
 import { distinctUntilChanged, EMPTY, map, switchMap } from 'rxjs';
@@ -51,7 +50,6 @@ import { distinctUntilChanged, EMPTY, map, switchMap } from 'rxjs';
     RouterLink,
     Tag,
     SimpleMetricCard,
-    TrendMetricCard,
     Skeleton,
   ],
   templateUrl: './tour-details.html',
