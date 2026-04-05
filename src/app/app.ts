@@ -24,6 +24,11 @@ export class App {
       routerLink: '/dashboard',
     },
     {
+      label: 'Touren',
+      icon: 'pi pi-map',
+      routerLink: '/tours-overview',
+    },
+    {
       label: 'Behälterkarte',
       icon: 'pi pi-map',
       routerLink: '/bin-map',
@@ -32,11 +37,6 @@ export class App {
       label: 'Behälterliste',
       icon: 'pi pi-list',
       routerLink: '/bin-list',
-    },
-    {
-      label: 'Touren',
-      icon: 'pi pi-map',
-      routerLink: '/tours-overview',
     },
   ];
 
