@@ -51,7 +51,6 @@ import { distinctUntilChanged, EMPTY, map, switchMap } from 'rxjs';
     RouterLink,
     Tag,
     SimpleMetricCard,
-    TrendMetricCard,
     Skeleton,
   ],
   templateUrl: './tour-details.html',
