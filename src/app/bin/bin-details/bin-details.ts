@@ -173,7 +173,10 @@ export class BinDetails implements OnInit {
     if (value.length !== 8) {
       return value;
     }
-    return `${value.slice(4, 6)}.${value.slice(0, 4)}`;
+    const year = dateKey.toString().slice(0, 4);
+    const month = dateKey.toString().slice(4, 6);
+    const day = dateKey.toString().slice(6, 8);
+    return `${day}.${month}.${year}`;
   }
 
   ngOnInit(): void {
