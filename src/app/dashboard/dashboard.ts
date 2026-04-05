@@ -72,6 +72,8 @@ export class Dashboard implements OnInit {
   });
 
   ngOnInit(): void {
+    // TODO takeuntil destroyed? altough this is a one shot http observable completing itself, this
+    //  would auto complete if the component is destroyed mid request, same in tour overview?
     this.dashboardService.getDashboard().subscribe({
       next: (dashboardResponse) => {
         this.dashboardData.set(dashboardResponse);
