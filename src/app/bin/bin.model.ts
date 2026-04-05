@@ -1,3 +1,5 @@
+import { KpiMetricResponseDTO } from '../shared/models/kpi-metric.model';
+
 export interface BinMapResponseDTO {
   binId: number;
   type: string;
@@ -31,8 +33,8 @@ export interface BinDetailsResponseDTO {
 }
 
 export interface BinDayFeaturesResponseDTO {
-  baselineAvgVisitsPerWeek90d: number | null;
-  baselineAvgEmptyingsPerWeek90d: number | null;
+  baselineAvgVisitsPerWeek90d: KpiMetricResponseDTO | null;
+  baselineAvgEmptyingsPerWeek90d: KpiMetricResponseDTO | null;
   lowFillVisitRatio90d: number | null;
   notEmptiedRatio90d: number | null;
   emptyingRank90d: number | null;
