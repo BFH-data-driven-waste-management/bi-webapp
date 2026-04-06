@@ -1,13 +1,36 @@
 <div class="card">
+  <p-toolbar class="mb-4">
+    <ng-template pTemplate="start">
+      <div class="flex flex-col gap-2">
+        <span class="text-lg text-surface-800 font-medium">Ansichten</span>
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="text-surface-600 font-medium">Heuristik (statisch)</span>
+          <p-toggle-button
+            onLabel="Behälterdichte zu erhöhen"
+            offLabel="Behälterdichte zu erhöhen" />
+          <p-toggle-button
+            onLabel="Vertikal hochskalieren"
+            offLabel="Vertikal hochskalieren" /> <!-- behälterdichte erhöhen spalten plus bin type basel, vielleicht info icon mit popup text -->
+          <span class="ml-4 text-surface-600 font-medium">Heuristik (dynamisch)</span>
+          <p-toggle-button
+            onLabel="Anfahrtfrequenz reduzieren"
+            offLabel="Anfahrtfrequenz reduzieren" />
+          <p-toggle-button
+            onLabel="Anfahrtfrequenz erhöhen"
+            offLabel="Anfahrtfrequenz erhöhen" />
+        </div>
+      </div>
+    </ng-template>
+  </p-toolbar>
+
   <p-table
+    #dt
     [value]="bins()"
     dataKey="binId"
     paginator
-    [lazy]="true"
-    (onLazyLoad)="onPageChange($event)"
+    sortMode="multiple"
     [rows]="rows"
-    [rowsPerPageOptions]="[20]"
-    [totalRecords]="totalRecords()"
+    [rowsPerPageOptions]="[10, 20]"
     [tableStyle]="{ 'min-width': '55rem' }">
 
     <ng-template #header>
@@ -16,9 +39,15 @@
         <th class="w-[15%]">Typ</th>
         <th class="w-[7%]">Aktiv</th>
         <th class="w-[18%]">Koordinaten 2056</th>
-        <th class="w-[18%]">Ø Besuche/Woche (90d)</th>
-        <th class="w-[15%]">Low-Fill-Quote (90d)</th>
-        <th class="w-[15%]">Overfull-Quote (90d)</th>
+        <th class="w-[18%]" pSortableColumn="avgWeeklyVisits90d">
+          Ø Besuche/Woche (90d)
+          <p-sortIcon field="avgWeeklyVisits90d" />
+        </th>
+        <th class="w-[15%]">Untervoll-Quote (90d)</th>
+        <th class="w-[15%]" pSortableColumn="overfullVisitRatio90d">
+          Übervoll-Quote (90d)
+          <p-sortIcon field="overfullVisitRatio90d" />
+        </th>
       </tr>
     </ng-template>
 

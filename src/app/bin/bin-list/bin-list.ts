@@ -1,38 +1,23 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
-import { TableLazyLoadEvent, TableModule } from 'primeng/table';
-import { BinListResponseDTO } from '../bin.model';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { TableModule } from 'primeng/table';
 import { BinService } from '../bin.service';
 import { DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { Toolbar } from 'primeng/toolbar';
+import { FormsModule } from '@angular/forms';
+import { ToggleButton } from 'primeng/togglebutton';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-bin-list',
-  imports: [TableModule, DecimalPipe, RouterLink],
+  imports: [TableModule, DecimalPipe, RouterLink, Toolbar, FormsModule, ToggleButton],
   templateUrl: './bin-list.html',
   styleUrl: './bin-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BinList implements OnInit {
+export class BinList {
   private readonly binService = inject(BinService);
 
-  readonly bins = signal<BinListResponseDTO[]>([]);
-  readonly totalRecords = signal(0);
+  readonly bins = toSignal(this.binService.getBinList(), { initialValue: [] });
   readonly rows = 20;
-
-  ngOnInit(): void {
-    this.loadPage(0, this.rows);
-  }
-
-  protected onPageChange(event: TableLazyLoadEvent): void {
-    const pageSize = event.rows ?? this.rows;
-    const page = event.first ? Math.floor(event.first / pageSize) : 0;
-    this.loadPage(page, pageSize);
-  }
-
-  private loadPage(page: number, pageSize: number): void {
-    this.binService.getBinList(page, pageSize).subscribe((response) => {
-      this.bins.set(response.content);
-      this.totalRecords.set(response.totalElements);
-    });
-  }
 }
