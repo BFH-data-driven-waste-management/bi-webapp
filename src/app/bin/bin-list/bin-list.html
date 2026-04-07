@@ -2,7 +2,7 @@
   <p-toolbar class="mb-4">
     <ng-template pTemplate="start">
       <div class="flex flex-col gap-2">
-        <span class="text-lg text-surface-800 font-medium">Sortieransichten</span>
+        <span class="text-lg text-surface-800 font-medium">Heuristiken</span>
         <div class="flex items-center gap-3">
           <span class="text-surface-600 font-medium">Statisch</span>
           @for (toggle of staticHeuristicToggles; track toggle.id) {
@@ -21,6 +21,13 @@
               [offLabel]="toggle.label" />
           }
         </div>
+        @if (activeHeuristicFilterChips().length > 0) {
+          <div class="flex items-center gap-2 mt-2">
+            @for (chipLabel of activeHeuristicFilterChips(); track chipLabel) {
+              <p-chip class="py-1 px-3 text-sm bg-red-200" [label]="chipLabel" /> <!-- TODO centralize chip style (tour overview has same) -->
+            }
+          </div>
+        }
       </div>
     </ng-template>
   </p-toolbar>

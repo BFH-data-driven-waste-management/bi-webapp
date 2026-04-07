@@ -6,6 +6,7 @@ import { RouterLink } from '@angular/router';
 import { Toolbar } from 'primeng/toolbar';
 import { FormsModule } from '@angular/forms';
 import { ToggleButton } from 'primeng/togglebutton';
+import { Chip } from 'primeng/chip';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SortMeta } from 'primeng/api';
 import { BinListResponseDTO } from '../bin.model';
@@ -20,11 +21,21 @@ type BinHeuristicToggle = {
   label: string;
   category: 'static' | 'dynamic';
   sorts: SortMeta[];
+  filterChips: string[];
 };
 
 @Component({
   selector: 'app-bin-list',
-  imports: [TableModule, DecimalPipe, RouterLink, Toolbar, FormsModule, ToggleButton, PercentPipe],
+  imports: [
+    TableModule,
+    DecimalPipe,
+    RouterLink,
+    Toolbar,
+    FormsModule,
+    ToggleButton,
+    PercentPipe,
+    Chip,
+  ],
   templateUrl: './bin-list.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -56,6 +67,7 @@ export class BinList {
       id: 'increase-bin-density-static',
       label: 'Behälterdichte erhöhen',
       category: 'static',
+      filterChips: ['Aktiv = Ja', 'Ø Besuche/Woche (90d) >= 6'],
       sorts: [
         { field: 'overfullVisitRatio90d', order: -1 },
         { field: 'avgWeeklyVisits90d', order: -1 },
@@ -66,6 +78,12 @@ export class BinList {
       id: 'reduce-approach-frequency-dynamic',
       label: 'Anfahrtsfrequenz reduzieren',
       category: 'dynamic',
+      filterChips: [
+        'Aktiv = Ja',
+        'Ø Besuche/Woche (90d) > 4',
+        'Leer-/Halbvollquote (90d) > 40%',
+        'Übervoll-Quote (90d) < 40%',
+      ],
       sorts: [
         { field: 'lowFillVisitRatio90d', order: -1 },
         { field: 'overfullVisitRatio90d', order: 1 },
@@ -76,6 +94,12 @@ export class BinList {
       id: 'increase-approach-frequency-dynamic',
       label: 'Anfahrtsfrequenz erhöhen',
       category: 'dynamic',
+      filterChips: [
+        'Aktiv = Ja',
+        'Ø Besuche/Woche (90d) < 4',
+        'Leer-/Halbvollquote (90d) < 40%',
+        'Übervoll-Quote (90d) > 40%',
+      ],
       sorts: [
         { field: 'overfullVisitRatio90d', order: -1 },
         { field: 'avgWeeklyVisits90d', order: 1 },
@@ -85,6 +109,18 @@ export class BinList {
   ];
 
   readonly activeHeuristicId = signal<BinHeuristicId | null>(null);
+
+  readonly activeHeuristicFilterChips = computed<string[]>(() => {
+    const activeHeuristic = this.heuristicToggles.find(
+      (toggle) => toggle.id === this.activeHeuristicId(),
+    );
+    if (!activeHeuristic) {
+      return [];
+    }
+
+    return activeHeuristic.filterChips;
+  });
+
   multiSortMeta: SortMeta[] | null = this.initialSortMeta.map((sort) => ({ ...sort }));
 
   get staticHeuristicToggles(): BinHeuristicToggle[] {
@@ -110,23 +146,31 @@ export class BinList {
       this.initialSortMeta.map((sort) => ({ ...sort }));
   }
 
+  // TODO verify tresholds
   private isIncreaseDensityCandidate(bin: BinListResponseDTO): boolean {
-    return bin.avgWeeklyVisits90d >= 6; // TODO?
+    return bin.avgWeeklyVisits90d >= 6 && bin.isActive;
   }
 
+  // TODO verify tresholds
   private isReduceApproachCandidate(bin: BinListResponseDTO): boolean {
     return (
       bin.avgWeeklyVisits90d > 4 &&
       bin.lowFillVisitRatio90d > 0.4 &&
-      bin.overfullVisitRatio90d < 0.4
+      bin.overfullVisitRatio90d < 0.4 &&
+      bin.isActive
     );
   }
 
+  // TODO verify tresholds
   private isIncreaseApproachCandidate(bin: BinListResponseDTO): boolean {
     return (
       bin.avgWeeklyVisits90d < 4 &&
       bin.lowFillVisitRatio90d < 0.4 &&
-      bin.overfullVisitRatio90d > 0.4
+      bin.overfullVisitRatio90d > 0.4 &&
+      bin.isActive
     );
   }
+
+  // TODO andere generelle "gates"?:
+  // visits_90d >= x?
 }
