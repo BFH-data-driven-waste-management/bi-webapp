@@ -49,10 +49,8 @@ export interface BinDayFeaturesResponseDTO {
   lowFillVisitRatio90d: number | null;
   notEmptiedRatio90d: number | null;
   emptyingRank90d: number | null;
-  weatherSensitivityScore: number | null;
-  rainSensitivityScore: number | null;
-  sunSensitivityScore: number | null;
-  heatSensitivityScore: number | null;
+  goodWeatherSensitivityScore: number | null;
+  badWeatherSensitivityScore: number | null;
   eventSensitivityScore: number | null;
 }
 

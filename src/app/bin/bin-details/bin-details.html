@@ -113,14 +113,14 @@
     icon="sun"
     [percent]="true"
     [loading]="loading()"
-    [value]="bin()?.binDayFeaturesResponse?.sunSensitivityScore ?? 0" />
+    [value]="bin()?.binDayFeaturesResponse?.goodWeatherSensitivityScore ?? 0" />
 
   <app-simple-metric-card
     header="Schlechtwetter Sensitivität"
     icon="cloud"
     [percent]="true"
     [loading]="loading()"
-    [value]="bin()?.binDayFeaturesResponse?.rainSensitivityScore ?? 0" />
+    [value]="bin()?.binDayFeaturesResponse?.badWeatherSensitivityScore ?? 0" />
 
   <app-simple-metric-card
     header="Event Sensitivtät"
