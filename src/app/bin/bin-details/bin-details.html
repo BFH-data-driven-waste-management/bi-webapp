@@ -109,11 +109,18 @@
     [value]="bin()?.binDayFeaturesResponse?.emptyingRank90d ?? 0" />
 
   <app-simple-metric-card
-    header="Wetter Sensitivität"
+    header="Schönwetter Sensitivität"
     icon="sun"
     [percent]="true"
     [loading]="loading()"
-    [value]="bin()?.binDayFeaturesResponse?.weatherSensitivityScore ?? 0" />
+    [value]="bin()?.binDayFeaturesResponse?.sunSensitivityScore ?? 0" />
+
+  <app-simple-metric-card
+    header="Schlechtwetter Sensitivität"
+    icon="cloud"
+    [percent]="true"
+    [loading]="loading()"
+    [value]="bin()?.binDayFeaturesResponse?.rainSensitivityScore ?? 0" />
 
   <app-simple-metric-card
     header="Event Sensitivtät"
