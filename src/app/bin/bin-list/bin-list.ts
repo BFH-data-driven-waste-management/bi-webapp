@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { BinService } from '../bin.service';
-import { DecimalPipe } from '@angular/common';
+import { DecimalPipe, PercentPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Toolbar } from 'primeng/toolbar';
 import { FormsModule } from '@angular/forms';
@@ -23,9 +23,8 @@ type BinHeuristicToggle = {
 
 @Component({
   selector: 'app-bin-list',
-  imports: [TableModule, DecimalPipe, RouterLink, Toolbar, FormsModule, ToggleButton],
+  imports: [TableModule, DecimalPipe, RouterLink, Toolbar, FormsModule, ToggleButton, PercentPipe],
   templateUrl: './bin-list.html',
-  styleUrl: './bin-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BinList {
