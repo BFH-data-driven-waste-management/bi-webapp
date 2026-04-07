@@ -67,7 +67,12 @@ export class BinList {
       id: 'increase-bin-density-static',
       label: 'Behälterdichte erhöhen',
       category: 'static',
-      filterChips: ['Aktiv = Ja', 'Ø Besuche/Woche (90d) >= 6'],
+      filterChips: [
+        'Aktiv = Ja',
+        'Ø Besuche/Woche (90d) > 5',
+        'Leer-/Halbvollquote (90d) < 50%',
+        'Übervoll-Quote (90d) > 1%',
+      ],
       sorts: [
         { field: 'overfullVisitRatio90d', order: -1 },
         { field: 'avgWeeklyVisits90d', order: -1 },
@@ -81,8 +86,8 @@ export class BinList {
       filterChips: [
         'Aktiv = Ja',
         'Ø Besuche/Woche (90d) > 4',
-        'Leer-/Halbvollquote (90d) > 40%',
-        'Übervoll-Quote (90d) < 40%',
+        'Leer-/Halbvollquote (90d) > 50%',
+        'Übervoll-Quote (90d) < 1%',
       ],
       sorts: [
         { field: 'lowFillVisitRatio90d', order: -1 },
@@ -97,8 +102,8 @@ export class BinList {
       filterChips: [
         'Aktiv = Ja',
         'Ø Besuche/Woche (90d) < 4',
-        'Leer-/Halbvollquote (90d) < 40%',
-        'Übervoll-Quote (90d) > 40%',
+        'Leer-/Halbvollquote (90d) < 50%',
+        'Übervoll-Quote (90d) > 1%',
       ],
       sorts: [
         { field: 'overfullVisitRatio90d', order: -1 },
@@ -148,15 +153,20 @@ export class BinList {
 
   // TODO verify tresholds
   private isIncreaseDensityCandidate(bin: BinListResponseDTO): boolean {
-    return bin.avgWeeklyVisits90d >= 6 && bin.isActive;
+    return (
+      bin.avgWeeklyVisits90d > 5 &&
+      bin.lowFillVisitRatio90d < 0.5 &&
+      bin.overfullVisitRatio90d > 0.01 &&
+      bin.isActive
+    );
   }
 
   // TODO verify tresholds
   private isReduceApproachCandidate(bin: BinListResponseDTO): boolean {
     return (
       bin.avgWeeklyVisits90d > 4 &&
-      bin.lowFillVisitRatio90d > 0.4 &&
-      bin.overfullVisitRatio90d < 0.4 &&
+      bin.lowFillVisitRatio90d > 0.5 &&
+      bin.overfullVisitRatio90d < 0.01 &&
       bin.isActive
     );
   }
@@ -165,8 +175,8 @@ export class BinList {
   private isIncreaseApproachCandidate(bin: BinListResponseDTO): boolean {
     return (
       bin.avgWeeklyVisits90d < 4 &&
-      bin.lowFillVisitRatio90d < 0.4 &&
-      bin.overfullVisitRatio90d > 0.4 &&
+      bin.lowFillVisitRatio90d < 0.5 &&
+      bin.overfullVisitRatio90d > 0.01 &&
       bin.isActive
     );
   }
