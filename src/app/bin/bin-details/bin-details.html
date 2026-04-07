@@ -48,6 +48,11 @@
         </div>
 
         <div class="flex flex-col">
+          <strong>Aktiv</strong>
+          <span>{{ bin()?.active ? 'Ja' : 'Nein' }}</span>
+        </div>
+
+        <div class="flex flex-col">
           <strong>Koordinaten</strong>
 
           <div class="flex gap-3">
@@ -106,12 +111,14 @@
   <app-simple-metric-card
     header="Wetter Sensitivität"
     icon="sun"
+    [percent]="true"
     [loading]="loading()"
     [value]="bin()?.binDayFeaturesResponse?.weatherSensitivityScore ?? 0" />
 
   <app-simple-metric-card
     header="Event Sensitivtät"
     icon="calendar"
+    [percent]="true"
     [loading]="loading()"
     [value]="bin()?.binDayFeaturesResponse?.eventSensitivityScore ?? 0" />
 
