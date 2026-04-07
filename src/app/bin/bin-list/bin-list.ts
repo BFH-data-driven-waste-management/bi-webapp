@@ -21,7 +21,7 @@ type BinHeuristicToggle = {
   label: string;
   category: 'static' | 'dynamic';
   sorts: SortMeta[];
-  filterChips: string[];
+  filterChips: string[]; // TODO maybe there is a better generic solution
 };
 
 @Component({
