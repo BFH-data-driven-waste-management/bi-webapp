@@ -7,7 +7,7 @@
           <span class="text-surface-600 font-medium">Statisch</span>
           @for (toggle of staticHeuristicToggles; track toggle.id) {
             <p-toggle-button
-              [ngModel]="activeHeuristicId === toggle.id"
+              [ngModel]="activeHeuristicId() === toggle.id"
               (ngModelChange)="onHeuristicToggleChange(toggle.id, $event)"
               [onLabel]="toggle.label"
               [offLabel]="toggle.label" />
@@ -15,7 +15,7 @@
           <span class="ml-4 text-surface-600 font-medium">Dynamisch</span>
           @for (toggle of dynamicHeuristicToggles; track toggle.id) {
             <p-toggle-button
-              [ngModel]="activeHeuristicId === toggle.id"
+              [ngModel]="activeHeuristicId() === toggle.id"
               (ngModelChange)="onHeuristicToggleChange(toggle.id, $event)"
               [onLabel]="toggle.label"
               [offLabel]="toggle.label" />
