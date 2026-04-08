@@ -1,5 +1,7 @@
 import { FillLevel, KpiMetricResponseDTO, VisitAction } from '../shared/models/common.model';
 
+// ================= data transfer objects =================
+
 export interface BinMapResponseDTO {
   binId: number;
   type: string;
@@ -8,11 +10,6 @@ export interface BinMapResponseDTO {
   coordY4326: number;
   coordX2056: number;
   coordY2056: number;
-}
-
-export interface BinMapMarkerVM extends BinMapResponseDTO {
-  position: google.maps.LatLngLiteral;
-  content: HTMLElement;
 }
 
 export interface BinListResponseDTO {
@@ -69,6 +66,13 @@ export interface BinDayFeaturesResponseDTO {
 export interface DailyCountResponseDTO {
   dateKey: number;
   count: number;
+}
+
+// ================= view models =================
+
+export interface BinMapMarkerVM extends BinMapResponseDTO {
+  position: google.maps.LatLngLiteral;
+  content: HTMLElement;
 }
 
 export interface FullBinVm extends BinListResponseDTO {

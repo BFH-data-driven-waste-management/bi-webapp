@@ -1,5 +1,7 @@
 import { FillLevel, VisitAction } from '../shared/models/common.model';
 
+// ================= data transfer objects =================
+
 export interface TourDTO {
   id: number;
   licensePlate: string;
@@ -44,9 +46,7 @@ export interface VehicleEmptyingDTO {
   eventTimestamp: string;
 }
 
-export type TourTimelineItem =
-  | (BinVisitDTO & { type: 'binVisit' })
-  | (VehicleEmptyingDTO & { type: 'vehicleEmptying' });
+// ================= view models =================
 
 export interface SimpleTourTimelineItemVm {
   action: string;
@@ -61,9 +61,6 @@ export interface TourVisitVm extends BinVisitDTO {
   visitActionSeverity: 'success' | 'contrast';
 }
 
-/**
- * Tour view model extending the dto with derived fields
- */
 export interface TourVm extends TourDTO {
   binVisitsAmount: number;
   startedAtLabel: string;
@@ -82,3 +79,9 @@ export type TourPathVm = {
   path: google.maps.LatLngLiteral[];
   options: google.maps.PolylineOptions;
 };
+
+// ================= other =================
+
+export type TourTimelineItem =
+  | (BinVisitDTO & { type: 'binVisit' })
+  | (VehicleEmptyingDTO & { type: 'vehicleEmptying' });
