@@ -150,3 +150,47 @@
     [value]="bin()?.binDayFeaturesResponse?.notEmptiedRatio90d ?? 0"
     [percent]="true" />
 </div>
+
+<!-- TODO first prop needed? -->
+<p-card header="Behälterbesuche" class="mt-6 mb-8 rounded-2xl border border-surface-300">
+  <p-table
+    [value]="binVisits()"
+    paginator
+    [lazy]="true"
+    [rows]="binVisitRows"
+    [first]="binVisitFirst()"
+    [totalRecords]="binVisitPage().totalElements"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [loading]="binVisitLoading()"
+    [tableStyle]="{ 'min-width': '64rem' }"
+    (onLazyLoad)="onBinVisitLazyLoad($event)">
+    <ng-template #header>
+      <tr>
+        <th class="w-[10%]">Besuchs-ID</th>
+        <th class="w-[10%]">Tour-ID</th>
+        <th class="w-[10%]">Position in Tour</th>
+        <th>Zeitpunkt</th>
+        <th>Füllstand</th>
+        <th>Aktion</th>
+        <th class="w-[10%]">Fahrzeug</th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-visit>
+      <tr>
+        <td>{{ visit.binVisitId }}</td>
+        <td>
+          <a [routerLink]="['/tour', visit.tourId]"
+             class="text-red-500 hover:text-red-400 underline underline-offset-2">
+            {{ visit.tourId }}
+          </a>
+        </td>
+        <td>{{ visit.sequenceInTour }}</td>
+        <td>{{ visit.eventTimestampLabel }}</td>
+        <td><p-tag [value]="visit.fillLevelLabel" [class]="visit.fillLevelClass" /></td>
+        <td><p-tag [value]="visit.visitActionLabel" [severity]="visit.visitActionSeverity" /></td>
+        <td>{{ visit.licensePlate }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>

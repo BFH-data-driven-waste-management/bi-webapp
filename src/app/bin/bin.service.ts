@@ -1,7 +1,13 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { BinDetailsResponseDTO, BinListResponseDTO, BinMapResponseDTO } from './bin.model';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import {
+  BinDetailsResponseDTO,
+  BinListResponseDTO,
+  BinMapResponseDTO,
+  BinVisitHistoryResponseDTO,
+} from './bin.model';
+import { PageDTO } from '../shared/models/common.model';
 
 @Injectable({
   providedIn: 'root',
@@ -22,5 +28,20 @@ export class BinService {
 
   getBinDetailsById(binId: number): Observable<BinDetailsResponseDTO> {
     return this.http.get<BinDetailsResponseDTO>(`${this.binDetailsApiUrl}/${binId}`);
+  }
+
+  getBinVisitsByBinId(
+    binId: number,
+    page = 0,
+    size = 10,
+  ): Observable<PageDTO<BinVisitHistoryResponseDTO>> {
+    return this.http.get<PageDTO<BinVisitHistoryResponseDTO>>(
+      `${this.binDetailsApiUrl}/${binId}/visits`,{
+        params: {
+          page,
+          size
+        }
+      }
+    );
   }
 }

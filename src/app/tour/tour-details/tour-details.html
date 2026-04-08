@@ -162,14 +162,10 @@
       <tr>
         <td>{{ visit.id }}</td>
         <td>
-          @if (visit.binId) {
-            <a [routerLink]="['/bin', visit.binId]"
-              class="text-red-500 hover:text-red-400 underline underline-offset-2">
-              {{ visit.binId }}
-            </a>
-          } @else {
-            <span>{{ visit.binId }}</span>
-          }
+          <a [routerLink]="['/bin', visit.binId]"
+            class="text-red-500 hover:text-red-400 underline underline-offset-2">
+            {{ visit.binId }}
+          </a>
         </td>
         <td>{{ visit.eventTimestampLabel }}</td>
         <td><p-tag [value]="visit.binType" [severity]="BIN_TYPE_TAG_SEVERITY" /></td> <!-- TODO maybe there is a better solution to display-->

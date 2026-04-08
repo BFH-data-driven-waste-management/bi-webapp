@@ -53,7 +53,7 @@ export class ToursOverview implements OnInit, AfterViewInit {
 
   readonly columns: Column[] = [
     { field: 'id', header: 'ID' },
-    { field: 'licensePlate', header: 'Fahrzeugnummer' },
+    { field: 'licensePlate', header: 'Fahrzeug' },
     { field: 'startedAtLabel', header: 'Startzeit' },
     { field: 'endedAtLabel', header: 'Endzeit' },
     { field: 'binVisitsAmount', header: 'Anzahl Behälterbesuche' },

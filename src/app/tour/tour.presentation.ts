@@ -1,4 +1,5 @@
-import { BinVisitVm, FillLevel, VisitAction } from './tour.model';
+import { BinVisitVm } from './tour.model';
+import { FillLevel, VisitAction } from '../shared/models/common.model';
 
 /**
  * This file capsules presentation related constants: pragmatic enum translations (for now) and tag styles (severities).
@@ -11,7 +12,8 @@ export const BIN_VISIT_FILL_LEVEL_LABELS: Record<FillLevel, string> = {
   EMPTY_OR_ALMOST_EMPTY: 'Leer oder fast leer',
 };
 
-export const BIN_VISIT_FILL_LEVEL_TAG_CLASSES: Record<FillLevel, string> = { // TODO use in bar chart?
+export const BIN_VISIT_FILL_LEVEL_TAG_CLASSES: Record<FillLevel, string> = {
+  // TODO use in bar chart?
   OVERFULL: 'bg-gray-900 text-white',
   FULL: 'bg-red-600 text-white',
   HALF_FULL: 'bg-red-300 text-gray-900',

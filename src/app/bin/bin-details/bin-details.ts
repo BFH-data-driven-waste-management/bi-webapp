@@ -11,7 +11,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Card } from 'primeng/card';
 import { UIChart } from 'primeng/chart';
-import { BinDetailsResponseDTO } from '../bin.model';
+import { BinDetailsResponseDTO, BinVisitHistoryResponseDTO } from '../bin.model';
 import { ChartData, ChartOptions, ScriptableContext } from 'chart.js';
 import { GoogleMap, MapAdvancedMarker } from '@angular/google-maps';
 import { SimpleMetricCard } from '../../shared/components/simple-metric-card/simple-metric-card';
@@ -20,9 +20,19 @@ import { Button } from 'primeng/button';
 import { Location } from '@angular/common';
 import { Skeleton } from 'primeng/skeleton';
 import { BinService } from '../bin.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { buildFillTrendOptions } from './chart-options';
-import { distinctUntilChanged, EMPTY, map, switchMap } from 'rxjs';
+import { distinctUntilChanged, EMPTY, finalize, map, switchMap } from 'rxjs';
+import { TableLazyLoadEvent, TableModule } from 'primeng/table';
+import { Tag } from 'primeng/tag';
+import { PageDTO } from '../../shared/models/common.model';
+import { DateTimeService } from '../../shared/services/date-time.service';
+import {
+  BIN_VISIT_ACTION_LABELS,
+  BIN_VISIT_ACTION_TAG_SEVERITIES,
+  BIN_VISIT_FILL_LEVEL_LABELS,
+  BIN_VISIT_FILL_LEVEL_TAG_CLASSES,
+} from '../../tour/tour.presentation';
 
 @Component({
   selector: 'app-bin-details',
@@ -35,6 +45,9 @@ import { distinctUntilChanged, EMPTY, map, switchMap } from 'rxjs';
     TrendMetricCard,
     Button,
     Skeleton,
+    TableModule,
+    Tag,
+    RouterLink,
   ],
   templateUrl: './bin-details.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,8 +57,19 @@ export class BinDetails implements OnInit {
   private readonly location = inject(Location);
   private readonly binService = inject(BinService);
   private readonly route = inject(ActivatedRoute);
+  private readonly dateTimeService = inject(DateTimeService);
 
   readonly loading = signal(true);
+  readonly binVisitLoading = signal(false);
+  readonly binVisitPage = signal<PageDTO<BinVisitHistoryResponseDTO>>({
+    content: [],
+    page: 0,
+    size: 10,
+    totalElements: 0,
+    totalPages: 0,
+  });
+  readonly binVisitRows = 10;
+  readonly binVisitFirst = signal(0);
   readonly bin = signal<BinDetailsResponseDTO | null>(null);
   readonly binPosition = computed(() => {
     const bin = this.bin();
@@ -155,6 +179,16 @@ export class BinDetails implements OnInit {
 
   readonly locationLabel = computed(() => this.locationResource.value() ?? '');
   readonly locationLoading = computed(() => this.locationResource.isLoading());
+  readonly binVisits = computed(() =>
+    this.binVisitPage().content.map((visit) => ({
+      ...visit,
+      eventTimestampLabel: this.dateTimeService.format(visit.eventTimestamp),
+      fillLevelLabel: BIN_VISIT_FILL_LEVEL_LABELS[visit.fillLevelCode],
+      fillLevelClass: BIN_VISIT_FILL_LEVEL_TAG_CLASSES[visit.fillLevelCode],
+      visitActionLabel: BIN_VISIT_ACTION_LABELS[visit.actionCode],
+      visitActionSeverity: BIN_VISIT_ACTION_TAG_SEVERITIES[visit.actionCode],
+    })),
+  );
 
   ngOnInit(): void {
     this.route.paramMap
@@ -165,10 +199,13 @@ export class BinDetails implements OnInit {
           if (!Number.isFinite(binId)) {
             this.loading.set(false);
             this.bin.set(null);
+            this.resetBinVisits();
             return EMPTY;
           }
 
           this.loading.set(true);
+          this.binVisitFirst.set(0);
+          this.loadBinVisits(binId, 0, this.binVisitRows);
           return this.binService.getBinDetailsById(binId);
         }),
         takeUntilDestroyed(this.destroyRef),
@@ -182,6 +219,20 @@ export class BinDetails implements OnInit {
           this.loading.set(false);
         },
       });
+  }
+
+  onBinVisitLazyLoad(event: TableLazyLoadEvent): void {
+    const binId = this.bin()?.binId;
+    if (binId == null) {
+      return;
+    }
+
+    const rows = event.rows ?? this.binVisitRows;
+    const first = event.first ?? 0;
+    const page = Math.floor(first / rows);
+
+    this.binVisitFirst.set(first);
+    this.loadBinVisits(binId, page, rows);
   }
 
   // TODO this is a bit of a hack... verify
@@ -230,5 +281,30 @@ export class BinDetails implements OnInit {
 
   goBack(): void {
     this.location.back();
+  }
+
+  private loadBinVisits(binId: number, page: number, size: number): void {
+    this.binVisitLoading.set(true);
+    this.binService
+      .getBinVisitsByBinId(binId, page, size)
+      .pipe(
+        finalize(() => this.binVisitLoading.set(false)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: (response) => this.binVisitPage.set(response),
+        error: () => this.resetBinVisits(),
+      });
+  }
+
+  private resetBinVisits(): void {
+    this.binVisitPage.set({
+      content: [],
+      page: 0,
+      size: this.binVisitRows,
+      totalElements: 0,
+      totalPages: 0,
+    });
+    this.binVisitFirst.set(0);
   }
 }

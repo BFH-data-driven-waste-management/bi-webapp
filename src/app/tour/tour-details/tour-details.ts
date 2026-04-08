@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
-import { BinVisitVm, Column, FillLevel, TourDTO, SimpleTourTimelineItemVm } from '../tour.model';
+import { BinVisitVm, Column, TourDTO, SimpleTourTimelineItemVm } from '../tour.model';
 import {
   BIN_TYPE_TAG_SEVERITY,
   BIN_VISIT_ACTION_LABELS,
@@ -34,6 +34,7 @@ import { SimpleMetricCard } from '../../shared/components/simple-metric-card/sim
 import { TourService } from '../tour.service';
 import { Skeleton } from 'primeng/skeleton';
 import { distinctUntilChanged, EMPTY, map, switchMap } from 'rxjs';
+import { FillLevel } from '../../shared/models/common.model';
 
 @Component({
   selector: 'app-tour-details',
