@@ -13,11 +13,11 @@ import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { Button } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import {
-  MapMarkerVm,
+  MapMarkerVM,
   TourOverviewDTO,
-  TourPathVm,
+  TourPathVM,
   TourTimelineItem,
-  TourVm,
+  TourVM,
 } from '../tour.model';
 import { Chip } from 'primeng/chip';
 import { Toolbar } from 'primeng/toolbar';
@@ -65,7 +65,7 @@ export class ToursOverview implements OnInit, AfterViewInit {
   readonly totalRecords = signal(0);
   readonly rows = signal(4);
   readonly latestTourIdFromFirstPage = signal<number | null>(null);
-  readonly tableRows = computed<TourVm[]>(() =>
+  readonly tableRows = computed<TourVM[]>(() =>
     [...this.tours()].map(
       (tour) =>
         ({
@@ -73,7 +73,7 @@ export class ToursOverview implements OnInit, AfterViewInit {
           binVisitsAmount: tour.binVisits.length,
           startedAtLabel: this.dateTimeService.format(tour.startedAt),
           endedAtLabel: this.dateTimeService.format(tour.endedAt),
-        }) as TourVm,
+        }) as TourVM,
     ),
   );
 
@@ -81,8 +81,8 @@ export class ToursOverview implements OnInit, AfterViewInit {
   private readonly selectedTourAcrossPagesMap = new Map<number, TourOverviewDTO>();
 
   protected canBeAligned = false;
-  protected markers: MapMarkerVm[] = [];
-  protected tourPaths: TourPathVm[] = [];
+  protected markers: MapMarkerVM[] = [];
+  protected tourPaths: TourPathVM[] = [];
   protected showMueve = false;
 
   protected readonly center: google.maps.LatLngLiteral = {
@@ -298,7 +298,7 @@ export class ToursOverview implements OnInit, AfterViewInit {
     );
   }
 
-  private buildMarkersForTour(tour: TourOverviewDTO, timelineItems: TourTimelineItem[]): MapMarkerVm[] {
+  private buildMarkersForTour(tour: TourOverviewDTO, timelineItems: TourTimelineItem[]): MapMarkerVM[] {
     const totalBinVisits = timelineItems.filter(
       (timelineItem) => timelineItem.type === 'binVisit',
     ).length;

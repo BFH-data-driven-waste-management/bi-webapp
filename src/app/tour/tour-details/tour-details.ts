@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
-import { TourVisitVm, TourDTO, SimpleTourTimelineItemVm } from '../tour.model';
+import { TourVisitVM, TourDTO, SimpleTourTimelineItemVM } from '../tour.model';
 import {
   BIN_TYPE_TAG_SEVERITY,
   BIN_VISIT_ACTION_LABELS,
@@ -108,13 +108,13 @@ export class TourDetails implements OnInit {
 
   readonly timelineWithMueve = signal(false);
 
-  readonly timeline = computed<SimpleTourTimelineItemVm[]>(() => {
+  readonly timeline = computed<SimpleTourTimelineItemVM[]>(() => {
     const tour = this.tour();
     if (!tour) {
       return [];
     }
 
-    const items: SimpleTourTimelineItemVm[] = [
+    const items: SimpleTourTimelineItemVM[] = [
       {
         action: 'Tourstart',
         timestamp: tour.startedAt,
@@ -217,7 +217,7 @@ export class TourDetails implements OnInit {
     };
   });
 
-  readonly binVisitRows = computed<TourVisitVm[]>(() =>
+  readonly binVisitRows = computed<TourVisitVM[]>(() =>
     (this.tour()?.binVisits ?? []).map((visit) => ({
       ...visit,
       eventTimestampLabel: this.dateTimeService.format(visit.eventTimestamp),

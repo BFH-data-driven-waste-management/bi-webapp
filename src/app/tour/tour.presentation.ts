@@ -1,4 +1,4 @@
-import { TourVisitVm } from './tour.model';
+import { TourVisitVM } from './tour.model';
 import { FillLevel, VisitAction } from '../shared/models/common.model';
 
 /**
@@ -25,7 +25,7 @@ export const BIN_VISIT_ACTION_LABELS: Record<VisitAction, string> = {
   NOT_EMPTIED: 'Nicht geleert',
 };
 
-export const BIN_VISIT_ACTION_TAG_SEVERITIES: Record<VisitAction, TourVisitVm['visitActionSeverity']> = {
+export const BIN_VISIT_ACTION_TAG_SEVERITIES: Record<VisitAction, TourVisitVM['visitActionSeverity']> = {
   EMPTIED: 'success',
   NOT_EMPTIED: 'contrast',
 };

@@ -11,7 +11,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Card } from 'primeng/card';
 import { UIChart } from 'primeng/chart';
-import { BinDetailsResponseDTO, BinVisitHistoryResponseDTO, BinVisitVm } from '../bin.model';
+import { BinDetailsResponseDTO, BinVisitHistoryResponseDTO, BinVisitVM } from '../bin.model';
 import { ChartData, ChartOptions, ScriptableContext } from 'chart.js';
 import { GoogleMap, MapAdvancedMarker } from '@angular/google-maps';
 import { SimpleMetricCard } from '../../shared/components/simple-metric-card/simple-metric-card';
@@ -179,7 +179,7 @@ export class BinDetails implements OnInit {
 
   readonly locationLabel = computed(() => this.locationResource.value() ?? '');
   readonly locationLoading = computed(() => this.locationResource.isLoading());
-  readonly binVisits = computed<BinVisitVm[]>(() =>
+  readonly binVisits = computed<BinVisitVM[]>(() =>
     this.binVisitPage().content.map((visit) => ({
       ...visit,
       eventTimestampLabel: this.dateTimeService.format(visit.eventTimestamp),

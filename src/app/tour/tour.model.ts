@@ -48,12 +48,12 @@ export interface VehicleEmptyingDTO {
 
 // ================= view models =================
 
-export interface SimpleTourTimelineItemVm {
+export interface SimpleTourTimelineItemVM {
   action: string;
   timestamp: string;
 }
 
-export interface TourVisitVm extends BinVisitDTO {
+export interface TourVisitVM extends BinVisitDTO {
   eventTimestampLabel: string;
   fillLevelLabel: string;
   fillLevelClass: string;
@@ -61,20 +61,20 @@ export interface TourVisitVm extends BinVisitDTO {
   visitActionSeverity: 'success' | 'contrast';
 }
 
-export interface TourVm extends TourDTO {
+export interface TourVM extends TourDTO {
   binVisitsAmount: number;
   startedAtLabel: string;
   endedAtLabel: string;
 }
 
-export type MapMarkerVm = {
+export type MapMarkerVM = {
   id: string;
   position: google.maps.LatLngLiteral;
   title: string;
   content: HTMLElement;
 };
 
-export type TourPathVm = {
+export type TourPathVM = {
   tourId: number;
   path: google.maps.LatLngLiteral[];
   options: google.maps.PolylineOptions;

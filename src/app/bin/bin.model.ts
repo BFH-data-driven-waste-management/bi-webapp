@@ -75,7 +75,7 @@ export interface BinMapMarkerVM extends BinMapResponseDTO {
   content: HTMLElement;
 }
 
-export interface FullBinVm extends BinListResponseDTO {
+export interface FullBinVM extends BinListResponseDTO {
   isActiveLabel: string;
   coord2056Label: string;
   avgWeeklyVisits90dLabel: string;
@@ -83,7 +83,7 @@ export interface FullBinVm extends BinListResponseDTO {
   overfullVisitRatio90dLabel: string;
 }
 
-export interface BinVisitVm extends BinVisitHistoryResponseDTO {
+export interface BinVisitVM extends BinVisitHistoryResponseDTO {
   eventTimestampLabel: string;
   fillLevelLabel: string;
   fillLevelClass: string;

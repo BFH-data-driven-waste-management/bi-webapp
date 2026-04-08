@@ -16,7 +16,7 @@ import { ToggleButton } from 'primeng/togglebutton';
 import { Chip } from 'primeng/chip';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SortMeta } from 'primeng/api';
-import { BinListResponseDTO, FullBinVm } from '../bin.model';
+import { BinListResponseDTO, FullBinVM } from '../bin.model';
 import { Button } from 'primeng/button';
 import { TableColumn } from '../../shared/models/common.model';
 
@@ -69,7 +69,7 @@ export class BinList {
     }
   });
 
-  readonly binRows = computed<FullBinVm[]>(() =>
+  readonly binRows = computed<FullBinVM[]>(() =>
     this.bins().map((bin) => ({
       ...bin,
       isActiveLabel: bin.isActive ? 'Ja' : 'Nein',
