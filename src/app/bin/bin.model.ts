@@ -1,4 +1,4 @@
-import { KpiMetricResponseDTO } from '../shared/models/common.model';
+import { FillLevel, KpiMetricResponseDTO, VisitAction } from '../shared/models/common.model';
 
 export interface BinMapResponseDTO {
   binId: number;
@@ -49,8 +49,8 @@ export interface BinVisitHistoryResponseDTO {
   tourId: number;
   sequenceInTour: number;
   eventTimestamp: string;
-  fillLevelCode: string;
-  actionCode: string;
+  fillLevelCode: FillLevel;
+  actionCode: VisitAction;
   licensePlate: string;
 }
 

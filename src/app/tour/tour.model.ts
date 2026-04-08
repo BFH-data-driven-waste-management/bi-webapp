@@ -1,3 +1,5 @@
+import { FillLevel, VisitAction } from '../shared/models/common.model';
+
 export interface TourDTO {
   id: number;
   licensePlate: string;
@@ -49,18 +51,6 @@ export type TourTimelineItem =
 export interface SimpleTourTimelineItemVm {
   action: string;
   timestamp: string;
-}
-
-export enum FillLevel {
-  OVERFULL = 'OVERFULL',
-  FULL = 'FULL',
-  HALF_FULL = 'HALF_FULL',
-  EMPTY_OR_ALMOST_EMPTY = 'EMPTY_OR_ALMOST_EMPTY',
-}
-
-export enum VisitAction {
-  EMPTIED = 'EMPTIED',
-  NOT_EMPTIED = 'NOT_EMPTIED',
 }
 
 export interface BinVisitVm extends BinVisitDTO {

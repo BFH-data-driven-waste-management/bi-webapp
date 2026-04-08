@@ -144,9 +144,10 @@
     [percent]="true" />
 </div>
 
+<!-- TODO first prop needed? -->
 <p-card header="Behälterbesuche" class="mt-6 mb-8 rounded-2xl border border-surface-300">
   <p-table
-    [value]="binVisitRowsVm()"
+    [value]="binVisits()"
     paginator
     [lazy]="true"
     [rows]="binVisitRows"
@@ -162,9 +163,9 @@
         <th class="w-[10%]">Tour-ID</th>
         <th class="w-[10%]">Position in Tour</th>
         <th>Zeitpunkt</th>
-        <th class="w-[12%]">Füllstand</th>
-        <th class="w-[12%]">Aktion</th>
-        <th class="w-[12%]">Kennzeichen</th>
+        <th>Füllstand</th>
+        <th>Aktion</th>
+        <th class="w-[10%]">Fahrzeug</th>
       </tr>
     </ng-template>
 
@@ -178,10 +179,10 @@
           </a>
         </td>
         <td>{{ visit.sequenceInTour }}</td>
-        <td>{{ visit.eventTimestamp | date: 'EEE, dd.MM.y, HH:mm':'Europe/Zurich':'de-CH' }}</td>
+        <td>{{ visit.eventTimestampLabel }}</td>
         <td><p-tag [value]="visit.fillLevelLabel" [class]="visit.fillLevelClass" /></td>
-        <td><p-tag [value]="visit.actionLabel" [severity]="visit.actionSeverity" /></td>
-        <td>{{ visit.licensePlate || '-' }}</td>
+        <td><p-tag [value]="visit.visitActionLabel" [severity]="visit.visitActionSeverity" /></td>
+        <td>{{ visit.licensePlate }}</td>
       </tr>
     </ng-template>
   </p-table>

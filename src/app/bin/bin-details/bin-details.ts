@@ -17,7 +17,7 @@ import { GoogleMap, MapAdvancedMarker } from '@angular/google-maps';
 import { SimpleMetricCard } from '../../shared/components/simple-metric-card/simple-metric-card';
 import { TrendMetricCard } from '../../shared/components/trend-metric-card/trend-metric-card';
 import { Button } from 'primeng/button';
-import { DatePipe, Location } from '@angular/common';
+import { Location } from '@angular/common';
 import { Skeleton } from 'primeng/skeleton';
 import { BinService } from '../bin.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -26,6 +26,7 @@ import { distinctUntilChanged, EMPTY, finalize, map, switchMap } from 'rxjs';
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { Tag } from 'primeng/tag';
 import { PageDTO } from '../../shared/models/common.model';
+import { DateTimeService } from '../../shared/services/date-time.service';
 import {
   BIN_VISIT_ACTION_LABELS,
   BIN_VISIT_ACTION_TAG_SEVERITIES,
@@ -47,7 +48,6 @@ import {
     TableModule,
     Tag,
     RouterLink,
-    DatePipe,
   ],
   templateUrl: './bin-details.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -57,7 +57,7 @@ export class BinDetails implements OnInit {
   private readonly location = inject(Location);
   private readonly binService = inject(BinService);
   private readonly route = inject(ActivatedRoute);
-  private readonly currentBinId = signal<number | null>(null);
+  private readonly dateTimeService = inject(DateTimeService);
 
   readonly loading = signal(true);
   readonly binVisitLoading = signal(false);
@@ -179,13 +179,14 @@ export class BinDetails implements OnInit {
 
   readonly locationLabel = computed(() => this.locationResource.value() ?? '');
   readonly locationLoading = computed(() => this.locationResource.isLoading());
-  readonly binVisitRowsVm = computed(() =>
+  readonly binVisits = computed(() =>
     this.binVisitPage().content.map((visit) => ({
       ...visit,
-      fillLevelLabel: this.toFillLevelLabelByCode(visit.fillLevelCode),
-      fillLevelClass: this.toFillLevelTagClass(visit.fillLevelCode),
-      actionLabel: this.toVisitActionLabel(visit.actionCode),
-      actionSeverity: this.toVisitActionSeverity(visit.actionCode),
+      eventTimestampLabel: this.dateTimeService.format(visit.eventTimestamp),
+      fillLevelLabel: BIN_VISIT_FILL_LEVEL_LABELS[visit.fillLevelCode],
+      fillLevelClass: BIN_VISIT_FILL_LEVEL_TAG_CLASSES[visit.fillLevelCode],
+      visitActionLabel: BIN_VISIT_ACTION_LABELS[visit.actionCode],
+      visitActionSeverity: BIN_VISIT_ACTION_TAG_SEVERITIES[visit.actionCode],
     })),
   );
 
@@ -198,13 +199,11 @@ export class BinDetails implements OnInit {
           if (!Number.isFinite(binId)) {
             this.loading.set(false);
             this.bin.set(null);
-            this.currentBinId.set(null);
             this.resetBinVisits();
             return EMPTY;
           }
 
           this.loading.set(true);
-          this.currentBinId.set(binId);
           this.binVisitFirst.set(0);
           this.loadBinVisits(binId, 0, this.binVisitRows);
           return this.binService.getBinDetailsById(binId);
@@ -223,8 +222,8 @@ export class BinDetails implements OnInit {
   }
 
   onBinVisitLazyLoad(event: TableLazyLoadEvent): void {
-    const binId = this.currentBinId();
-    if (!binId) {
+    const binId = this.bin()?.binId;
+    if (binId == null) {
       return;
     }
 
@@ -307,32 +306,5 @@ export class BinDetails implements OnInit {
       totalPages: 0,
     });
     this.binVisitFirst.set(0);
-  }
-
-  private toFillLevelLabelByCode(fillLevelCode: string): string {
-    return (
-      BIN_VISIT_FILL_LEVEL_LABELS[fillLevelCode as keyof typeof BIN_VISIT_FILL_LEVEL_LABELS] ??
-      fillLevelCode
-    );
-  }
-
-  private toFillLevelTagClass(fillLevelCode: string): string {
-    return (
-      BIN_VISIT_FILL_LEVEL_TAG_CLASSES[
-        fillLevelCode as keyof typeof BIN_VISIT_FILL_LEVEL_TAG_CLASSES
-      ] ?? 'bg-gray-200 text-gray-700'
-    );
-  }
-
-  private toVisitActionLabel(actionCode: string): string {
-    return BIN_VISIT_ACTION_LABELS[actionCode as keyof typeof BIN_VISIT_ACTION_LABELS] ?? actionCode;
-  }
-
-  private toVisitActionSeverity(actionCode: string): 'success' | 'contrast' {
-    return (
-      BIN_VISIT_ACTION_TAG_SEVERITIES[
-        actionCode as keyof typeof BIN_VISIT_ACTION_TAG_SEVERITIES
-      ] ?? 'contrast'
-    );
   }
 }
