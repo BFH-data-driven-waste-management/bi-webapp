@@ -21,9 +21,9 @@ import { Button } from 'primeng/button';
 import { TableColumn } from '../../shared/models/common.model';
 
 type BinHeuristicId =
-  | 'increase-bin-density-static'
-  | 'reduce-approach-frequency-dynamic'
-  | 'increase-approach-frequency-dynamic';
+  | 'increase-bin-density'
+  | 'reduce-approach-frequency'
+  | 'increase-approach-frequency';
 
 type BinHeuristicToggle = {
   id: BinHeuristicId;
@@ -35,15 +35,7 @@ type BinHeuristicToggle = {
 
 @Component({
   selector: 'app-bin-list',
-  imports: [
-    TableModule,
-    RouterLink,
-    Toolbar,
-    FormsModule,
-    ToggleButton,
-    Chip,
-    Button,
-  ],
+  imports: [TableModule, RouterLink, Toolbar, FormsModule, ToggleButton, Chip, Button],
   templateUrl: './bin-list.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -58,11 +50,11 @@ export class BinList {
     const bins = this.binsRaw();
 
     switch (this.activeHeuristicId()) {
-      case 'increase-bin-density-static':
+      case 'increase-bin-density':
         return bins.filter((bin) => this.isIncreaseDensityCandidate(bin));
-      case 'reduce-approach-frequency-dynamic':
+      case 'reduce-approach-frequency':
         return bins.filter((bin) => this.isReduceApproachCandidate(bin));
-      case 'increase-approach-frequency-dynamic':
+      case 'increase-approach-frequency':
         return bins.filter((bin) => this.isIncreaseApproachCandidate(bin));
       default:
         return bins;
@@ -93,7 +85,7 @@ export class BinList {
 
   readonly heuristicToggles: BinHeuristicToggle[] = [
     {
-      id: 'increase-bin-density-static',
+      id: 'increase-bin-density',
       label: 'Behälterdichte erhöhen',
       category: 'static',
       filterChips: [
@@ -109,7 +101,7 @@ export class BinList {
       ],
     },
     {
-      id: 'reduce-approach-frequency-dynamic',
+      id: 'reduce-approach-frequency',
       label: 'Anfahrtsfrequenz reduzieren',
       category: 'dynamic',
       filterChips: [
@@ -125,7 +117,7 @@ export class BinList {
       ],
     },
     {
-      id: 'increase-approach-frequency-dynamic',
+      id: 'increase-approach-frequency',
       label: 'Anfahrtsfrequenz erhöhen',
       category: 'dynamic',
       filterChips: [
@@ -153,6 +145,11 @@ export class BinList {
     }
 
     return activeHeuristic.filterChips;
+  });
+
+  readonly exportFilename = computed<string>(() => {
+    const activeHeuristicId = this.activeHeuristicId();
+    return !activeHeuristicId ? 'bin-list' : `bin-list-filtered-heuristic-${activeHeuristicId}`;
   });
 
   multiSortMeta: SortMeta[] | null = this.initialSortMeta.map((sort) => ({ ...sort }));

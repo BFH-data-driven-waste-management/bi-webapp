@@ -50,7 +50,7 @@
     [multiSortMeta]="multiSortMeta"
     [rows]="rows"
     [rowsPerPageOptions]="[10, 20]"
-    exportFilename="bin-list"
+    [exportFilename]="exportFilename()"
     [tableStyle]="{ 'min-width': '55rem' }">
 
     <ng-template #header>
