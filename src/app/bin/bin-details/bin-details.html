@@ -137,6 +137,13 @@
     [percent]="true" />
 
   <app-simple-metric-card
+    header="Anteil Besuche mit übervollem Füllstand (90d)"
+    icon="exclamation-circle"
+    [loading]="loading()"
+    [value]="bin()?.binDayFeaturesResponse?.overfullVisitRatio90d ?? 0"
+    [percent]="true" />
+
+  <app-simple-metric-card
     header="Anteil Nichtleerungen"
     icon="sort-up-fill"
     [loading]="loading()"

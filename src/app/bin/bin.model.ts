@@ -47,6 +47,7 @@ export interface BinDayFeaturesResponseDTO {
   baselineAvgVisitsPerWeek90d: KpiMetricResponseDTO | null;
   baselineAvgEmptyingsPerWeek90d: KpiMetricResponseDTO | null;
   lowFillVisitRatio90d: number | null;
+  overfullVisitRatio90d: number | null;
   notEmptiedRatio90d: number | null;
   emptyingRank90d: number | null;
   goodWeatherSensitivityScore: number | null;
