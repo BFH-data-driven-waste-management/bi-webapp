@@ -169,10 +169,10 @@
         <th class="w-[10%]">Besuchs-ID</th>
         <th class="w-[10%]">Tour-ID</th>
         <th class="w-[10%]">Position in Tour</th>
-        <th>Zeitpunkt</th>
+        <th class="w-[20%]">Zeitpunkt</th>
+        <th class="w-[10%]">Fahrzeug</th>
         <th>Füllstand</th>
         <th>Aktion</th>
-        <th class="w-[10%]">Fahrzeug</th>
       </tr>
     </ng-template>
 
@@ -187,9 +187,9 @@
         </td>
         <td>{{ visit.sequenceInTour }}</td>
         <td>{{ visit.eventTimestampLabel }}</td>
+        <td>{{ visit.licensePlate }}</td>
         <td><p-tag [value]="visit.fillLevelLabel" [class]="visit.fillLevelClass" /></td>
         <td><p-tag [value]="visit.visitActionLabel" [severity]="visit.visitActionSeverity" /></td>
-        <td>{{ visit.licensePlate }}</td>
       </tr>
     </ng-template>
   </p-table>
