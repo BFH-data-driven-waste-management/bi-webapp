@@ -13,7 +13,6 @@ import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { Button } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import {
-  Column,
   MapMarkerVm,
   TourOverviewDTO,
   TourPathVm,
@@ -26,6 +25,7 @@ import { ToggleButton } from 'primeng/togglebutton';
 import { DateTimeService } from '../../shared/services/date-time.service';
 import { Router } from '@angular/router';
 import { TourService } from '../tour.service';
+import { TableColumn } from '../../shared/models/common.model';
 
 @Component({
   selector: 'app-tours',
@@ -51,7 +51,7 @@ export class ToursOverview implements OnInit, AfterViewInit {
   readonly tourService = inject(TourService);
   readonly dateTimeService = inject(DateTimeService);
 
-  readonly columns: Column[] = [
+  readonly columns: TableColumn[] = [
     { field: 'id', header: 'ID' },
     { field: 'licensePlate', header: 'Fahrzeug' },
     { field: 'startedAtLabel', header: 'Startzeit' },

@@ -30,17 +30,27 @@
         }
       </div>
     </ng-template>
+    <ng-template pTemplate="end">
+      <p-button
+        label="Export"
+        icon="pi pi-file-export"
+        severity="secondary"
+        (onClick)="dt.exportCSV()"
+      />
+    </ng-template>
   </p-toolbar>
 
   <p-table
     #dt
-    [value]="bins()"
+    [columns]="columns"
+    [value]="binRows()"
     dataKey="binId"
     paginator
     sortMode="multiple"
     [multiSortMeta]="multiSortMeta"
     [rows]="rows"
     [rowsPerPageOptions]="[10, 20]"
+    exportFilename="bin-list"
     [tableStyle]="{ 'min-width': '55rem' }">
 
     <ng-template #header>
@@ -48,7 +58,7 @@
         <th class="w-[9%]">Behälter-ID</th>
         <th class="w-[12%]">Typ</th>
         <th class="w-[4%]">Aktiv</th>
-        <th class="w-[18%]">Koordinaten 2056</th>
+        <th class="w-[18%]">Koordinaten</th>
         <th class="w-[19%]" pSortableColumn="avgWeeklyVisits90d">
           Ø Besuche/Woche (90d)
           <p-sortIcon field="avgWeeklyVisits90d" />
@@ -73,11 +83,11 @@
           </a>
         </td>
         <td>{{ bin.type }}</td>
-        <td>{{ bin.isActive ? 'Ja' : 'Nein' }}</td>
-        <td>{{ bin.coordX2056 }} / {{ bin.coordY2056 }}</td>
-        <td>{{ bin.avgWeeklyVisits90d | number: '1.0-2' }}</td>
-        <td>{{ bin.lowFillVisitRatio90d | percent: '1.0-1' }}</td>
-        <td>{{ bin.overfullVisitRatio90d | percent: '1.0-1' }}</td>
+        <td>{{ bin.isActiveLabel }}</td>
+        <td>{{ bin.coord2056Label }}</td>
+        <td>{{ bin.avgWeeklyVisits90dLabel }}</td>
+        <td>{{ bin.lowFillVisitRatio90dLabel }}</td>
+        <td>{{ bin.overfullVisitRatio90dLabel }}</td>
       </tr>
     </ng-template>
   </p-table>

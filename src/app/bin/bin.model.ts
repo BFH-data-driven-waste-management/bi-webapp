@@ -70,3 +70,19 @@ export interface DailyCountResponseDTO {
   dateKey: number;
   count: number;
 }
+
+export interface FullBinVm extends BinListResponseDTO {
+  isActiveLabel: string;
+  coord2056Label: string;
+  avgWeeklyVisits90dLabel: string;
+  lowFillVisitRatio90dLabel: string;
+  overfullVisitRatio90dLabel: string;
+}
+
+export interface BinVisitVm extends BinVisitHistoryResponseDTO {
+  eventTimestampLabel: string;
+  fillLevelLabel: string;
+  fillLevelClass: string;
+  visitActionLabel: string;
+  visitActionSeverity: 'success' | 'contrast';
+}

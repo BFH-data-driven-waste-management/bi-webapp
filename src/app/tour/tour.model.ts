@@ -53,7 +53,7 @@ export interface SimpleTourTimelineItemVm {
   timestamp: string;
 }
 
-export interface BinVisitVm extends BinVisitDTO {
+export interface TourVisitVm extends BinVisitDTO {
   eventTimestampLabel: string;
   fillLevelLabel: string;
   fillLevelClass: string;
@@ -82,9 +82,3 @@ export type TourPathVm = {
   path: google.maps.LatLngLiteral[];
   options: google.maps.PolylineOptions;
 };
-
-export interface Column {
-  // TODO maybe move to shared
-  field: string;
-  header: string;
-}

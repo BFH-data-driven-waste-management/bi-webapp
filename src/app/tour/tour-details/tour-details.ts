@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
-import { BinVisitVm, Column, TourDTO, SimpleTourTimelineItemVm } from '../tour.model';
+import { TourVisitVm, TourDTO, SimpleTourTimelineItemVm } from '../tour.model';
 import {
   BIN_TYPE_TAG_SEVERITY,
   BIN_VISIT_ACTION_LABELS,
@@ -34,7 +34,7 @@ import { SimpleMetricCard } from '../../shared/components/simple-metric-card/sim
 import { TourService } from '../tour.service';
 import { Skeleton } from 'primeng/skeleton';
 import { distinctUntilChanged, EMPTY, map, switchMap } from 'rxjs';
-import { FillLevel } from '../../shared/models/common.model';
+import { TableColumn, FillLevel } from '../../shared/models/common.model';
 
 @Component({
   selector: 'app-tour-details',
@@ -97,7 +97,7 @@ export class TourDetails implements OnInit {
   /**
    * A (static) column definition is needed for the export
    */
-  readonly columns: Column[] = [
+  readonly columns: TableColumn[] = [
     { field: 'id', header: 'Besuchs-ID' },
     { field: 'binId', header: 'Eimer-ID' },
     { field: 'eventTimestampLabel', header: 'Zeitpunkt' },
@@ -217,7 +217,7 @@ export class TourDetails implements OnInit {
     };
   });
 
-  readonly binVisitRows = computed<BinVisitVm[]>(() =>
+  readonly binVisitRows = computed<TourVisitVm[]>(() =>
     (this.tour()?.binVisits ?? []).map((visit) => ({
       ...visit,
       eventTimestampLabel: this.dateTimeService.format(visit.eventTimestamp),

@@ -22,3 +22,8 @@ export enum VisitAction {
   EMPTIED = 'EMPTIED',
   NOT_EMPTIED = 'NOT_EMPTIED',
 }
+
+export interface TableColumn {
+  field: string;
+  header: string;
+}
