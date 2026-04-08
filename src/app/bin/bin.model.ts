@@ -43,6 +43,17 @@ export interface BinDetailsResponseDTO {
   fillTrend12m: DailyCountResponseDTO[];
 }
 
+export interface BinVisitHistoryResponseDTO {
+  binVisitId: number;
+  binId: number;
+  tourId: number;
+  sequenceInTour: number;
+  eventTimestamp: string;
+  fillLevelCode: string;
+  actionCode: string;
+  licensePlate: string;
+}
+
 export interface BinDayFeaturesResponseDTO {
   baselineAvgVisitsPerWeek90d: KpiMetricResponseDTO | null;
   baselineAvgEmptyingsPerWeek90d: KpiMetricResponseDTO | null;
