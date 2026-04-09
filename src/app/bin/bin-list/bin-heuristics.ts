@@ -1,6 +1,5 @@
 import {
   BinHeuristicFilter,
-  BinHeuristicId,
   BinHeuristicToggle,
   BinListResponseDTO,
 } from '../bin.model';
@@ -91,17 +90,6 @@ export const BIN_HEURISTIC_TOGGLES: BinHeuristicToggle[] = [
     ],
   },
 ];
-
-export function getHeuristicToggle(
-  toggles: BinHeuristicToggle[],
-  id: BinHeuristicId | null,
-): BinHeuristicToggle | undefined {
-  if (!id) {
-    return undefined;
-  }
-
-  return toggles.find((toggle) => toggle.id === id);
-}
 
 export function filterBinsByHeuristic(
   bins: BinListResponseDTO[],

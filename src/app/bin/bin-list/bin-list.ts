@@ -16,15 +16,10 @@ import { ToggleButton } from 'primeng/togglebutton';
 import { Chip } from 'primeng/chip';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SortMeta } from 'primeng/api';
-import {
-  BinHeuristicFilter,
-  BinHeuristicId,
-  BinHeuristicToggle,
-  FullBinVM,
-} from '../bin.model';
+import { BinHeuristicFilter, BinHeuristicToggle, FullBinVM } from '../bin.model';
 import { Button } from 'primeng/button';
 import { TableColumn } from '../../shared/models/common.model';
-import { BIN_HEURISTIC_TOGGLES, filterBinsByHeuristic, getHeuristicToggle } from './bin-heuristics';
+import { BIN_HEURISTIC_TOGGLES, filterBinsByHeuristic } from './bin-heuristics';
 
 @Component({
   selector: 'app-bin-list',
@@ -41,7 +36,7 @@ export class BinList {
 
   readonly bins = computed(() => {
     const bins = this.binsRaw();
-    const activeHeuristic = getHeuristicToggle(this.heuristicToggles, this.activeHeuristicId());
+    const activeHeuristic = this.activeHeuristic();
     if (!activeHeuristic) {
       return bins;
     }
@@ -73,10 +68,10 @@ export class BinList {
 
   readonly heuristicToggles: BinHeuristicToggle[] = BIN_HEURISTIC_TOGGLES;
 
-  readonly activeHeuristicId = signal<BinHeuristicId | null>(null);
+  readonly activeHeuristic = signal<BinHeuristicToggle | null>(null);
 
   readonly activeHeuristicFilterChips = computed<string[]>(() => {
-    const activeHeuristic = getHeuristicToggle(this.heuristicToggles, this.activeHeuristicId());
+    const activeHeuristic = this.activeHeuristic();
     if (!activeHeuristic) {
       return [];
     }
@@ -85,7 +80,7 @@ export class BinList {
   });
 
   readonly exportFilename = computed<string>(() => {
-    const activeHeuristicId = this.activeHeuristicId();
+    const activeHeuristicId = this.activeHeuristic()?.id;
     return !activeHeuristicId ? 'bin-list' : `bin-list-filtered-heuristic-${activeHeuristicId}`;
   });
 
@@ -99,18 +94,16 @@ export class BinList {
     return this.heuristicToggles.filter((toggle) => toggle.category === 'dynamic');
   }
 
-  onHeuristicToggleChange(toggleId: BinHeuristicId, isActive: boolean): void {
+  onHeuristicToggleChange(toggle: BinHeuristicToggle, isActive: boolean): void {
     if (!isActive) {
-      this.activeHeuristicId.set(null);
+      this.activeHeuristic.set(null);
       this.multiSortMeta = this.initialSortMeta.map((sort) => ({ ...sort }));
       return;
     }
 
-    this.activeHeuristicId.set(toggleId);
-
-    const selectedToggle = getHeuristicToggle(this.heuristicToggles, toggleId);
+    this.activeHeuristic.set(toggle);
     this.multiSortMeta =
-      selectedToggle?.sorts.map((sort) => ({ ...sort })) ??
+      toggle?.sorts.map((sort) => ({ ...sort })) ??
       this.initialSortMeta.map((sort) => ({ ...sort }));
   }
 
