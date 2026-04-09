@@ -1,4 +1,5 @@
 import { FillLevel, KpiMetricResponseDTO, VisitAction } from '../shared/models/common.model';
+import { SortMeta } from 'primeng/api';
 
 // ================= data transfer objects =================
 
@@ -89,4 +90,35 @@ export interface BinVisitVM extends BinVisitHistoryResponseDTO {
   fillLevelClass: string;
   visitActionLabel: string;
   visitActionSeverity: 'success' | 'contrast';
+}
+
+// ================= other =================
+
+export type BinHeuristicId =
+  | 'increase-bin-density'
+  | 'reduce-approach-frequency'
+  | 'increase-approach-frequency';
+
+export type NumericBinHeuristicField =
+  | 'isActive'
+  | 'avgWeeklyVisits90d'
+  | 'lowFillVisitRatio90d'
+  | 'overfullVisitRatio90d';
+
+export type FilterOperator = 'eq' | 'gt' | 'gte' | 'lt' | 'lte';
+
+export interface BinHeuristicToggle {
+  id: BinHeuristicId;
+  label: string;
+  category: 'static' | 'dynamic';
+  sorts: SortMeta[];
+  filters: BinHeuristicFilter[];
+}
+
+export interface BinHeuristicFilter {
+  label: string;
+  field: NumericBinHeuristicField;
+  operator: FilterOperator;
+  value: number | boolean;
+  displayAs?: 'number' | 'percent';
 }

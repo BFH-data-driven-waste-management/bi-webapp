@@ -16,22 +16,15 @@ import { ToggleButton } from 'primeng/togglebutton';
 import { Chip } from 'primeng/chip';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SortMeta } from 'primeng/api';
-import { BinListResponseDTO, FullBinVM } from '../bin.model';
+import {
+  BinHeuristicFilter,
+  BinHeuristicId,
+  BinHeuristicToggle,
+  BinListResponseDTO,
+  FullBinVM,
+} from '../bin.model';
 import { Button } from 'primeng/button';
 import { TableColumn } from '../../shared/models/common.model';
-
-type BinHeuristicId =
-  | 'increase-bin-density'
-  | 'reduce-approach-frequency'
-  | 'increase-approach-frequency';
-
-type BinHeuristicToggle = {
-  id: BinHeuristicId;
-  label: string;
-  category: 'static' | 'dynamic';
-  sorts: SortMeta[];
-  filterChips: string[]; // TODO maybe there is a better generic solution
-};
 
 @Component({
   selector: 'app-bin-list',
@@ -48,17 +41,13 @@ export class BinList {
 
   readonly bins = computed(() => {
     const bins = this.binsRaw();
-
-    switch (this.activeHeuristicId()) {
-      case 'increase-bin-density':
-        return bins.filter((bin) => this.isIncreaseDensityCandidate(bin));
-      case 'reduce-approach-frequency':
-        return bins.filter((bin) => this.isReduceApproachCandidate(bin));
-      case 'increase-approach-frequency':
-        return bins.filter((bin) => this.isIncreaseApproachCandidate(bin));
-      default:
-        return bins;
+    const activeHeuristic = this.heuristicToggles.find((toggle) => toggle.id === this.activeHeuristicId());
+    if (!activeHeuristic) {
+      return bins;
     }
+
+    return bins.filter((bin) => activeHeuristic.filters
+      .every((filter) => this.matchesFilter(bin, filter)));
   });
 
   readonly binRows = computed<FullBinVM[]>(() =>
@@ -88,11 +77,23 @@ export class BinList {
       id: 'increase-bin-density',
       label: 'Behälterdichte erhöhen',
       category: 'static',
-      filterChips: [
-        'Aktiv = Ja',
-        'Ø Besuche/Woche (90d) > 5',
-        'Leer-/Halbvollquote (90d) < 50%',
-        'Übervoll-Quote (90d) > 1%',
+      filters: [
+        { label: 'Aktiv', field: 'isActive', operator: 'eq', value: true },
+        { label: 'Ø Besuche/Woche (90d)', field: 'avgWeeklyVisits90d', operator: 'gt', value: 5 },
+        {
+          label: 'Leer-/Halbvollquote (90d)',
+          field: 'lowFillVisitRatio90d',
+          operator: 'lt',
+          value: 0.5,
+          displayAs: 'percent',
+        },
+        {
+          label: 'Übervoll-Quote (90d)',
+          field: 'overfullVisitRatio90d',
+          operator: 'gt',
+          value: 0.01,
+          displayAs: 'percent',
+        },
       ],
       sorts: [
         { field: 'overfullVisitRatio90d', order: -1 },
@@ -104,11 +105,23 @@ export class BinList {
       id: 'reduce-approach-frequency',
       label: 'Anfahrtsfrequenz reduzieren',
       category: 'dynamic',
-      filterChips: [
-        'Aktiv = Ja',
-        'Ø Besuche/Woche (90d) > 4',
-        'Leer-/Halbvollquote (90d) > 50%',
-        'Übervoll-Quote (90d) < 1%',
+      filters: [
+        { label: 'Aktiv', field: 'isActive', operator: 'eq', value: true },
+        { label: 'Ø Besuche/Woche (90d)', field: 'avgWeeklyVisits90d', operator: 'gt', value: 4 },
+        {
+          label: 'Leer-/Halbvollquote (90d)',
+          field: 'lowFillVisitRatio90d',
+          operator: 'gt',
+          value: 0.5,
+          displayAs: 'percent',
+        },
+        {
+          label: 'Übervoll-Quote (90d)',
+          field: 'overfullVisitRatio90d',
+          operator: 'lt',
+          value: 0.01,
+          displayAs: 'percent',
+        },
       ],
       sorts: [
         { field: 'lowFillVisitRatio90d', order: -1 },
@@ -120,11 +133,23 @@ export class BinList {
       id: 'increase-approach-frequency',
       label: 'Anfahrtsfrequenz erhöhen',
       category: 'dynamic',
-      filterChips: [
-        'Aktiv = Ja',
-        'Ø Besuche/Woche (90d) < 4',
-        'Leer-/Halbvollquote (90d) < 50%',
-        'Übervoll-Quote (90d) > 1%',
+      filters: [
+        { label: 'Aktiv', field: 'isActive', operator: 'eq', value: true },
+        { label: 'Ø Besuche/Woche (90d)', field: 'avgWeeklyVisits90d', operator: 'lt', value: 4 },
+        {
+          label: 'Leer-/Halbvollquote (90d)',
+          field: 'lowFillVisitRatio90d',
+          operator: 'lt',
+          value: 0.5,
+          displayAs: 'percent',
+        },
+        {
+          label: 'Übervoll-Quote (90d)',
+          field: 'overfullVisitRatio90d',
+          operator: 'gt',
+          value: 0.01,
+          displayAs: 'percent',
+        },
       ],
       sorts: [
         { field: 'overfullVisitRatio90d', order: -1 },
@@ -144,7 +169,7 @@ export class BinList {
       return [];
     }
 
-    return activeHeuristic.filterChips;
+    return activeHeuristic.filters.map((filter) => this.toFilterChipLabel(filter));
   });
 
   readonly exportFilename = computed<string>(() => {
@@ -177,36 +202,60 @@ export class BinList {
       this.initialSortMeta.map((sort) => ({ ...sort }));
   }
 
-  // TODO verify tresholds
-  private isIncreaseDensityCandidate(bin: BinListResponseDTO): boolean {
-    return (
-      bin.avgWeeklyVisits90d > 5 &&
-      bin.lowFillVisitRatio90d < 0.5 &&
-      bin.overfullVisitRatio90d > 0.01 &&
-      bin.isActive
-    );
+  private matchesFilter(bin: BinListResponseDTO, filter: BinHeuristicFilter): boolean {
+    const fieldValue = bin[filter.field];
+    return this.compare(fieldValue, filter.operator, filter.value);
   }
 
-  // TODO verify tresholds
-  private isReduceApproachCandidate(bin: BinListResponseDTO): boolean {
-    return (
-      bin.avgWeeklyVisits90d > 4 &&
-      bin.lowFillVisitRatio90d > 0.5 &&
-      bin.overfullVisitRatio90d < 0.01 &&
-      bin.isActive
-    );
+  private compare(
+    left: number | boolean,
+    operator: BinHeuristicFilter['operator'],
+    right: number | boolean,
+  ): boolean {
+    switch (operator) {
+      case 'eq':
+        return left === right;
+      case 'gt':
+        return Number(left) > Number(right);
+      case 'gte':
+        return Number(left) >= Number(right);
+      case 'lt':
+        return Number(left) < Number(right);
+      case 'lte':
+        return Number(left) <= Number(right);
+      default:
+        return false;
+    }
   }
 
-  // TODO verify tresholds
-  private isIncreaseApproachCandidate(bin: BinListResponseDTO): boolean {
-    return (
-      bin.avgWeeklyVisits90d < 4 &&
-      bin.lowFillVisitRatio90d < 0.5 &&
-      bin.overfullVisitRatio90d > 0.01 &&
-      bin.isActive
-    );
+  private toFilterChipLabel(filter: BinHeuristicFilter): string {
+    const operatorLabel = this.toOperatorLabel(filter.operator);
+    if (typeof filter.value === 'boolean') {
+      const booleanLabel = filter.value ? 'Ja' : 'Nein';
+      return `${filter.label} ${operatorLabel} ${booleanLabel}`;
+    }
+
+    const formattedValue =
+      filter.displayAs === 'percent'
+        ? formatPercent(filter.value, this.locale, '1.0-0')
+        : formatNumber(filter.value, this.locale, '1.0-2');
+    return `${filter.label} ${operatorLabel} ${formattedValue}`;
   }
 
-  // TODO andere generelle "gates"?:
-  // visits_90d >= x?
+  private toOperatorLabel(operator: BinHeuristicFilter['operator']): string {
+    switch (operator) {
+      case 'eq':
+        return '=';
+      case 'gt':
+        return '>';
+      case 'gte':
+        return '≥';
+      case 'lt':
+        return '<';
+      case 'lte':
+        return '≤';
+      default:
+        return operator;
+    }
+  }
 }
