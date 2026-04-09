@@ -114,7 +114,11 @@ export class BinDetails implements OnInit {
           data: trend.map((entry) => Number(entry.count)),
           borderColor: style.getPropertyValue('--color-red-500').trim(),
           backgroundColor: (context: ScriptableContext<'line'>) =>
-            this.buildGradient(context, style),
+            this.buildSeriesGradient(context, style, {
+              low: '--color-red-50',
+              mid: '--color-red-300',
+              high: '--color-red-500',
+            }),
           fill: true,
           tension: 0.35,
           pointRadius: 2,
@@ -321,24 +325,6 @@ export class BinDetails implements OnInit {
     const month = dateKey.toString().slice(4, 6);
     const day = dateKey.toString().slice(6, 8);
     return `${day}.${month}.${year}`;
-  }
-
-  private buildGradient(
-    context: ScriptableContext<'line'>,
-    style: CSSStyleDeclaration,
-  ): CanvasGradient | string {
-    const chart = context.chart;
-    const { ctx, chartArea } = chart;
-
-    if (!chartArea) {
-      return style.getPropertyValue('--color-red-300').trim();
-    }
-
-    const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-    gradient.addColorStop(0, style.getPropertyValue('--color-red-50'));
-    gradient.addColorStop(0.7, style.getPropertyValue('--color-red-300'));
-    gradient.addColorStop(1, style.getPropertyValue('--color-red-500'));
-    return gradient;
   }
 
   private buildSeriesGradient(
