@@ -36,7 +36,7 @@ export class TrendMetricCard {
   readonly trendIcon = computed(() => {
     const trendValue = this.trendValue();
     if (trendValue == null || trendValue === 0) {
-      return 'minus';
+      return 'arrow-right';
     }
 
     return trendValue > 0 ? 'arrow-up-right' : 'arrow-down-right';
