@@ -61,3 +61,58 @@ export function buildFillTrendOptions({
     },
   };
 }
+
+export function buildDailyFrequencyOptions(): ChartOptions<'line'> {
+  const style = getComputedStyle(document.documentElement);
+  const bg = style.getPropertyValue('--p-content-background').trim();
+  const gray = style.getPropertyValue('--color-gray-600').trim();
+
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        backgroundColor: bg,
+        titleColor: gray,
+        bodyColor: gray,
+        borderColor: gray,
+        borderWidth: 1,
+        cornerRadius: 10,
+        padding: 12,
+        displayColors: false,
+      },
+    },
+    scales: {
+      x: {
+        border: {
+          display: false,
+        },
+        grid: {
+          display: false,
+        },
+        ticks: {
+          color: gray,
+          maxRotation: 0,
+          minRotation: 0,
+          autoSkip: true,
+          maxTicksLimit: 8,
+        },
+      },
+      y: {
+        beginAtZero: true,
+        border: {
+          display: false,
+        },
+        grid: {
+          display: false,
+        },
+        ticks: {
+          stepSize: 1,
+        },
+      },
+    },
+  };
+}

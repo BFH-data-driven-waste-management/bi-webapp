@@ -21,7 +21,7 @@ import { Location } from '@angular/common';
 import { Skeleton } from 'primeng/skeleton';
 import { BinService } from '../bin.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { buildFillTrendOptions } from './chart-options';
+import { buildDailyFrequencyOptions, buildFillTrendOptions } from './chart-options';
 import { distinctUntilChanged, EMPTY, finalize, map, switchMap } from 'rxjs';
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { Tag } from 'primeng/tag';
@@ -118,6 +118,68 @@ export class BinDetails implements OnInit {
           fill: true,
           tension: 0.35,
           pointRadius: 2,
+          pointHoverRadius: 4,
+        },
+      ],
+    };
+  });
+
+  readonly dailyFrequencyOptions: ChartOptions<'line'> = buildDailyFrequencyOptions();
+
+  readonly visitFrequencyData = computed<ChartData<'line'>>(() => {
+    const bin = this.bin();
+    if (!bin) {
+      return { labels: [], datasets: [{ data: [] }] };
+    }
+
+    const style = getComputedStyle(document.documentElement);
+    const trend = [...(bin.visitFrequency90d ?? [])].sort((a, b) => a.dateKey - b.dateKey);
+
+    return {
+      labels: trend.map((entry) => this.formatDateKey(entry.dateKey)),
+      datasets: [
+        {
+          data: trend.map((entry) => Number(entry.count)),
+          borderColor: style.getPropertyValue('--color-blue-500').trim(),
+          backgroundColor: (context: ScriptableContext<'line'>) =>
+            this.buildSeriesGradient(context, style, {
+              low: '--color-blue-50',
+              mid: '--color-blue-300',
+              high: '--color-blue-500',
+            }),
+          fill: true,
+          tension: 0.35,
+          pointRadius: 1,
+          pointHoverRadius: 4,
+        },
+      ],
+    };
+  });
+
+  readonly emptyingFrequencyData = computed<ChartData<'line'>>(() => {
+    const bin = this.bin();
+    if (!bin) {
+      return { labels: [], datasets: [{ data: [] }] };
+    }
+
+    const style = getComputedStyle(document.documentElement);
+    const trend = [...(bin.emptyingFrequency90d ?? [])].sort((a, b) => a.dateKey - b.dateKey);
+
+    return {
+      labels: trend.map((entry) => this.formatDateKey(entry.dateKey)),
+      datasets: [
+        {
+          data: trend.map((entry) => Number(entry.count)),
+          borderColor: style.getPropertyValue('--color-emerald-500').trim(),
+          backgroundColor: (context: ScriptableContext<'line'>) =>
+            this.buildSeriesGradient(context, style, {
+              low: '--color-emerald-50',
+              mid: '--color-emerald-300',
+              high: '--color-emerald-500',
+            }),
+          fill: true,
+          tension: 0.35,
+          pointRadius: 1,
           pointHoverRadius: 4,
         },
       ],
@@ -276,6 +338,25 @@ export class BinDetails implements OnInit {
     gradient.addColorStop(0, style.getPropertyValue('--color-red-50'));
     gradient.addColorStop(0.7, style.getPropertyValue('--color-red-300'));
     gradient.addColorStop(1, style.getPropertyValue('--color-red-500'));
+    return gradient;
+  }
+
+  private buildSeriesGradient(
+    context: ScriptableContext<'line'>,
+    style: CSSStyleDeclaration,
+    colors: { low: string; mid: string; high: string },
+  ): CanvasGradient | string {
+    const chart = context.chart;
+    const { ctx, chartArea } = chart;
+
+    if (!chartArea) {
+      return style.getPropertyValue(colors.mid).trim();
+    }
+
+    const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+    gradient.addColorStop(0, style.getPropertyValue(colors.low));
+    gradient.addColorStop(0.7, style.getPropertyValue(colors.mid));
+    gradient.addColorStop(1, style.getPropertyValue(colors.high));
     return gradient;
   }
 

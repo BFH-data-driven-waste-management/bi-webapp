@@ -102,6 +102,30 @@
     [value]="bin()?.binDayFeaturesResponse?.baselineAvgEmptyingsPerWeek90d?.value"
     [trendValue]="bin()?.binDayFeaturesResponse?.baselineAvgEmptyingsPerWeek90d?.deltaRelative" />
 
+  <p-card header="Besuchsfrequenz" class="md:col-span-1 xl:col-span-2">
+    @if (loading()) {
+      <p-skeleton height="16rem"/>
+    } @else {
+      <p-chart
+        type="line"
+        [data]="visitFrequencyData()"
+        [options]="dailyFrequencyOptions"
+        class="h-64 mt-2" />
+    }
+  </p-card>
+
+  <p-card header="Leerungsfrequenz" class="md:col-span-1 xl:col-span-2">
+    @if (loading()) {
+      <p-skeleton height="16rem"/>
+    } @else {
+      <p-chart
+        type="line"
+        [data]="emptyingFrequencyData()"
+        [options]="dailyFrequencyOptions"
+        class="h-64 mt-2" />
+    }
+  </p-card>
+
   <app-simple-metric-card
     header="Rang nach Leerungen (letzte 90 Tage)"
     icon="list"
