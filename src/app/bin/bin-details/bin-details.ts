@@ -327,6 +327,7 @@ export class BinDetails implements OnInit {
     return `${day}.${month}.${year}`;
   }
 
+  // TODO maybe outsource (also other gradients elsewhere)
   private buildSeriesGradient(
     context: ScriptableContext<'line'>,
     style: CSSStyleDeclaration,
