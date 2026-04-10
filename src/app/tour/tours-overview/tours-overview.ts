@@ -3,29 +3,25 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   inject,
   OnInit,
   signal,
   viewChild,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { GoogleMap, MapAdvancedMarker, MapPolyline } from '@angular/google-maps';
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { Button } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
-import {
-  MapMarkerVM,
-  TourOverviewDTO,
-  TourPathVM,
-  TourTimelineItem,
-  TourVM,
-} from '../tour.model';
+import { MapMarkerVM, TourOverviewDTO, TourPathVM, TourTimelineItem, TourVM } from '../tour.model';
 import { Chip } from 'primeng/chip';
 import { Toolbar } from 'primeng/toolbar';
 import { ToggleButton } from 'primeng/togglebutton';
 import { DateTimeService } from '../../shared/services/date-time.service';
 import { Router } from '@angular/router';
 import { TourService } from '../tour.service';
-import { TableColumn } from '../../shared/models/common.model';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-tours',
@@ -46,24 +42,18 @@ import { TableColumn } from '../../shared/models/common.model';
 export class ToursOverview implements OnInit, AfterViewInit {
   private readonly markerClass = 'pi text-white rounded-full p-1 rounded';
   private readonly muevePosition: google.maps.LatLngLiteral = { lat: 47.120678, lng: 7.257629 }; // TODO move to central constants file?
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly router = inject(Router);
   readonly tourService = inject(TourService);
   readonly dateTimeService = inject(DateTimeService);
-
-  readonly columns: TableColumn[] = [
-    { field: 'id', header: 'ID' },
-    { field: 'licensePlate', header: 'Fahrzeug' },
-    { field: 'startedAtLabel', header: 'Startzeit' },
-    { field: 'endedAtLabel', header: 'Endzeit' },
-    { field: 'binVisitsAmount', header: 'Anzahl Behälterbesuche' },
-  ];
 
   readonly mapCmp = viewChild.required(GoogleMap);
 
   readonly tours = signal<TourOverviewDTO[]>([]);
   readonly totalRecords = signal(0);
   readonly rows = signal(4);
+  readonly exportLoading = signal(false);
   readonly latestTourIdFromFirstPage = signal<number | null>(null);
   readonly tableRows = computed<TourVM[]>(() =>
     [...this.tours()].map(
@@ -165,6 +155,27 @@ export class ToursOverview implements OnInit, AfterViewInit {
       this.rebuildMapData();
       this.alignMap();
     });
+  }
+
+  protected exportToursCsv(): void {
+    this.exportLoading.set(true);
+    this.tourService
+      .exportToursCsv()
+      .pipe(
+        finalize(() => this.exportLoading.set(false)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: (csvBlob) => {
+          const url = URL.createObjectURL(csvBlob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = 'tours.csv';
+          link.click();
+          URL.revokeObjectURL(url);
+        },
+        error: () => {},
+      });
   }
 
   private getDefaultSelection(tours: TourOverviewDTO[], pageNumber: number): TourOverviewDTO[] {

@@ -23,4 +23,10 @@ export class TourService {
   getTourById(id: number): Observable<TourDTO> {
     return this.http.get<TourDTO>(this.apiUrl + `/${id}`);
   }
+
+  exportToursCsv(): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/csv`, {
+      responseType: 'blob',
+    });
+  }
 }

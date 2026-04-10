@@ -4,18 +4,20 @@
       <p-button [label]="'Tour ' + selectedToursAcrossPages[0].id + ' anzeigen'" icon="pi pi-arrow-right" (onClick)="showTourDetails()" />
     }
     <p-button [disabled]="selectedToursAcrossPages.length === 0" label="Auswahl aufheben" icon="pi pi-times" severity="secondary" (onClick)="deselectAll()" />
-    <p-button label="Export" icon="pi pi-file-export" severity="secondary" (onClick)="dt.exportCSV()" />
+    <p-button
+      label="Export"
+      icon="pi pi-file-export"
+      severity="secondary"
+      [loading]="exportLoading()"
+      (onClick)="exportToursCsv()" />
   </p-toolbar>
   <p-table
-    #dt
-    [columns]="columns"
     [value]="tableRows()"
     [(selection)]="selectedTours"
     (selectionChange)="onSelectionChange()"
     selectionMode="multiple"
     metaKeySelection="false"
     dataKey="id"
-    exportFilename="tours"
     paginator
     [lazy]="true"
     (onLazyLoad)="onPageChange($event)"
