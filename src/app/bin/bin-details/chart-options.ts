@@ -109,9 +109,6 @@ export function buildDailyFrequencyOptions(): ChartOptions<'line'> {
         grid: {
           display: false,
         },
-        ticks: {
-          stepSize: 1,
-        },
       },
     },
   };
