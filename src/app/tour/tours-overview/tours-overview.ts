@@ -330,7 +330,7 @@ export class ToursOverview implements OnInit, AfterViewInit {
         position: this.toLatLng(timelineItem.binCoordX, timelineItem.binCoordY),
         title: `${timelineItem.binType} - ${timelineItem.fillLevel} - ${timelineItem.visitAction}`,
         content: this.createBinIcon(
-          currentBinVisitIndex,
+          currentBinVisitIndex, // TODO use sequenceInTour property?
           currentBinVisitIndex === totalBinVisits - 1,
         ),
       };
