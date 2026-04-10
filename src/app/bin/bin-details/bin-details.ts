@@ -25,6 +25,7 @@ import { buildDailyFrequencyOptions, buildFillTrendOptions } from './chart-optio
 import { distinctUntilChanged, EMPTY, finalize, map, switchMap } from 'rxjs';
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { Tag } from 'primeng/tag';
+import { Toolbar } from 'primeng/toolbar';
 import { PageDTO } from '../../shared/models/common.model';
 import { DateTimeService } from '../../shared/services/date-time.service';
 import {
@@ -47,6 +48,7 @@ import {
     Skeleton,
     TableModule,
     Tag,
+    Toolbar,
     RouterLink,
   ],
   templateUrl: './bin-details.html',
@@ -61,6 +63,7 @@ export class BinDetails implements OnInit {
 
   readonly loading = signal(true);
   readonly binVisitLoading = signal(false);
+  readonly exportLoading = signal(false);
   readonly binVisitPage = signal<PageDTO<BinVisitHistoryResponseDTO>>({
     content: [],
     page: 0,
@@ -349,6 +352,32 @@ export class BinDetails implements OnInit {
 
   goBack(): void {
     this.location.back();
+  }
+
+  exportBinVisitsCsv(): void {
+    const binId = this.bin()?.binId;
+    if (binId == null) {
+      return;
+    }
+
+    this.exportLoading.set(true);
+    this.binService
+      .exportBinVisitsCsvByBinId(binId)
+      .pipe(
+        finalize(() => this.exportLoading.set(false)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: (csvBlob) => {
+          const url = URL.createObjectURL(csvBlob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `bin-${binId}-visits.csv`;
+          link.click();
+          URL.revokeObjectURL(url);
+        },
+        error: () => {},
+      });
   }
 
   private loadBinVisits(binId: number, page: number, size: number): void {

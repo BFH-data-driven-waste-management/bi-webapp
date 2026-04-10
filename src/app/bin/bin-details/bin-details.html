@@ -177,6 +177,15 @@
 
 <!-- TODO first prop needed? -->
 <p-card header="Behälterbesuche" class="mt-6 mb-8 rounded-2xl border border-surface-300">
+  <p-toolbar class="mb-4 flex justify-end">
+    <p-button
+      label="Export"
+      icon="pi pi-file-export"
+      severity="secondary"
+      [loading]="exportLoading()"
+      (onClick)="exportBinVisitsCsv()" />
+  </p-toolbar>
+
   <p-table
     [value]="binVisits()"
     paginator

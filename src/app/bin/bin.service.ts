@@ -44,4 +44,10 @@ export class BinService {
       }
     );
   }
+
+  exportBinVisitsCsvByBinId(binId: number): Observable<Blob> {
+    return this.http.get(`${this.binDetailsApiUrl}/${binId}/visits/csv`, {
+      responseType: 'blob',
+    });
+  }
 }
