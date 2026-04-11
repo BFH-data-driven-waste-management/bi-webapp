@@ -78,19 +78,19 @@
   </p-card>
 
   <app-simple-metric-card
-    header="Mülleimer besucht"
+    header="Behälter besucht"
     icon="eye"
     [value]="tour()?.visitCount ?? 0"
     [loading]="loading()" />
 
   <app-simple-metric-card
-    header="Mülleimer geleert"
+    header="Behälter geleert"
     icon="trash"
     [value]="this.tour()?.emptiedVisitCount ?? 0"
     [loading]="loading()" />
 
   <app-simple-metric-card
-    header="Anteil Mülleimer geleert"
+    header="Anteil Behälter geleert"
     [value]="0.492"
     [percent]="true"
     [icon]="'chart-pie'"
@@ -118,7 +118,7 @@
   </p-card>
 
   <app-simple-metric-card
-    header="Übervolle Mülleimer"
+    header="Übervolle Behälter"
     icon="exclamation-circle"
     [value]="this.tour()?.overfullVisitCount ?? 0"
     [loading]="loading()" />

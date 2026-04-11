@@ -21,7 +21,7 @@ export function buildBaseBarOptions(): ChartOptions<'bar'> {
         padding: 12,
         displayColors: false,
         callbacks: {
-          label: (context) => `${context.raw} Eimer`,
+          label: (context) => `${context.raw} Behälter`,
         },
       },
     },

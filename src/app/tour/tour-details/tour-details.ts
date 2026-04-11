@@ -99,7 +99,7 @@ export class TourDetails implements OnInit {
    */
   readonly columns: TableColumn[] = [
     { field: 'id', header: 'Besuchs-ID' },
-    { field: 'binId', header: 'Eimer-ID' },
+    { field: 'binId', header: 'Behälter-ID' },
     { field: 'eventTimestampLabel', header: 'Zeitpunkt' },
     { field: 'binType', header: 'Behältertyp' },
     { field: 'fillLevelLabel', header: 'Füllstand' },

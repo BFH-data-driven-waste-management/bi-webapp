@@ -1,17 +1,17 @@
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 auto-rows-fr gap-6
-    [&>*]:h-full
+    *:h-full
     [&_.p-card]:h-full
     [&_.p-card]:rounded-2xl
     [&_.p-card]:border
     [&_.p-card]:border-surface-300">
 
   <app-simple-metric-card
-    header="Installierte Eimer"
+    header="Installierte Behälter"
     icon="trash"
     [loading]="loading()"
     [value]="dashboardData()?.installedBins?.total" />
 
-  <p-card header="Eimertyp-Verteilung" class="rounded-lg">
+  <p-card header="Behältertyp-Verteilung" class="rounded-lg">
     @if (loading()) {
       <div class="px-4 pt-4">
         <p-skeleton width="100%" height="16rem" />
@@ -55,7 +55,7 @@
     [trendValue]="dashboardData()?.lowFillEmptyingShare90d?.deltaRelative ?? 0"/>
 
   <app-simple-metric-card
-    header="Übervolle Mülleimer (30d)"
+    header="Übervolle Behälter (30d)"
     icon="exclamation-circle"
     [loading]="loading()"
     [value]="dashboardData()?.overfullEvents30d?.value"/>
