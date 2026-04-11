@@ -14,9 +14,9 @@ import { PageDTO } from '../shared/models/common.model';
 })
 export class BinService {
   private readonly http = inject(HttpClient);
-  private readonly binDetailsApiUrl = 'http://localhost:8081/api/bins/bindetails'; // TODO better/scalable url definitions
-  private readonly binMapApiUrl = 'http://localhost:8081/api/bins/binmap';
-  private readonly binListApiUrl = 'http://localhost:8081/api/bins/binlist';
+  private readonly binDetailsApiUrl = 'http://localhost:8080/api/bins/bindetails'; // TODO better/scalable url definitions
+  private readonly binMapApiUrl = 'http://localhost:8080/api/bins/binmap';
+  private readonly binListApiUrl = 'http://localhost:8080/api/bins/binlist';
 
   getBins(): Observable<BinMapResponseDTO[]> {
     return this.http.get<BinMapResponseDTO[]>(this.binMapApiUrl);
