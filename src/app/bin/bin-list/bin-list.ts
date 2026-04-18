@@ -32,10 +32,10 @@ export class BinList {
   private readonly locale = inject(LOCALE_ID);
   private readonly initialSortMeta: SortMeta[] = [{ field: 'binId', order: 1 }];
 
-  private readonly binsRaw = toSignal(this.binService.getBinList(), { initialValue: [] });
+  private readonly bins = toSignal(this.binService.getBinList(), { initialValue: [] });
 
-  readonly bins = computed(() => {
-    const bins = this.binsRaw();
+  readonly filteredBins = computed(() => {
+    const bins = this.bins();
     const activeHeuristic = this.activeHeuristic();
     if (!activeHeuristic) {
       return bins;
@@ -45,7 +45,7 @@ export class BinList {
   });
 
   readonly binRows = computed<FullBinVM[]>(() =>
-    this.bins().map((bin) => ({
+    this.filteredBins().map((bin) => ({
       ...bin,
       isActiveLabel: bin.isActive ? 'Ja' : 'Nein',
       coord2056Label: `${bin.coordX2056} / ${bin.coordY2056}`,
