@@ -272,7 +272,7 @@ export class BinDetails implements OnInit {
             return EMPTY;
           }
 
-          this.loading.set(true);
+          this.loading.set(true); // TODO might not be needed
           this.binVisitFirst.set(0);
           this.loadBinVisits(binId, 0, this.binVisitRows);
           return this.binService.getBinDetailsById(binId);
