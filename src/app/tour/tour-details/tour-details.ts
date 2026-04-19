@@ -228,6 +228,28 @@ export class TourDetails implements OnInit {
     })),
   );
 
+  readonly emptiedVisitShare = computed<number>(() => {
+    const tour = this.tour();
+    const visitCount = tour?.visitCount ?? 0;
+    if (visitCount <= 0) {
+      return 0;
+    }
+
+    const emptiedVisitCount = tour?.emptiedVisitCount ?? 0;
+    return emptiedVisitCount / visitCount;
+  });
+
+  readonly lowFillVisitShare = computed<number>(() => {
+    const tour = this.tour();
+    const visitCount = tour?.visitCount ?? 0;
+    if (visitCount <= 0) {
+      return 0;
+    }
+
+    const lowFillVisitCount = tour?.lowFillVisitCount ?? 0;
+    return lowFillVisitCount / visitCount;
+  });
+
   private createPieGradient(
     ctx: CanvasRenderingContext2D,
     chartArea: { top: number; bottom: number },

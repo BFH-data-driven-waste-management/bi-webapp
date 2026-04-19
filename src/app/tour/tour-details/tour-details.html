@@ -91,14 +91,14 @@
 
   <app-simple-metric-card
     header="Anteil Behälter geleert"
-    [value]="0.492"
+    [value]="emptiedVisitShare()"
     [percent]="true"
     [icon]="'chart-pie'"
     [loading]="loading()"/>
 
   <app-simple-metric-card
     header="Anteil Besuche mit niedrigem Füllstand"
-    [value]="0.102"
+    [value]="lowFillVisitShare()"
     [percent]="true"
     [icon]="'chart-pie'"
     [loading]="loading()"/>
