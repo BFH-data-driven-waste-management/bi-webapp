@@ -66,8 +66,7 @@ export class App {
   );
 
   private getRoutePaddingClass(url: string): string {
-    if (url.startsWith('/tours')) return 'pr-4';
-    if (url.startsWith('/bin-map')) return '';
-    return 'p-6';
+    if (url.startsWith('/bin-map')) return 'pt-4 pr-4';
+    return 'py-4 pr-4';
   }
 }
