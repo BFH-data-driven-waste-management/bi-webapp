@@ -1,67 +1,81 @@
-<google-map
-  height="100%"
-  width="100%"
-  [center]="center"
-  [options]="mapOptions"
-  (mapClick)="closeInfoWindow()">
-  @for (binMarker of binMapMarkers(); track binMarker.binId) {
-    <map-advanced-marker
-      #markerElement="mapAdvancedMarker"
-      [content]="binMarker.content"
-      [position]="binMarker.position"
-      [title]="binMarker.type"
-      (mapClick)="openInfoWindow(markerElement, binMarker)">
-    </map-advanced-marker>
-  }
+<div class="h-full flex flex-col">
+  <p-toolbar class="mb-4">
+    <p-select-button
+      [options]="mapViewOptions"
+      [allowEmpty]="false"
+      optionLabel="label"
+      optionValue="value"
+      [ngModel]="activeMapView()"
+      (ngModelChange)="onMapViewChange($event)" />
+  </p-toolbar>
 
-  <map-advanced-marker
-    [zIndex]="2"
-    [content]="mueveMarker.content"
-    [position]="mueveMarker.position"
-    [title]="mueveMarker.title" />
-
-  <map-advanced-marker
-    [zIndex]="2"
-    [content]="strasseninspektoratMarker.content"
-    [position]="strasseninspektoratMarker.position"
-    [title]="strasseninspektoratMarker.title" />
-
-  <map-info-window [options]="{ headerDisabled: true }">
-    @if (selectedBin(); as bin) {
-      <div class="relative">
-        <p-button
-          class="absolute top-0 right-0"
-          icon="pi pi-times"
-          ariaLabel="Close"
-          rounded="true"
-          text="true"
-          severity="secondary"
-          size="small"
-          (onClick)="closeInfoWindow()" />
-
-        <div class="p-2 mr-8">
-          <div class="font-bold">
-            {{ bin.type }}
-            @if (!bin.isActive){
-              <span>(inaktiv)</span>
-            }
-          </div>
-
-          <div class="text-sm mt-3">
-            <div><strong>X:</strong> {{ bin.coordX2056 }}</div>
-            <div><strong>Y:</strong> {{ bin.coordY2056 }}</div>
-            <div><strong>Lat:</strong> {{ bin.position.lat }}</div>
-            <div><strong>Lng:</strong> {{ bin.position.lng }}</div>
-          </div>
-
-          <a class="mt-2"
-             [routerLink]="['/bin', bin.binId]"
-             pButton
-             severity="secondary">
-            <span pButtonLabel>Details</span>
-          </a>
-        </div>
-      </div>
+  <google-map
+    class="flex-1"
+    height="100%"
+    width="100%"
+    [center]="center"
+    [options]="mapOptions()"
+    (mapClick)="closeInfoWindow()">
+    @for (binMarker of binMapMarkers(); track binMarker.binId) {
+      <map-advanced-marker
+        #markerElement="mapAdvancedMarker"
+        [zIndex]="binMarker.zIndex"
+        [content]="binMarker.content"
+        [position]="binMarker.position"
+        [title]="binMarker.type"
+        (mapClick)="openInfoWindow(markerElement, binMarker)">
+      </map-advanced-marker>
     }
-  </map-info-window>
-</google-map>
+
+    <map-advanced-marker
+      [zIndex]="2"
+      [content]="mueveMarker.content"
+      [position]="mueveMarker.position"
+      [title]="mueveMarker.title" />
+
+    <map-advanced-marker
+      [zIndex]="2"
+      [content]="strasseninspektoratMarker.content"
+      [position]="strasseninspektoratMarker.position"
+      [title]="strasseninspektoratMarker.title" />
+
+    <map-info-window [options]="{ headerDisabled: true }">
+      @if (selectedBin(); as bin) {
+        <div class="relative">
+          <p-button
+            class="absolute top-0 right-0"
+            icon="pi pi-times"
+            ariaLabel="Close"
+            rounded="true"
+            text="true"
+            severity="secondary"
+            size="small"
+            (onClick)="closeInfoWindow()" />
+
+          <div class="p-2 mr-8">
+            <div class="font-bold">
+              {{ bin.type }}
+              @if (!bin.isActive){
+                <span>(inaktiv)</span>
+              }
+            </div>
+
+            <div class="text-sm mt-3">
+              <div><strong>X:</strong> {{ bin.coordX2056 }}</div>
+              <div><strong>Y:</strong> {{ bin.coordY2056 }}</div>
+              <div><strong>Lat:</strong> {{ bin.position.lat }}</div>
+              <div><strong>Lng:</strong> {{ bin.position.lng }}</div>
+            </div>
+
+            <a class="mt-2"
+               [routerLink]="['/bin', bin.binId]"
+               pButton
+               severity="secondary">
+              <span pButtonLabel>Details</span>
+            </a>
+          </div>
+        </div>
+      }
+    </map-info-window>
+  </google-map>
+</div>

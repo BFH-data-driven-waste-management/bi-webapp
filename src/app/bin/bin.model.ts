@@ -11,6 +11,8 @@ export interface BinMapResponseDTO {
   coordY4326: number;
   coordX2056: number;
   coordY2056: number;
+  wasteGenerationHeat: number;
+  lastEmptyingHeat: number;
 }
 
 export interface BinListResponseDTO {
@@ -74,6 +76,7 @@ export interface DailyCountResponseDTO {
 export interface BinMapMarkerVM extends BinMapResponseDTO {
   position: google.maps.LatLngLiteral;
   content: HTMLElement;
+  zIndex: number;
 }
 
 export interface FullBinVM extends BinListResponseDTO {
@@ -122,3 +125,5 @@ export interface BinHeuristicFilter {
   value: number | boolean;
   displayAs?: 'number' | 'percent';
 }
+
+export type BinMapView = 'default' | 'waste-generation' | 'last-visit-age';
