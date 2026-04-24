@@ -27,7 +27,7 @@ export class App {
     {
       label: 'Touren',
       icon: 'pi pi-truck',
-      routerLink: '/tours-overview',
+      routerLink: '/tour-overview',
     },
     {
       label: 'Behälterkarte',

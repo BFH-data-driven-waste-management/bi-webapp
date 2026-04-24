@@ -36,10 +36,10 @@ import { finalize } from 'rxjs';
     FormsModule,
     ToggleButton,
   ],
-  templateUrl: './tours-overview.html',
+  templateUrl: './tour-overview.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ToursOverview implements OnInit, AfterViewInit {
+export class TourOverview implements OnInit, AfterViewInit {
   private readonly markerClass = 'pi text-white rounded-full p-1 rounded';
   private readonly muevePosition: google.maps.LatLngLiteral = { lat: 47.120678, lng: 7.257629 }; // TODO move to central constants file?
   private readonly destroyRef = inject(DestroyRef);

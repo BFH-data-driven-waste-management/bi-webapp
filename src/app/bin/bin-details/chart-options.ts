@@ -40,11 +40,6 @@ export function buildFillTrendOptions({
         grid: {
           display: false,
         },
-        ticks: {
-          color: gray,
-          maxRotation: 0,
-          minRotation: 0,
-        },
       },
       y: {
         min: 0,
@@ -54,7 +49,6 @@ export function buildFillTrendOptions({
         },
         ticks: {
           stepSize: 1 / 3,
-          color: gray,
           callback: (value) => toFillLevelLabel(value as number),
         },
       },
@@ -94,7 +88,6 @@ export function buildDailyFrequencyOptions(): ChartOptions<'line'> {
           display: false,
         },
         ticks: {
-          color: gray,
           maxRotation: 0,
           minRotation: 0,
           autoSkip: true,

@@ -9,10 +9,15 @@ import { PageDTO } from '../shared/models/common.model';
 })
 export class TourService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:8080/api/tours';
+  private readonly tourDetailsApiUrl = 'http://localhost:8080/api/tourdetails';
+  private readonly tourOverviewApiUrl = 'http://localhost:8080/api/touroverview';
+
+  getTourById(id: number): Observable<TourDTO> {
+    return this.http.get<TourDTO>(this.tourDetailsApiUrl + `/${id}`);
+  }
 
   getTours(page = 0, size = 4): Observable<PageDTO<TourOverviewDTO>> {
-    return this.http.get<PageDTO<TourOverviewDTO>>(this.apiUrl, {
+    return this.http.get<PageDTO<TourOverviewDTO>>(this.tourOverviewApiUrl, {
       params: {
         page,
         size,
@@ -20,12 +25,8 @@ export class TourService {
     });
   }
 
-  getTourById(id: number): Observable<TourDTO> {
-    return this.http.get<TourDTO>(this.apiUrl + `/${id}`);
-  }
-
   exportToursCsv(): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}/csv`, {
+    return this.http.get(`${this.tourOverviewApiUrl}/csv`, {
       responseType: 'blob',
     });
   }
