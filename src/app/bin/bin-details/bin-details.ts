@@ -110,7 +110,9 @@ export class BinDetails implements OnInit {
     }
 
     const style = getComputedStyle(document.documentElement);
-    const trend = [...(bin.fillTrend12m ?? [])].sort((a, b) => a.dateKey - b.dateKey); // TODO is sorting needed?
+
+    // sorting should already be done on the backend, here it is cheap and defensive
+    const trend = [...(bin.fillTrend12m ?? [])].sort((a, b) => a.dateKey - b.dateKey);
 
     return {
       labels: trend.map((entry) => this.formatDateKey(entry.dateKey)),
