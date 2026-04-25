@@ -34,6 +34,7 @@ import {
   BIN_VISIT_FILL_LEVEL_LABELS,
   BIN_VISIT_FILL_LEVEL_TAG_CLASSES,
 } from '../../tour/tour.presentation';
+import { BIEL_CENTER_COORDS } from '../../shared/constants/constants';
 
 @Component({
   selector: 'app-bin-details',
@@ -77,7 +78,7 @@ export class BinDetails implements OnInit {
   readonly binPosition = computed(() => {
     const bin = this.bin();
     if (!bin) {
-      return { lat: 47.142471, lng: 7.259719 }; // TODO this is the center, maybe put to constants file
+      return BIEL_CENTER_COORDS;
     }
     return { lat: bin.coordX4326, lng: bin.coordY4326 };
   });

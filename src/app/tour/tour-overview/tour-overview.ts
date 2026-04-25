@@ -22,6 +22,7 @@ import { DateTimeService } from '../../shared/services/date-time.service';
 import { Router } from '@angular/router';
 import { TourService } from '../tour.service';
 import { finalize } from 'rxjs';
+import { BIEL_CENTER_COORDS, MUEVE_COORDS } from '../../shared/constants/constants';
 
 @Component({
   selector: 'app-tours',
@@ -41,8 +42,8 @@ import { finalize } from 'rxjs';
 })
 export class TourOverview implements OnInit, AfterViewInit {
   private readonly markerClass = 'pi text-white rounded-full p-1 rounded';
-  private readonly muevePosition: google.maps.LatLngLiteral = { lat: 47.120678, lng: 7.257629 }; // TODO move to central constants file?
   private readonly destroyRef = inject(DestroyRef);
+  protected readonly BIEL_CENTER_COORDS = BIEL_CENTER_COORDS; // used for access in template
 
   readonly router = inject(Router);
   readonly tourService = inject(TourService);
@@ -74,11 +75,6 @@ export class TourOverview implements OnInit, AfterViewInit {
   protected markers: MapMarkerVM[] = [];
   protected tourPaths: TourPathVM[] = [];
   protected showMueve = false;
-
-  protected readonly center: google.maps.LatLngLiteral = {
-    lat: 47.142471,
-    lng: 7.259719,
-  };
 
   protected readonly mapOptions: google.maps.MapOptions = {
     zoom: 14,
@@ -230,7 +226,7 @@ export class TourOverview implements OnInit, AfterViewInit {
       const path = timelineForMap.map((timelineItem) =>
         timelineItem.type === 'binVisit'
           ? this.toLatLng(timelineItem.binCoordX, timelineItem.binCoordY)
-          : this.muevePosition,
+          : MUEVE_COORDS,
       );
 
       if (path.length > 1) {
@@ -265,7 +261,7 @@ export class TourOverview implements OnInit, AfterViewInit {
     );
 
     if (totalTimelineItems === 0) {
-      map.setCenter(this.center);
+      map.setCenter(BIEL_CENTER_COORDS);
       map.setZoom(this.mapOptions.zoom ?? 14);
       this.canBeAligned = false;
       return;
@@ -281,7 +277,7 @@ export class TourOverview implements OnInit, AfterViewInit {
 
     if (this.showMueve &&
       this.selectedToursAcrossPages.some((tour) => tour.vehicleEmptyings.length > 0)) {
-      bounds.extend(this.muevePosition);
+      bounds.extend(MUEVE_COORDS);
     }
 
     map.fitBounds(bounds, 10);
@@ -319,7 +315,7 @@ export class TourOverview implements OnInit, AfterViewInit {
       if (timelineItem.type === 'vehicleEmptying') {
         return {
           id: `${tour.id}-vehicleEmptying-${timelineItem.id}`,
-          position: this.muevePosition,
+          position: MUEVE_COORDS,
           title: `Müve - ${this.dateTimeService.format(timelineItem.eventTimestamp)}`,
           content: this.createVehicleEmptyingIcon(),
         };
