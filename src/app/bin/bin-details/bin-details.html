@@ -33,43 +33,51 @@
   </p-card>
 
   <p-card>
-    @if (loading()) {
-      <div class="flex flex-col gap-3">
-        <p-skeleton width="10rem" height="1.5rem" /> <!-- TODO mabe show skeleton below labels -->
-        <p-skeleton width="14rem" height="1.5rem" />
-        <p-skeleton width="12rem" height="1.5rem" />
-      </div>
-    } @else {
-      <div class="flex flex-col gap-3">
-        <div class="flex flex-col">
-          <strong>Typ</strong>
+    <div class="flex flex-col gap-3">
+      <div class="flex flex-col">
+        <strong>Typ</strong>
+        @if (loading()) {
+          <p-skeleton width="10rem" height="1.5rem" />
+        } @else {
           <span>{{ bin()?.binType }}</span>
-        </div>
+        }
+      </div>
 
-        <div class="flex flex-col">
-          <strong>Aktiv</strong>
+      <div class="flex flex-col">
+        <strong>Aktiv</strong>
+        @if (loading()) {
+          <p-skeleton width="5rem" height="1.5rem" />
+        } @else {
           <span>{{ bin()?.active ? 'Ja' : 'Nein' }}</span>
-        </div>
+        }
+      </div>
 
-        <div class="flex flex-col">
-          <strong>Koordinaten</strong>
+      <div class="flex flex-col">
+        <strong>Koordinaten</strong>
 
-          <div class="flex gap-3">
+        <div class="flex gap-3">
+          @if (loading()) {
+            <p-skeleton width="15rem" height="1.5rem" />
+          } @else {
             <div>
               <strong>X:</strong><span class="ml-1">{{ bin()?.coordX2056 }}</span>
             </div>
             <div>
               <strong>Y:</strong><span class="ml-1">{{ bin()?.coordY2056 }}</span>
             </div>
-          </div>
-        </div>
-
-        <div class="flex flex-col">
-          <strong>Strasse</strong>
-          <span>{{ locationLabel() }}</span>
+          }
         </div>
       </div>
-    }
+
+      <div class="flex flex-col">
+        <strong>Strasse</strong>
+        @if (locationLoading()) {
+          <p-skeleton width="10rem" height="1.5rem" />
+        } @else {
+          <span>{{ locationLabel() }}</span>
+        }
+      </div>
+    </div>
   </p-card>
 
   <p-card header="Standort">
