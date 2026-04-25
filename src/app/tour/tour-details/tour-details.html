@@ -15,27 +15,26 @@
     [&_.p-card]:border-surface-300">
 
   <p-card>
-    @if (loading()) {
-      <div class="flex flex-col gap-3">
-        <p-skeleton width="8rem" height="0.875rem" class="mt-2" />
-        <p-skeleton width="11rem" height="1rem" />
-        <p-skeleton width="7rem" height="0.875rem" class="mt-2" />
-        <p-skeleton width="15rem" height="1rem" />
-      </div>
-    } @else {
-      <div class="flex flex-col gap-3">
-        <div class="flex flex-col">
-          <strong>ID</strong>
+    <div class="flex flex-col gap-3">
+      <div class="flex flex-col">
+        <strong>ID</strong>
+        @if (loading()) {
+          <p-skeleton width="5rem" height="1.5rem" />
+        } @else {
           <span>{{ tour()?.id ?? '' }}</span>
-        </div>
-
-        <div class="flex flex-col">
-          <strong>Datum</strong>
-          <span>{{ tour()?.startedAt | date: 'EEE, dd.MM.y, HH:mm':'Europe/Zurich':'de-CH' }}</span> <!-- TODO centralize time constants -->
-        </div>
-
+        }
       </div>
-    }
+
+      <div class="flex flex-col">
+        <strong>Datum</strong>
+        @if (loading()) {
+          <p-skeleton width="12rem" height="1.5rem" />
+        } @else {
+          <span>{{ tour()?.startedAt | date: FORMAT_DATETIME: TIMEZONE: LOCALE }}</span>
+        }
+      </div>
+
+    </div>
   </p-card>
 
   <p-card
