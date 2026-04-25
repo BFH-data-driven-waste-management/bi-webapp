@@ -1,3 +1,10 @@
 @import 'tailwindcss';
 @import 'primeicons/primeicons.css';
 @plugin 'tailwindcss-primeui';
+
+
+@layer components {
+  .p-chip {
+    @apply py-2 px-3 text-sm bg-red-200
+  }
+}

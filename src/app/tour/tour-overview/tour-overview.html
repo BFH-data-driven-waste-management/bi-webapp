@@ -42,7 +42,7 @@
           [pSelectableRowDisabled]="tour.binVisitsAmount === 0">
         <td>{{ tour.id }}
           @if (latestTourIdFromFirstPage() === tour.id) {
-            <p-chip class="ml-2 py-1 px-3 text-sm bg-red-200" label="Neueste" />
+            <p-chip class="ml-2 py-1" label="Neueste" />
           }
         </td>
         <td>{{ tour.licensePlate }}</td>

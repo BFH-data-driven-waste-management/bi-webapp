@@ -24,7 +24,7 @@
         @if (activeHeuristicFilterChips().length > 0) {
           <div class="flex items-center gap-2 mt-2">
             @for (chipLabel of activeHeuristicFilterChips(); track chipLabel) {
-              <p-chip class="py-1 px-3 text-sm bg-red-200" [label]="chipLabel" /> <!-- TODO centralize chip style (tour overview has same) -->
+              <p-chip [label]="chipLabel" />
             }
           </div>
         }
