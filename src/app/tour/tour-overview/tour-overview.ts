@@ -103,7 +103,7 @@ export class TourOverview implements OnInit, AfterViewInit {
     '#6366f1',
   ];
 
-  // TODO maybe centralize
+  // TODO maybe centralize and use consistently everywhere
   private toLatLng(coordX: number, coordY: number): google.maps.LatLngLiteral {
     return { lat: coordX, lng: coordY };
   }
