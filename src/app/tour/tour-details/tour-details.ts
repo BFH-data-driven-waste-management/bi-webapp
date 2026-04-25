@@ -33,6 +33,7 @@ import { DateTimeService } from '../../shared/services/date-time.service';
 import { SimpleMetricCard } from '../../shared/components/simple-metric-card/simple-metric-card';
 import { TourService } from '../tour.service';
 import { Skeleton } from 'primeng/skeleton';
+import { DetailsPageHeader } from '../../shared/components/details-page-header/details-page-header';
 import { distinctUntilChanged, EMPTY, map, switchMap } from 'rxjs';
 import { TableColumn, FillLevel } from '../../shared/models/common.model';
 
@@ -52,6 +53,7 @@ import { TableColumn, FillLevel } from '../../shared/models/common.model';
     Tag,
     SimpleMetricCard,
     Skeleton,
+    DetailsPageHeader,
   ],
   templateUrl: './tour-details.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

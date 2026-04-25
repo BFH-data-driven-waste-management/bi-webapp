@@ -35,6 +35,7 @@ import {
   BIN_VISIT_FILL_LEVEL_TAG_CLASSES,
 } from '../../tour/tour.presentation';
 import { BIEL_CENTER_COORDS } from '../../shared/constants/constants';
+import { DetailsPageHeader } from '../../shared/components/details-page-header/details-page-header';
 
 @Component({
   selector: 'app-bin-details',
@@ -51,6 +52,7 @@ import { BIEL_CENTER_COORDS } from '../../shared/constants/constants';
     Tag,
     Toolbar,
     RouterLink,
+    DetailsPageHeader,
   ],
   templateUrl: './bin-details.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

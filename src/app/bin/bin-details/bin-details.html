@@ -1,19 +1,18 @@
-<div class="mb-6 flex items-end justify-between gap-6"> <!-- TODO maybe outsource to dedicated header component -->
-  <div class="flex items-end gap-4">
-    <h2 class="text-7xl font-extrabold tracking-tight text-gray-600">Behälter</h2>
-    @if (loading() || locationLoading()) {
-      <p-skeleton width="14rem" height="2rem" />
-    } @else {
-      <p class="text-2xl font-black tracking-tight text-gray-500">{{ locationLabel() }}</p>
-    }
-  </div>
+<app-details-page-header title="Behälter">
+  @if (loading() || locationLoading()) {
+    <p-skeleton header-subtitle width="14rem" height="2rem" />
+  } @else {
+    <p header-subtitle class="text-2xl font-black tracking-tight text-gray-500">{{ locationLabel() }}</p>
+  }
+
   <p-button
+    header-action
     severity="secondary"
     [outlined]="true"
     icon="pi pi-arrow-left"
     label="Zurück"
     (onClick)="goBack()" />
-</div>
+</app-details-page-header>
 
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 auto-rows-fr gap-6
     [&_.p-card]:h-full
