@@ -115,7 +115,7 @@ export class BinDetails implements OnInit {
     const trend = [...(bin.fillTrend12m ?? [])].sort((a, b) => a.dateKey - b.dateKey);
 
     return {
-      labels: trend.map((entry) => this.formatDateKey(entry.dateKey)),
+      labels: trend.map((entry) => this.dateTimeService.formatDateKey(entry.dateKey)),
       datasets: [
         {
           label: 'Fülltrend (12 Monate)',
@@ -148,7 +148,7 @@ export class BinDetails implements OnInit {
     const trend = [...(bin.visitFrequency90d ?? [])].sort((a, b) => a.dateKey - b.dateKey);
 
     return {
-      labels: trend.map((entry) => this.formatDateKey(entry.dateKey)),
+      labels: trend.map((entry) => this.dateTimeService.formatDateKey(entry.dateKey)),
       datasets: [
         {
           data: trend.map((entry) => Number(entry.count)),
@@ -178,7 +178,7 @@ export class BinDetails implements OnInit {
     const trend = [...(bin.emptyingFrequency90d ?? [])].sort((a, b) => a.dateKey - b.dateKey);
 
     return {
-      labels: trend.map((entry) => this.formatDateKey(entry.dateKey)),
+      labels: trend.map((entry) => this.dateTimeService.formatDateKey(entry.dateKey)),
       datasets: [
         {
           data: trend.map((entry) => Number(entry.count)),
@@ -322,18 +322,6 @@ export class BinDetails implements OnInit {
       return 'Voll';
     }
     return 'Übervoll';
-  }
-
-  // TODO centralize if reused?
-  private formatDateKey(dateKey: number): string {
-    const value = String(dateKey);
-    if (value.length !== 8) {
-      return value;
-    }
-    const year = dateKey.toString().slice(0, 4);
-    const month = dateKey.toString().slice(4, 6);
-    const day = dateKey.toString().slice(6, 8);
-    return `${day}.${month}.${year}`;
   }
 
   // TODO maybe outsource (also other gradients elsewhere)
