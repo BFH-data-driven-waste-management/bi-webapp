@@ -1,6 +1,12 @@
 <div class="mb-6 flex items-end justify-between gap-6">
   <div class="flex items-end gap-4">
-    <h2 class="text-7xl font-extrabold tracking-tight text-gray-600">{{ title() }}</h2>
+    <h2 class="text-7xl font-extrabold tracking-tight text-gray-600">
+      @if (loading()) {
+        <p-skeleton width="20rem" height="4.5rem" />
+      } @else {
+        {{ title() }}
+      }
+    </h2>
     <ng-content select="[header-subtitle]" />
   </div>
 

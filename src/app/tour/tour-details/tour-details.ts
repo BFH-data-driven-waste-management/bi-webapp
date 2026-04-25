@@ -67,6 +67,10 @@ export class TourDetails implements OnInit {
 
   readonly tour = signal<TourDTO | null>(null);
   readonly loading = signal(true);
+  readonly pageTitle = computed(() => {
+    const id = this.tour()?.id;
+    return id ? `Tour ${id}` : 'Tour';
+  });
 
   ngOnInit(): void {
     this.route.paramMap

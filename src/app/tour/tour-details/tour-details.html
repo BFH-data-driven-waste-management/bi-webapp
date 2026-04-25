@@ -1,4 +1,4 @@
-<app-details-page-header [title]="'Tour ' + (tour()?.id ?? '...')">
+<app-details-page-header [title]="pageTitle()" [loading]="loading()">
   <p-button
     header-action
     severity="secondary"
