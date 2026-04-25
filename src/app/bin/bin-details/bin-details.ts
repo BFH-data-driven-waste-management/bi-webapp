@@ -199,11 +199,12 @@ export class BinDetails implements OnInit {
   });
 
   /**
-   * This is a convenience feature with relatively small overhead.
-   * We load other Google Maps stuff logically in the frontend, so fetching the location here (for each bin's details invocation) is consistent and acceptable.
-   * An alternative would be to fetch the location for each bin on bin master data import, which is immutable for the rest of the day.
-   * This, however, would include fetching data for bins that are never queried on that day.
-   * TODO caching (bin coordinates are immutable until next bin master data import, i.e. for one day) and document: fetching location here on demand and cache for a day is fine
+   * Resolves a bin's street name from its coordinates.
+   *
+   * @remarks
+   * This enables a convenience feature with relatively small performance overhead.
+   * Resolving the location on demand avoids resolving locations (API calls) for bins that are never opened in the detail view.
+   * In a production version, resolved locations should be cached until the next bin master data import to avoid repeated calls for unchanged coordinates.
    *
    * @see https://angular.dev/guide/signals/resource
    */
