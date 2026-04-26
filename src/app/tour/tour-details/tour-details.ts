@@ -270,7 +270,6 @@ export class TourDetails implements OnInit {
 
   // used for access in template
   protected readonly BIN_TYPE_TAG_SEVERITY = BIN_TYPE_TAG_SEVERITY;
-  protected readonly FORMAT_DATETIME = FORMAT_DATETIME;
   protected readonly TIMEZONE = TIMEZONE;
   protected readonly LOCALE = LOCALE;
   protected readonly FORMAT_DATE = FORMAT_DATE;
