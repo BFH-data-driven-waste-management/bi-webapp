@@ -15,6 +15,7 @@ import {
   BIN_VISIT_ACTION_LABELS,
   BIN_VISIT_ACTION_TAG_SEVERITIES,
   BIN_VISIT_FILL_LEVEL_LABELS,
+  BIN_VISIT_FILL_LEVEL_ORDER,
   BIN_VISIT_FILL_LEVEL_TAG_CLASSES,
 } from '../tour.presentation';
 import { Card } from 'primeng/card';
@@ -159,14 +160,6 @@ export class TourDetails implements OnInit {
   });
 
   readonly fillLevelPieData = computed<ChartData<'pie'>>(() => {
-    const order: FillLevel[] = [
-      // TODO maybe also outsource
-      FillLevel.OVERFULL,
-      FillLevel.FULL,
-      FillLevel.HALF_FULL,
-      FillLevel.EMPTY_OR_ALMOST_EMPTY,
-    ];
-
     const counts = {
       [FillLevel.OVERFULL]: 0,
       [FillLevel.FULL]: 0,
@@ -182,10 +175,10 @@ export class TourDetails implements OnInit {
     const gray = style.getPropertyValue(`--color-gray-900`);
 
     return {
-      labels: order.map((level) => BIN_VISIT_FILL_LEVEL_LABELS[level]),
+      labels: BIN_VISIT_FILL_LEVEL_ORDER.map((level) => BIN_VISIT_FILL_LEVEL_LABELS[level]),
       datasets: [
         {
-          data: order.map((level) => counts[level]),
+          data: BIN_VISIT_FILL_LEVEL_ORDER.map((level) => counts[level]),
           backgroundColor: (context) => {
             const { chart } = context;
             const { ctx, chartArea } = chart;

@@ -5,6 +5,13 @@ import { FillLevel, VisitAction } from '../shared/models/common.model';
  * This file capsules presentation-related constants: pragmatic enum translations (for now) and tag styles (severities).
  */
 
+export const BIN_VISIT_FILL_LEVEL_ORDER: readonly FillLevel[] = [
+  FillLevel.OVERFULL,
+  FillLevel.FULL,
+  FillLevel.HALF_FULL,
+  FillLevel.EMPTY_OR_ALMOST_EMPTY,
+];
+
 export const BIN_VISIT_FILL_LEVEL_LABELS: Record<FillLevel, string> = {
   OVERFULL: 'Übervoll',
   FULL: 'Voll',
