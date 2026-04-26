@@ -8,15 +8,16 @@ import {
   BinVisitHistoryResponseDTO,
 } from './bin.model';
 import { PageDTO } from '../shared/models/common.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BinService {
   private readonly http = inject(HttpClient);
-  private readonly binDetailsApiUrl = 'http://localhost:8080/api/bins/bindetails'; // TODO better/scalable url definitions
-  private readonly binMapApiUrl = 'http://localhost:8080/api/bins/binmap';
-  private readonly binListApiUrl = 'http://localhost:8080/api/bins/binlist';
+  private readonly binDetailsApiUrl = `${environment.apiBaseUrl}/bins/bindetails`;
+  private readonly binMapApiUrl = `${environment.apiBaseUrl}/bins/binmap`;
+  private readonly binListApiUrl = `${environment.apiBaseUrl}/bins/binlist`;
 
   getBins(): Observable<BinMapResponseDTO[]> {
     return this.http.get<BinMapResponseDTO[]>(this.binMapApiUrl);

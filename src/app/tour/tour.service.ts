@@ -3,14 +3,15 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { TourDTO, TourOverviewDTO } from './tour.model';
 import { PageDTO } from '../shared/models/common.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TourService {
   private readonly http = inject(HttpClient);
-  private readonly tourDetailsApiUrl = 'http://localhost:8080/api/tourdetails';
-  private readonly tourOverviewApiUrl = 'http://localhost:8080/api/touroverview';
+  private readonly tourDetailsApiUrl = `${environment.apiBaseUrl}/tourdetails`;
+  private readonly tourOverviewApiUrl = `${environment.apiBaseUrl}/touroverview`;
 
   getTourById(id: number): Observable<TourDTO> {
     return this.http.get<TourDTO>(this.tourDetailsApiUrl + `/${id}`);
