@@ -100,7 +100,18 @@ export class BinDetails implements OnInit {
   };
 
   readonly fillLevelOptions: ChartOptions<'line'> = buildFillTrendOptions({
-    toFillLevelLabel: (value) => this.toFillLevelLabel(value),
+    toFillLevelLabel: (fillLevelScore) => {
+      if (fillLevelScore <= 0.25) {
+        return 'Leer oder fast leer';
+      }
+      if (fillLevelScore <= 0.5) {
+        return 'Halbvoll';
+      }
+      if (fillLevelScore <= 0.75) {
+        return 'Voll';
+      }
+      return 'Übervoll';
+    },
   });
 
   readonly fillLevelData = computed<ChartData<'line'>>(() => {
@@ -308,20 +319,6 @@ export class BinDetails implements OnInit {
 
     this.binVisitFirst.set(first);
     this.loadBinVisits(binId, page, rows);
-  }
-
-  // TODO this is a bit of a hack... verify
-  private toFillLevelLabel(fillLevelScore: number): string {
-    if (fillLevelScore <= 0.25) {
-      return 'Leer oder fast leer';
-    }
-    if (fillLevelScore <= 0.5) {
-      return 'Halbvoll';
-    }
-    if (fillLevelScore <= 0.75) {
-      return 'Voll';
-    }
-    return 'Übervoll';
   }
 
   // TODO maybe outsource (also other gradients elsewhere)
