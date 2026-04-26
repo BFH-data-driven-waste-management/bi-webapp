@@ -1,9 +1,8 @@
 import { ChartOptions } from 'chart.js';
+import { buildCommonTooltipOptions } from '../../shared/charts/common-options';
 
 export function buildFillLevelPieOptions(): ChartOptions<'pie'> {
-  const style = getComputedStyle(document.documentElement);
-  const bg = style.getPropertyValue('--p-content-background').trim();
-  const gray = style.getPropertyValue('--color-gray-600').trim();
+  const commonTooltip = buildCommonTooltipOptions();
 
   return {
     maintainAspectRatio: false,
@@ -12,17 +11,10 @@ export function buildFillLevelPieOptions(): ChartOptions<'pie'> {
         position: 'bottom',
         labels: {
           usePointStyle: true,
-          color: gray,
         },
       },
-      tooltip: { // TODO might better be outsourced (because reused for any chart)
-        backgroundColor: bg,
-        titleColor: gray,
-        bodyColor: gray,
-        borderColor: gray,
-        borderWidth: 1,
-        cornerRadius: 10,
-        padding: 12,
+      tooltip: {
+        ...commonTooltip,
         callbacks: {
           label: (context) => `Abs.: ${context.raw}`, // TODO display percentage?
         },

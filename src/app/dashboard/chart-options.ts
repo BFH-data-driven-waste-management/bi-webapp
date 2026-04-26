@@ -1,9 +1,8 @@
 import { ChartOptions } from 'chart.js';
+import { buildCommonTooltipOptions } from '../shared/charts/common-options';
 
 export function buildBaseBarOptions(): ChartOptions<'bar'> {
-  const style = getComputedStyle(document.documentElement);
-  const bg = style.getPropertyValue('--p-content-background').trim();
-  const gray = style.getPropertyValue('--color-gray-600').trim();
+  const commonTooltip = buildCommonTooltipOptions();
 
   return {
     maintainAspectRatio: false,
@@ -12,13 +11,7 @@ export function buildBaseBarOptions(): ChartOptions<'bar'> {
         display: false,
       },
       tooltip: {
-        backgroundColor: bg,
-        titleColor: gray,
-        bodyColor: gray,
-        borderColor: gray,
-        borderWidth: 1,
-        cornerRadius: 10,
-        padding: 12,
+        ...commonTooltip,
         displayColors: false,
         callbacks: {
           label: (context) => `${context.raw} Behälter`,

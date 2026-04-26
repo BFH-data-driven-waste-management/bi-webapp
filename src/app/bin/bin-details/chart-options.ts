@@ -1,4 +1,5 @@
 import { ChartOptions } from 'chart.js';
+import { buildCommonTooltipOptions } from '../../shared/charts/common-options';
 
 type FillTrendOptionsArgs = {
   toFillLevelLabel: (fillLevelScore: number) => string;
@@ -7,9 +8,7 @@ type FillTrendOptionsArgs = {
 export function buildFillTrendOptions({
   toFillLevelLabel,
 }: FillTrendOptionsArgs): ChartOptions<'line'> {
-  const style = getComputedStyle(document.documentElement);
-  const bg = style.getPropertyValue('--p-content-background').trim();
-  const gray = style.getPropertyValue('--color-gray-600').trim();
+  const commonTooltip = buildCommonTooltipOptions();
 
   return {
     responsive: true,
@@ -19,13 +18,7 @@ export function buildFillTrendOptions({
         display: false,
       },
       tooltip: {
-        backgroundColor: bg,
-        titleColor: gray,
-        bodyColor: gray,
-        borderColor: gray,
-        borderWidth: 1,
-        cornerRadius: 10,
-        padding: 12,
+        ...commonTooltip,
         displayColors: false,
         callbacks: {
           label: (context) => toFillLevelLabel(context.parsed.y as number),
@@ -57,9 +50,7 @@ export function buildFillTrendOptions({
 }
 
 export function buildDailyFrequencyOptions(): ChartOptions<'line'> {
-  const style = getComputedStyle(document.documentElement);
-  const bg = style.getPropertyValue('--p-content-background').trim();
-  const gray = style.getPropertyValue('--color-gray-600').trim();
+  const commonTooltip = buildCommonTooltipOptions();
 
   return {
     responsive: true,
@@ -69,13 +60,7 @@ export function buildDailyFrequencyOptions(): ChartOptions<'line'> {
         display: false,
       },
       tooltip: {
-        backgroundColor: bg,
-        titleColor: gray,
-        bodyColor: gray,
-        borderColor: gray,
-        borderWidth: 1,
-        cornerRadius: 10,
-        padding: 12,
+        ...commonTooltip,
         displayColors: false,
       },
     },
