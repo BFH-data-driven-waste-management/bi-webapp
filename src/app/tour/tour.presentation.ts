@@ -2,7 +2,7 @@ import { TourVisitVM } from './tour.model';
 import { FillLevel, VisitAction } from '../shared/models/common.model';
 
 /**
- * This file capsules presentation related constants: pragmatic enum translations (for now) and tag styles (severities).
+ * This file capsules presentation-related constants: pragmatic enum translations (for now) and tag styles (severities).
  */
 
 export const BIN_VISIT_FILL_LEVEL_LABELS: Record<FillLevel, string> = {
