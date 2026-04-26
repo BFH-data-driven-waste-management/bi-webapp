@@ -5,7 +5,7 @@ import { FillLevel, VisitAction } from '../shared/models/common.model';
 export interface TourDTO {
   id: number;
   licensePlate: string;
-  visitCount: number | null; // TODO why nulls?
+  visitCount: number | null;
   emptiedVisitCount: number | null;
   notEmptiedVisitCount: number | null;
   lowFillVisitCount: number | null;
