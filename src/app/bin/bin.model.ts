@@ -38,7 +38,7 @@ export interface BinDetailsResponseDTO {
   lastVisitDateKey: number | null;
   lastEmptyingDateKey: number | null;
   binDayFeaturesResponse: BinDayFeaturesResponseDTO | null;
-  visitFrequency90d: DailyCountResponseDTO[]; // TODO verify that daily is ok
+  visitFrequency90d: DailyCountResponseDTO[];
   emptyingFrequency90d: DailyCountResponseDTO[];
   fillTrend12m: DailyCountResponseDTO[];
 }
