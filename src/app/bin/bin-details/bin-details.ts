@@ -73,7 +73,6 @@ export class BinDetails implements OnInit {
     page: 0,
     size: 10,
     totalElements: 0,
-    totalPages: 0,
   });
   readonly binVisitRows = 10;
   readonly binVisitFirst = signal(0);
@@ -391,7 +390,6 @@ export class BinDetails implements OnInit {
       page: 0,
       size: this.binVisitRows,
       totalElements: 0,
-      totalPages: 0,
     });
     this.binVisitFirst.set(0);
   }

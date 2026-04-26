@@ -8,7 +8,6 @@ export interface PageDTO<T> {
   page: number;
   size: number;
   totalElements: number;
-  totalPages: number;
 }
 
 export enum FillLevel {
