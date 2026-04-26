@@ -13,7 +13,7 @@
     class="flex-1"
     height="100%"
     width="100%"
-    [center]="center"
+    [center]="BIEL_CENTER_COORDS"
     [options]="mapOptions()"
     (mapClick)="closeInfoWindow()">
     @for (binMarker of binMapMarkers(); track binMarker.binId) {

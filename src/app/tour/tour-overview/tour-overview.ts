@@ -43,7 +43,6 @@ import { BIEL_CENTER_COORDS, MUEVE_COORDS } from '../../shared/constants/constan
 export class TourOverview implements OnInit, AfterViewInit {
   private readonly markerClass = 'pi text-white rounded-full p-1 rounded';
   private readonly destroyRef = inject(DestroyRef);
-  protected readonly BIEL_CENTER_COORDS = BIEL_CENTER_COORDS; // used for access in template
 
   readonly router = inject(Router);
   readonly tourService = inject(TourService);
@@ -377,4 +376,7 @@ export class TourOverview implements OnInit, AfterViewInit {
     this.selectedTourAcrossPagesMap.clear();
     this.onSelectionChange();
   }
+
+  // used for access in template
+  protected readonly BIEL_CENTER_COORDS = BIEL_CENTER_COORDS;
 }

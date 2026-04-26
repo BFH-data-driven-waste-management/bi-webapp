@@ -269,7 +269,7 @@ export class TourDetails implements OnInit {
     return gradient;
   }
 
-  // for usage in template
+  // used for access in template
   protected readonly BIN_TYPE_TAG_SEVERITY = BIN_TYPE_TAG_SEVERITY;
   protected readonly FORMAT_DATETIME = FORMAT_DATETIME;
   protected readonly TIMEZONE = TIMEZONE;

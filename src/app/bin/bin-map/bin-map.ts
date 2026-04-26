@@ -15,6 +15,11 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { BinMapMarkerVM, BinMapResponseDTO, BinMapView } from '../bin.model';
 import { BinService } from '../bin.service';
+import {
+  BIEL_CENTER_COORDS,
+  MUEVE_COORDS,
+  STRASSENINSPEKTORAT_COORDS,
+} from '../../shared/constants/constants';
 
 @Component({
   selector: 'app-bin-map',
@@ -39,8 +44,8 @@ export class BinMap {
 
   readonly mapViewOptions: { label: string; value: BinMapView }[] = [
     { label: 'Standard', value: 'default' },
-    { label: 'Heatmap: Müllaufkommen', value: 'waste-generation' },
-    { label: 'Heatmap: Letzter Besuch', value: 'last-visit-age' },
+    { label: 'Müllaufkommen', value: 'waste-generation' },
+    { label: 'Letzter Besuch', value: 'last-visit-age' },
   ];
 
   readonly activeMapView = signal<BinMapView>('default');
@@ -50,7 +55,7 @@ export class BinMap {
     title: string;
     content: HTMLElement;
   } = {
-    position: { lat: 47.120678, lng: 7.257629 },
+    position: MUEVE_COORDS,
     title: 'MÜVE Biel-Seeland AG',
     content: this.createBuildingIcon(),
   };
@@ -60,7 +65,7 @@ export class BinMap {
     title: string;
     content: HTMLElement;
   } = {
-    position: { lat: 47.125467, lng: 7.259864 },
+    position: STRASSENINSPEKTORAT_COORDS,
     title: 'Strasseninspektorat',
     content: this.createBuildingIcon(),
   };
@@ -83,8 +88,6 @@ export class BinMap {
   });
   readonly selectedBin = signal<BinMapMarkerVM | null>(null);
   readonly infoWindow = viewChild.required(MapInfoWindow);
-
-  readonly center: google.maps.LatLngLiteral = { lat: 47.142471, lng: 7.259719 };
 
   readonly mapOptions = computed<google.maps.MapOptions>(() => ({
     zoom: 15,
@@ -212,4 +215,7 @@ export class BinMap {
     this.infoWindow().close();
     this.selectedBin.set(null);
   }
+
+  // used for access in template
+  protected readonly BIEL_CENTER_COORDS = BIEL_CENTER_COORDS;
 }
