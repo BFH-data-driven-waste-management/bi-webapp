@@ -148,7 +148,7 @@ export class BinMap {
       return 1;
     }
 
-    return Math.round(heatValue * 100); // TODO multiply by 100 after dividing by 100 previously is ugly
+    return Math.round(heatValue * 100);
   }
 
   private getHeatmapValue(
