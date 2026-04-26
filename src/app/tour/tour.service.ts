@@ -10,8 +10,8 @@ import { environment } from '../../environments/environment';
 })
 export class TourService {
   private readonly http = inject(HttpClient);
-  private readonly tourDetailsApiUrl = `${environment.apiBaseUrl}/tourdetails`;
-  private readonly tourOverviewApiUrl = `${environment.apiBaseUrl}/touroverview`;
+  private readonly tourDetailsApiUrl = `${environment.apiBaseUrl}/tours/tourdetails`;
+  private readonly tourOverviewApiUrl = `${environment.apiBaseUrl}/tours/touroverview`;
 
   getTourById(id: number): Observable<TourDTO> {
     return this.http.get<TourDTO>(this.tourDetailsApiUrl + `/${id}`);
