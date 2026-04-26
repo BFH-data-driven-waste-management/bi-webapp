@@ -2,8 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   inject,
   LOCALE_ID,
+  OnInit,
   signal,
 } from '@angular/core';
 import { TableModule } from 'primeng/table';
@@ -14,9 +16,9 @@ import { Toolbar } from 'primeng/toolbar';
 import { FormsModule } from '@angular/forms';
 import { ToggleButton } from 'primeng/togglebutton';
 import { Chip } from 'primeng/chip';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SortMeta } from 'primeng/api';
-import { BinHeuristicFilter, BinHeuristicToggle, FullBinVM } from '../bin.model';
+import { BinHeuristicFilter, BinHeuristicToggle, BinListResponseDTO, FullBinVM } from '../bin.model';
 import { Button } from 'primeng/button';
 import { TableColumn } from '../../shared/models/common.model';
 import { BIN_HEURISTIC_TOGGLES, filterBinsByHeuristic } from './bin-heuristics';
@@ -27,12 +29,14 @@ import { BIN_HEURISTIC_TOGGLES, filterBinsByHeuristic } from './bin-heuristics';
   templateUrl: './bin-list.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BinList {
+export class BinList implements OnInit {
   private readonly binService = inject(BinService);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly locale = inject(LOCALE_ID);
   private readonly initialSortMeta: SortMeta[] = [{ field: 'binId', order: 1 }];
 
-  private readonly bins = toSignal(this.binService.getBinList(), { initialValue: [] });
+  readonly loading = signal(true);
+  private readonly bins = signal<BinListResponseDTO[]>([]);
 
   readonly filteredBins = computed(() => {
     const bins = this.bins();
@@ -85,6 +89,21 @@ export class BinList {
   });
 
   multiSortMeta: SortMeta[] | null = this.initialSortMeta.map((sort) => ({ ...sort }));
+
+  ngOnInit(): void {
+    this.binService
+      .getBinList()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (bins) => {
+          this.bins.set(bins);
+          this.loading.set(false);
+        },
+        error: () => {
+          this.loading.set(false);
+        },
+      });
+  }
 
   get staticHeuristicToggles(): BinHeuristicToggle[] {
     return this.heuristicToggles.filter((toggle) => toggle.category === 'static');
