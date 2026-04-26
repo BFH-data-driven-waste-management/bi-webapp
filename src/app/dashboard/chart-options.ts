@@ -2,7 +2,7 @@ import { ChartOptions } from 'chart.js';
 
 export function buildBaseBarOptions(): ChartOptions<'bar'> {
   const style = getComputedStyle(document.documentElement);
-  const bg = style.getPropertyValue('--p-content-background').trim(); // TODO maybe better option
+  const bg = style.getPropertyValue('--p-content-background').trim();
   const gray = style.getPropertyValue('--color-gray-600').trim();
 
   return {
