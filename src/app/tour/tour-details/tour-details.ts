@@ -36,7 +36,7 @@ import { Skeleton } from 'primeng/skeleton';
 import { DetailsPageHeader } from '../../shared/components/details-page-header/details-page-header';
 import { distinctUntilChanged, EMPTY, map, switchMap } from 'rxjs';
 import { TableColumn, FillLevel } from '../../shared/models/common.model';
-import { FORMAT_DATETIME, LOCALE, TIMEZONE } from '../../shared/constants/constants';
+import { FORMAT_DATE, FORMAT_DATETIME, LOCALE, TIMEZONE } from '../../shared/constants/constants';
 
 @Component({
   selector: 'app-tour-details',
@@ -107,7 +107,7 @@ export class TourDetails implements OnInit {
   readonly columns: TableColumn[] = [
     { field: 'id', header: 'Besuchs-ID' },
     { field: 'binId', header: 'Behälter-ID' },
-    { field: 'eventTimestampLabel', header: 'Zeitpunkt' },
+    { field: 'eventTimestampLabel', header: 'Uhrzeit' },
     { field: 'binType', header: 'Behältertyp' },
     { field: 'fillLevelLabel', header: 'Füllstand' },
     { field: 'visitActionLabel', header: 'Aktion' },
@@ -227,7 +227,7 @@ export class TourDetails implements OnInit {
   readonly binVisitRows = computed<TourVisitVM[]>(() =>
     (this.tour()?.binVisits ?? []).map((visit) => ({
       ...visit,
-      eventTimestampLabel: this.dateTimeService.format(visit.eventTimestamp),
+      eventTimestampLabel: this.dateTimeService.format(visit.eventTimestamp, 'time'),
       fillLevelLabel: BIN_VISIT_FILL_LEVEL_LABELS[visit.fillLevel],
       fillLevelClass: BIN_VISIT_FILL_LEVEL_TAG_CLASSES[visit.fillLevel],
       visitActionLabel: BIN_VISIT_ACTION_LABELS[visit.visitAction],
@@ -274,4 +274,5 @@ export class TourDetails implements OnInit {
   protected readonly FORMAT_DATETIME = FORMAT_DATETIME;
   protected readonly TIMEZONE = TIMEZONE;
   protected readonly LOCALE = LOCALE;
+  protected readonly FORMAT_DATE = FORMAT_DATE;
 }

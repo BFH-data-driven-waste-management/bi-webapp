@@ -30,7 +30,7 @@
         @if (loading()) {
           <p-skeleton width="12rem" height="1.5rem" />
         } @else {
-          <span>{{ tour()?.startedAt | date: FORMAT_DATETIME: TIMEZONE: LOCALE }}</span>
+          <span>{{ tour()?.startedAt | date: FORMAT_DATE: TIMEZONE: LOCALE }}</span>
         }
       </div>
 
@@ -149,7 +149,7 @@
       <tr>
         <th class="w-[10%]" pSortableColumn="id">Besuchs-ID <p-sortIcon field="id" /></th>
         <th class="w-[10%]" pSortableColumn="binId">Behälter-ID <p-sortIcon field="binId" /></th>
-        <th pSortableColumn="eventTimestamp">Zeitpunkt <p-sortIcon field="eventTimestamp" /></th>
+        <th pSortableColumn="eventTimestamp">Uhrzeit <p-sortIcon field="eventTimestamp" /></th>
         <th pSortableColumn="binType">Behältertyp <p-sortIcon field="binType" /></th>
         <th pSortableColumn="fillLevel">Füllstand <p-sortIcon field="fillLevel" /></th>
         <th pSortableColumn="visitAction">Aktion <p-sortIcon field="visitAction" /></th>

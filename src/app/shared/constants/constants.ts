@@ -8,5 +8,7 @@ export const MUEVE_COORDS: google.maps.LatLngLiteral = { lat: 47.120678, lng: 7.
  * Time
  */
 export const FORMAT_DATETIME = 'EEE, dd.MM.y, HH:mm';
+export const FORMAT_DATE = 'EEE, dd.MM.y';
+export const FORMAT_TIME = 'HH:mm';
 export const TIMEZONE = 'Europe/Zurich';
 export const LOCALE = 'de-CH';

@@ -1,5 +1,12 @@
 import { formatDate } from '@angular/common';
 import { Injectable } from '@angular/core';
+import {
+  FORMAT_DATE,
+  FORMAT_DATETIME,
+  FORMAT_TIME,
+  LOCALE,
+  TIMEZONE,
+} from '../constants/constants';
 
 type ChDateFormat = 'full' | 'time' | 'date';
 
@@ -7,12 +14,10 @@ type ChDateFormat = 'full' | 'time' | 'date';
   providedIn: 'root',
 })
 export class DateTimeService {
-  private static readonly LOCALE = 'de-CH';
-  private static readonly TIMEZONE = 'Europe/Zurich';
   private static readonly FORMATS: Record<ChDateFormat, string> = {
-    full: 'EEE, dd.MM.y, HH:mm',
-    time: 'HH:mm',
-    date: 'dd.MM.y',
+    full: FORMAT_DATETIME,
+    time: FORMAT_TIME,
+    date: FORMAT_DATE,
   };
 
   format(value: string | number | Date | null | undefined, format: ChDateFormat = 'full'): string {
@@ -28,8 +33,8 @@ export class DateTimeService {
     return formatDate(
       date,
       DateTimeService.FORMATS[format],
-      DateTimeService.LOCALE,
-      DateTimeService.TIMEZONE,
+      LOCALE,
+      TIMEZONE,
     );
   }
 
