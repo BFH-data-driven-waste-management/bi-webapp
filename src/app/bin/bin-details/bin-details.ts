@@ -6,7 +6,7 @@ import {
   inject,
   OnInit,
   resource,
-  signal,
+  signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Card } from 'primeng/card';
@@ -17,7 +17,7 @@ import { GoogleMap, MapAdvancedMarker } from '@angular/google-maps';
 import { SimpleMetricCard } from '../../shared/components/simple-metric-card/simple-metric-card';
 import { TrendMetricCard } from '../../shared/components/trend-metric-card/trend-metric-card';
 import { Button } from 'primeng/button';
-import { Location } from '@angular/common';
+import { Location, PercentPipe } from '@angular/common';
 import { Skeleton } from 'primeng/skeleton';
 import { BinService } from '../bin.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -32,9 +32,9 @@ import {
   BIN_VISIT_ACTION_LABELS,
   BIN_VISIT_ACTION_TAG_SEVERITIES,
   BIN_VISIT_FILL_LEVEL_LABELS,
-  BIN_VISIT_FILL_LEVEL_TAG_CLASSES,
+  BIN_VISIT_FILL_LEVEL_TAG_CLASSES
 } from '../../tour/tour.presentation';
-import { BIEL_CENTER_COORDS } from '../../shared/constants/constants';
+import { BIEL_CENTER_COORDS, LOCALE } from '../../shared/constants/constants';
 import { DetailsPageHeader } from '../../shared/components/details-page-header/details-page-header';
 
 @Component({
@@ -53,6 +53,7 @@ import { DetailsPageHeader } from '../../shared/components/details-page-header/d
     Toolbar,
     RouterLink,
     DetailsPageHeader,
+    PercentPipe,
   ],
   templateUrl: './bin-details.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -394,4 +395,7 @@ export class BinDetails implements OnInit {
     });
     this.binVisitFirst.set(0);
   }
+
+  // used for access in template
+  protected readonly LOCALE = LOCALE;
 }
