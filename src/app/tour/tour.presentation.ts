@@ -20,10 +20,9 @@ export const BIN_VISIT_FILL_LEVEL_LABELS: Record<FillLevel, string> = {
 };
 
 export const BIN_VISIT_FILL_LEVEL_TAG_CLASSES: Record<FillLevel, string> = {
-  // TODO use in bar chart?
-  OVERFULL: 'bg-gray-900 text-white',
-  FULL: 'bg-red-600 text-white',
-  HALF_FULL: 'bg-red-300 text-gray-900',
+  OVERFULL: 'bg-gray-700 text-white',
+  FULL: 'bg-red-500 text-white',
+  HALF_FULL: 'bg-red-200 text-gray-900',
   EMPTY_OR_ALMOST_EMPTY: 'bg-gray-200 text-gray-700',
 };
 
