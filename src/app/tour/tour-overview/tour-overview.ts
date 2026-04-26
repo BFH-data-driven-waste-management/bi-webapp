@@ -21,7 +21,6 @@ import { ToggleButton } from 'primeng/togglebutton';
 import { DateTimeService } from '../../shared/services/date-time.service';
 import { Router } from '@angular/router';
 import { TourService } from '../tour.service';
-import { finalize } from 'rxjs';
 import { BIEL_CENTER_COORDS, MUEVE_COORDS } from '../../shared/constants/constants';
 
 @Component({
@@ -54,6 +53,7 @@ export class TourOverview implements OnInit, AfterViewInit {
   readonly totalRecords = signal(0);
   readonly rows = signal(4);
   readonly exportLoading = signal(false);
+  readonly tourOverviewLoading = signal(false);
   readonly latestTourIdFromFirstPage = signal<number | null>(null);
   readonly tableRows = computed<TourVM[]>(() =>
     [...this.tours()].map(
@@ -108,18 +108,25 @@ export class TourOverview implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.tourOverviewLoading.set(true);
     this.tourService
       .getTours()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((initialPage) => {
-        this.tours.set(initialPage.content);
-        this.totalRecords.set(initialPage.totalElements);
-        this.rows.set(initialPage.size);
-        this.latestTourIdFromFirstPage.set(initialPage.content[0]?.id ?? null);
-        this.setCrossPageSelection(this.getDefaultSelection(initialPage.content, initialPage.page));
-        this.syncCurrentPageSelection(initialPage.content);
-        this.rebuildMapData();
-    });
+      .subscribe({
+        next: (initialPage) => {
+          this.tours.set(initialPage.content);
+          this.totalRecords.set(initialPage.totalElements);
+          this.rows.set(initialPage.size);
+          this.latestTourIdFromFirstPage.set(initialPage.content[0]?.id ?? null);
+          this.setCrossPageSelection(this.getDefaultSelection(initialPage.content, initialPage.page));
+          this.syncCurrentPageSelection(initialPage.content);
+          this.rebuildMapData();
+          this.tourOverviewLoading.set(false);
+        },
+        error: () => {
+          this.tourOverviewLoading.set(false);
+        },
+      });
   }
 
   ngAfterViewInit(): void {
@@ -142,19 +149,26 @@ export class TourOverview implements OnInit, AfterViewInit {
     const pageSize = event.rows ?? this.rows();
     const page = event.first ? Math.floor(event.first / pageSize) : 0;
 
+    this.tourOverviewLoading.set(true);
     this.tourService
       .getTours(page, pageSize)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((pageResult) => {
-        this.tours.set(pageResult.content);
-        this.totalRecords.set(pageResult.totalElements);
-        this.rows.set(pageResult.size);
-        if (this.selectedTourAcrossPagesMap.size === 0) {
-          this.setCrossPageSelection(this.getDefaultSelection(pageResult.content, pageResult.page));
-        }
-        this.syncCurrentPageSelection(pageResult.content);
-        this.rebuildMapData();
-        this.alignMap();
+      .subscribe({
+        next: (pageResult) => {
+          this.tours.set(pageResult.content);
+          this.totalRecords.set(pageResult.totalElements);
+          this.rows.set(pageResult.size);
+          if (this.selectedTourAcrossPagesMap.size === 0) {
+            this.setCrossPageSelection(this.getDefaultSelection(pageResult.content, pageResult.page));
+          }
+          this.syncCurrentPageSelection(pageResult.content);
+          this.rebuildMapData();
+          this.alignMap();
+          this.tourOverviewLoading.set(false);
+        },
+        error: () => {
+          this.tourOverviewLoading.set(false);
+        },
       });
   }
 
@@ -162,10 +176,7 @@ export class TourOverview implements OnInit, AfterViewInit {
     this.exportLoading.set(true);
     this.tourService
       .exportToursCsv()
-      .pipe(
-        finalize(() => this.exportLoading.set(false)),
-        takeUntilDestroyed(this.destroyRef),
-      )
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (csvBlob) => {
           const url = URL.createObjectURL(csvBlob);
@@ -174,8 +185,11 @@ export class TourOverview implements OnInit, AfterViewInit {
           link.download = 'tours.csv';
           link.click();
           URL.revokeObjectURL(url);
+          this.exportLoading.set(false);
         },
-        error: () => {},
+        error: () => {
+          this.exportLoading.set(false);
+        },
       });
   }
 

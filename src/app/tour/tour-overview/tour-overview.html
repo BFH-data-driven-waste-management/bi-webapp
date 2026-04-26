@@ -13,6 +13,7 @@
   </p-toolbar>
   <p-table
     [value]="tableRows()"
+    [loading]="tourOverviewLoading()"
     [(selection)]="selectedTours"
     (selectionChange)="onSelectionChange()"
     selectionMode="multiple"
