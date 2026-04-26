@@ -69,8 +69,8 @@ export class BinList implements OnInit {
     { field: 'isActiveLabel', header: 'Aktiv' },
     { field: 'coord2056Label', header: 'Koordinaten 2056' },
     { field: 'avgWeeklyVisits90dLabel', header: 'Ø Besuche/Woche (90d)' },
-    { field: 'lowFillVisitRatio90dLabel', header: 'Leer-/Halbvollquote (90d)' },
-    { field: 'overfullVisitRatio90dLabel', header: 'Übervoll-Quote (90d)' },
+    { field: 'lowFillVisitRatio90dLabel', header: 'Anteil Besuche mit niedrigem Füllstand (90d)' },
+    { field: 'overfullVisitRatio90dLabel', header: 'Anteil Besuche mit übervollem Füllstand (90d)' },
   ];
 
   readonly heuristicToggles: BinHeuristicToggle[] = BIN_HEURISTIC_TOGGLES;

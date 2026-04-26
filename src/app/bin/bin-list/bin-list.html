@@ -57,20 +57,20 @@
 
     <ng-template #header>
       <tr>
-        <th class="w-[9%]">Behälter-ID</th>
+        <th class="w-[6%]">Behälter-ID</th>
         <th class="w-[12%]">Typ</th>
         <th class="w-[4%]">Aktiv</th>
-        <th class="w-[18%]">Koordinaten</th>
-        <th class="w-[19%]" pSortableColumn="avgWeeklyVisits90d">
+        <th class="w-[15%]">Koordinaten</th>
+        <th class="w-[15%]" pSortableColumn="avgWeeklyVisits90d">
           Ø Besuche/Woche (90d)
           <p-sortIcon field="avgWeeklyVisits90d" />
         </th>
-        <th class="w-[20%]" pSortableColumn="lowFillVisitRatio90d">
-          Leer-/Halbvollquote (90d)
+        <th class="w-[24%]" pSortableColumn="lowFillVisitRatio90d">
+          Anteil Besuche mit niedrigem Füllstand (90d)
           <p-sortIcon field="lowFillVisitRatio90d" />
         </th>
-        <th class="w-[18%]" pSortableColumn="overfullVisitRatio90d">
-          Übervoll-Quote (90d)
+        <th class="w-[24%]" pSortableColumn="overfullVisitRatio90d">
+          Anteil Besuche mit übervollem Füllstand (90d)
           <p-sortIcon field="overfullVisitRatio90d" />
         </th>
       </tr>
