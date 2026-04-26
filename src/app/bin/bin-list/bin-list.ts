@@ -36,7 +36,10 @@ export class BinList implements OnInit {
   private readonly initialSortMeta: SortMeta[] = [{ field: 'binId', order: 1 }];
 
   readonly loading = signal(true);
-  private readonly bins = signal<BinListResponseDTO[]>([]);
+
+  readonly bins = signal<BinListResponseDTO[]>([]);
+
+  readonly activeHeuristic = signal<BinHeuristicToggle | null>(null);
 
   readonly filteredBins = computed(() => {
     const bins = this.bins();
@@ -58,8 +61,8 @@ export class BinList implements OnInit {
       overfullVisitRatio90dLabel: formatPercent(bin.overfullVisitRatio90d, this.locale, '1.0-1'),
     })),
   );
-
   readonly rows = 20;
+
   readonly columns: TableColumn[] = [
     { field: 'binId', header: 'Behälter-ID' },
     { field: 'type', header: 'Typ' },
@@ -71,8 +74,6 @@ export class BinList implements OnInit {
   ];
 
   readonly heuristicToggles: BinHeuristicToggle[] = BIN_HEURISTIC_TOGGLES;
-
-  readonly activeHeuristic = signal<BinHeuristicToggle | null>(null);
 
   readonly activeHeuristicFilterChips = computed<string[]>(() => {
     const activeHeuristic = this.activeHeuristic();
