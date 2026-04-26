@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { Card } from 'primeng/card';
 import { UIChart } from 'primeng/chart';
 import { Skeleton } from 'primeng/skeleton';
@@ -8,6 +16,7 @@ import { DashboardResponseDTO } from './dashboard.model';
 import { SimpleMetricCard } from '../shared/components/simple-metric-card/simple-metric-card';
 import { TrendMetricCard } from '../shared/components/trend-metric-card/trend-metric-card';
 import { DashboardService } from './dashboard.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,6 +26,7 @@ import { DashboardService } from './dashboard.service';
 })
 export class Dashboard implements OnInit {
   private readonly dashboardService = inject(DashboardService);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly loading = signal(true);
   readonly dashboardData = signal<DashboardResponseDTO | null>(null);
@@ -72,9 +82,10 @@ export class Dashboard implements OnInit {
   });
 
   ngOnInit(): void {
-    // TODO takeuntil destroyed? altough this is a one shot http observable completing itself, this
-    //  would auto complete if the component is destroyed mid request, same in tour overview?
-    this.dashboardService.getDashboard().subscribe({
+    this.dashboardService
+      .getDashboard()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
       next: (dashboardResponse) => {
         this.dashboardData.set(dashboardResponse);
         this.loading.set(false);

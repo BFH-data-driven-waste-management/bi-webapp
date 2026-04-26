@@ -108,7 +108,10 @@ export class TourOverview implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.tourService.getTours().subscribe((initialPage) => {
+    this.tourService
+      .getTours()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((initialPage) => {
       this.tours.set(initialPage.content);
       this.totalRecords.set(initialPage.totalElements);
       this.rows.set(initialPage.size);
@@ -139,17 +142,20 @@ export class TourOverview implements OnInit, AfterViewInit {
     const pageSize = event.rows ?? this.rows();
     const page = event.first ? Math.floor(event.first / pageSize) : 0;
 
-    this.tourService.getTours(page, pageSize).subscribe((pageResult) => {
-      this.tours.set(pageResult.content);
-      this.totalRecords.set(pageResult.totalElements);
-      this.rows.set(pageResult.size);
-      if (this.selectedTourAcrossPagesMap.size === 0) {
-        this.setCrossPageSelection(this.getDefaultSelection(pageResult.content, pageResult.page));
-      }
-      this.syncCurrentPageSelection(pageResult.content);
-      this.rebuildMapData();
-      this.alignMap();
-    });
+    this.tourService
+      .getTours(page, pageSize)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((pageResult) => {
+        this.tours.set(pageResult.content);
+        this.totalRecords.set(pageResult.totalElements);
+        this.rows.set(pageResult.size);
+        if (this.selectedTourAcrossPagesMap.size === 0) {
+          this.setCrossPageSelection(this.getDefaultSelection(pageResult.content, pageResult.page));
+        }
+        this.syncCurrentPageSelection(pageResult.content);
+        this.rebuildMapData();
+        this.alignMap();
+      });
   }
 
   protected exportToursCsv(): void {
