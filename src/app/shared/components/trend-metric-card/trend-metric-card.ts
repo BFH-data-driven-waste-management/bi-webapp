@@ -2,6 +2,7 @@ import { formatNumber, formatPercent } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { Card } from 'primeng/card';
 import { Skeleton } from 'primeng/skeleton';
+import { LOCALE } from '../../constants/constants';
 
 @Component({
   selector: 'app-trend-metric-card',
@@ -23,10 +24,10 @@ export class TrendMetricCard {
     }
 
     if (this.percent()) {
-      return formatPercent(value, 'de-CH', '1.0-0');
+      return formatPercent(value, LOCALE, '1.0-0');
     }
 
-    return formatNumber(value, 'de-CH', '1.0-0');
+    return formatNumber(value, LOCALE, '1.0-0');
   });
 
   readonly trendIcon = computed(() => {
@@ -44,7 +45,7 @@ export class TrendMetricCard {
       return '';
     }
 
-    const formatted = formatPercent(trendValue, 'de-CH', '1.0-2');
+    const formatted = formatPercent(trendValue, LOCALE, '1.0-2');
     return trendValue > 0 ? `+${formatted}` : formatted;
   });
 }

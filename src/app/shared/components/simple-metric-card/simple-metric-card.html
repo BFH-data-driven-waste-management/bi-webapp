@@ -10,9 +10,9 @@
       <div class="text-6xl font-extrabold tracking-tight">
         @if (value() != null) {
           @if (percent()) {
-            {{ value() | percent: '1.0-0' : 'de-CH' }}
+            {{ value() | percent: '1.0-0' : LOCALE }}
           } @else {
-            {{ value() | number: '1.0-2' : 'de-CH' }}
+            {{ value() | number: '1.0-2' : LOCALE }}
           }
         }
       </div>

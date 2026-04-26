@@ -60,7 +60,7 @@
             </ng-template>
 
             <ng-template #content let-event>
-              {{ event.timestamp | date: 'HH:mm':'Europe/Zurich':'de-CH' }}
+              {{ event.timestamp | date: FORMAT_TIME:TIMEZONE:LOCALE }}
             </ng-template>
           </p-timeline>
         }

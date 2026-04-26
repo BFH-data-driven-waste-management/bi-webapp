@@ -36,7 +36,13 @@ import { Skeleton } from 'primeng/skeleton';
 import { DetailsPageHeader } from '../../shared/components/details-page-header/details-page-header';
 import { distinctUntilChanged, EMPTY, map, switchMap } from 'rxjs';
 import { TableColumn, FillLevel } from '../../shared/models/common.model';
-import { FORMAT_DATE, FORMAT_DATETIME, LOCALE, TIMEZONE } from '../../shared/constants/constants';
+import {
+  FORMAT_DATE,
+  FORMAT_DATETIME,
+  FORMAT_TIME,
+  LOCALE,
+  TIMEZONE,
+} from '../../shared/constants/constants';
 
 @Component({
   selector: 'app-tour-details',
@@ -275,4 +281,5 @@ export class TourDetails implements OnInit {
   protected readonly TIMEZONE = TIMEZONE;
   protected readonly LOCALE = LOCALE;
   protected readonly FORMAT_DATE = FORMAT_DATE;
+  protected readonly FORMAT_TIME = FORMAT_TIME;
 }

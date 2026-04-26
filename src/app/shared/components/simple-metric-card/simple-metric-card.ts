@@ -2,6 +2,7 @@ import { DecimalPipe, PercentPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { Card } from 'primeng/card';
 import { Skeleton } from 'primeng/skeleton';
+import { LOCALE } from '../../constants/constants';
 
 @Component({
   selector: 'app-simple-metric-card',
@@ -15,4 +16,7 @@ export class SimpleMetricCard {
   readonly value = input<number>();
   readonly percent = input(false);
   readonly loading = input(false);
+
+  // used for access in template
+  protected readonly LOCALE = LOCALE;
 }
