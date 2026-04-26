@@ -102,11 +102,6 @@ export class TourOverview implements OnInit, AfterViewInit {
     '#6366f1',
   ];
 
-  // TODO maybe centralize and use consistently everywhere
-  private toLatLng(coordX: number, coordY: number): google.maps.LatLngLiteral {
-    return { lat: coordX, lng: coordY };
-  }
-
   ngOnInit(): void {
     this.tourOverviewLoading.set(true);
     this.tourService
@@ -244,7 +239,7 @@ export class TourOverview implements OnInit, AfterViewInit {
 
       const path = timelineForMap.map((timelineItem) =>
         timelineItem.type === 'binVisit'
-          ? this.toLatLng(timelineItem.binCoordX, timelineItem.binCoordY)
+          ? { lat: timelineItem.binCoordX, lng:  timelineItem.binCoordY }
           : MUEVE_COORDS,
       );
 
@@ -290,7 +285,7 @@ export class TourOverview implements OnInit, AfterViewInit {
 
     for (const tour of this.selectedToursAcrossPages) {
       for (const visit of tour.binVisits) {
-        bounds.extend(this.toLatLng(visit.binCoordX, visit.binCoordY));
+        bounds.extend({ lat: visit.binCoordX, lng: visit.binCoordY });
       }
     }
 
@@ -342,7 +337,7 @@ export class TourOverview implements OnInit, AfterViewInit {
 
       const marker = {
         id: `${tour.id}-binVisit-${timelineItem.id}`,
-        position: this.toLatLng(timelineItem.binCoordX, timelineItem.binCoordY),
+        position: { lat: timelineItem.binCoordX, lng: timelineItem.binCoordY },
         title: `${timelineItem.binType} - ${timelineItem.fillLevel} - ${timelineItem.visitAction}`,
         content: this.createBinIcon(
           currentBinVisitIndex, // TODO use sequenceInTour property?
