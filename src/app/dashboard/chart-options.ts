@@ -1,4 +1,4 @@
-import { ChartOptions } from 'chart.js'; // FIXME is chart.js separately needed?
+import { ChartOptions } from 'chart.js';
 
 export function buildBaseBarOptions(): ChartOptions<'bar'> {
   const style = getComputedStyle(document.documentElement);
