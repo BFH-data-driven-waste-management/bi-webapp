@@ -188,7 +188,7 @@
       label="Export"
       icon="pi pi-file-export"
       severity="secondary"
-      [loading]="exportLoading()"
+      [loading]="binVisitLoading() || exportLoading()"
       (onClick)="exportBinVisitsCsv()" />
   </p-toolbar>
 

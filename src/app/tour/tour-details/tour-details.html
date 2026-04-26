@@ -128,11 +128,11 @@
       label="Export"
       icon="pi pi-file-export"
       severity="secondary"
+      [loading]="loading()"
       (onClick)="dt.exportCSV()"
     />
   </p-toolbar>
 
-  <!-- TODO outsource in dedicated component? (also in bin details) -->
   <p-table
     #dt
     [columns]="columns"
@@ -141,10 +141,10 @@
     [sortOrder]="-1"
     paginator
     [rows]="10"
+    [loading]="loading()"
     [rowsPerPageOptions]="[10, 25, 50]"
-    exportFilename="tour-bin-visits"
+    [exportFilename]="'tour-' + tour()?.id + '-bin-visits'"
     [tableStyle]="{ 'min-width': '64rem' }">
-    <!-- TODO a dynamic export filename with id or so might be useful -->
     <ng-template #header>
       <tr>
         <th class="w-[10%]" pSortableColumn="id">Besuchs-ID <p-sortIcon field="id" /></th>

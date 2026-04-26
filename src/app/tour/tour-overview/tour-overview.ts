@@ -112,13 +112,13 @@ export class TourOverview implements OnInit, AfterViewInit {
       .getTours()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((initialPage) => {
-      this.tours.set(initialPage.content);
-      this.totalRecords.set(initialPage.totalElements);
-      this.rows.set(initialPage.size);
-      this.latestTourIdFromFirstPage.set(initialPage.content[0]?.id ?? null);
-      this.setCrossPageSelection(this.getDefaultSelection(initialPage.content, initialPage.page));
-      this.syncCurrentPageSelection(initialPage.content);
-      this.rebuildMapData();
+        this.tours.set(initialPage.content);
+        this.totalRecords.set(initialPage.totalElements);
+        this.rows.set(initialPage.size);
+        this.latestTourIdFromFirstPage.set(initialPage.content[0]?.id ?? null);
+        this.setCrossPageSelection(this.getDefaultSelection(initialPage.content, initialPage.page));
+        this.syncCurrentPageSelection(initialPage.content);
+        this.rebuildMapData();
     });
   }
 

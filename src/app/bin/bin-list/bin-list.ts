@@ -81,7 +81,7 @@ export class BinList {
 
   readonly exportFilename = computed<string>(() => {
     const activeHeuristicId = this.activeHeuristic()?.id;
-    return !activeHeuristicId ? 'bin-list' : `bin-list-filtered-heuristic-${activeHeuristicId}`;
+    return !activeHeuristicId ? 'bins' : `bins-filtered-heuristic-${activeHeuristicId}`;
   });
 
   multiSortMeta: SortMeta[] | null = this.initialSortMeta.map((sort) => ({ ...sort }));
