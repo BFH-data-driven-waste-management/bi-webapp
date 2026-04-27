@@ -34,6 +34,15 @@
         }
       </div>
 
+      <div class="flex flex-col">
+        <strong>Fahrzeug</strong>
+        @if (loading()) {
+          <p-skeleton width="5rem" height="1.5rem" />
+        } @else {
+          <span>{{ tour()?.licensePlate ?? '' }}</span>
+        }
+      </div>
+
     </div>
   </p-card>
 
