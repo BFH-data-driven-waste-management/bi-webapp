@@ -315,7 +315,7 @@ export class TourOverview implements OnInit, AfterViewInit {
 
     return timelineItems.sort(
       (a, b) =>
-        Date.parse(this.getTimelineItemTimestamp(a)) - Date.parse(this.getTimelineItemTimestamp(b)),
+        Date.parse(a.eventTimestamp) - Date.parse(b.eventTimestamp),
     );
   }
 
@@ -370,12 +370,6 @@ export class TourOverview implements OnInit, AfterViewInit {
     const el = document.createElement('span');
     el.className = `${this.markerClass} pi-building bg-black`;
     return el;
-  }
-
-  private getTimelineItemTimestamp(timelineItem: TourTimelineItem): string {
-    return timelineItem.type === 'binVisit'
-      ? timelineItem.eventTimestamp
-      : timelineItem.eventTimestamp;
   }
 
   rowClass(binVisitAmount: number) {
