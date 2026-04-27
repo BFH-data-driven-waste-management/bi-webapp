@@ -36,6 +36,7 @@ import {
 } from '../../tour/tour.presentation';
 import { BIEL_CENTER_COORDS, LOCALE } from '../../shared/constants/constants';
 import { DetailsPageHeader } from '../../shared/components/details-page-header/details-page-header';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-bin-details',
@@ -59,6 +60,7 @@ import { DetailsPageHeader } from '../../shared/components/details-page-header/d
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BinDetails implements OnInit {
+  private readonly messageService = inject(MessageService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly location = inject(Location);
   private readonly binService = inject(BinService);
@@ -286,6 +288,12 @@ export class BinDetails implements OnInit {
             this.loading.set(false);
             this.bin.set(null);
             this.resetBinVisits();
+            this.messageService.add({
+              severity: 'warn',
+              summary: 'Ungültige Behälter-ID',
+              detail: 'Die Behälter-ID muss numerisch sein.',
+              life: 5000,
+            });
             return EMPTY;
           }
 

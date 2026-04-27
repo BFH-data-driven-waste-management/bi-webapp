@@ -1,15 +1,15 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   DestroyRef,
   inject,
   OnInit,
   signal,
-  computed,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
-import { TourVisitVM, TourDTO, SimpleTourTimelineItemVM } from '../tour.model';
+import { SimpleTourTimelineItemVM, TourDTO, TourVisitVM } from '../tour.model';
 import {
   BIN_TYPE_TAG_SEVERITY,
   BIN_VISIT_ACTION_LABELS,
@@ -36,14 +36,9 @@ import { TourService } from '../tour.service';
 import { Skeleton } from 'primeng/skeleton';
 import { DetailsPageHeader } from '../../shared/components/details-page-header/details-page-header';
 import { distinctUntilChanged, EMPTY, map, switchMap } from 'rxjs';
-import { TableColumn, FillLevel } from '../../shared/models/common.model';
-import {
-  FORMAT_DATE,
-  FORMAT_DATETIME,
-  FORMAT_TIME,
-  LOCALE,
-  TIMEZONE,
-} from '../../shared/constants/constants';
+import { FillLevel, TableColumn } from '../../shared/models/common.model';
+import { FORMAT_DATE, FORMAT_TIME, LOCALE, TIMEZONE } from '../../shared/constants/constants';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-tour-details',
@@ -68,6 +63,7 @@ import {
 })
 export class TourDetails implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
+  private readonly messageService = inject(MessageService);
   readonly dateTimeService = inject(DateTimeService);
   readonly route = inject(ActivatedRoute);
   readonly tourService = inject(TourService);
@@ -89,6 +85,12 @@ export class TourDetails implements OnInit {
           if (!Number.isFinite(tourId)) {
             this.loading.set(false);
             this.tour.set(null);
+            this.messageService.add({
+              severity: 'warn',
+              summary: 'Ungültige Tour-ID',
+              detail: 'Die Tour-ID muss numerisch sein.',
+              life: 5000,
+            });
             return EMPTY;
           }
 
