@@ -1,17 +1,23 @@
 import { Routes } from '@angular/router';
-import { Dashboard } from './dashboard/dashboard';
-import { BinMap } from './bin/bin-map/bin-map';
-import { BinDetails } from './bin/bin-details/bin-details';
-import { TourOverview } from './tour/tour-overview/tour-overview';
-import { TourDetails } from './tour/tour-details/tour-details';
-import { BinList } from './bin/bin-list/bin-list';
 
 export const routes: Routes = [
-  { path: '', component: Dashboard },
+  { path: '', loadComponent: () => import('./dashboard/dashboard').then((m) => m.Dashboard) },
   { path: 'dashboard', redirectTo: '', pathMatch: 'full' },
-  { path: 'bin-map', component: BinMap },
-  { path: 'bin-list', component: BinList },
-  { path: 'bin/:id', component: BinDetails },
-  { path: 'tour-overview', component: TourOverview },
-  { path: 'tour/:id', component: TourDetails },
+  { path: 'bin-map', loadComponent: () => import('./bin/bin-map/bin-map').then((m) => m.BinMap) },
+  {
+    path: 'bin-list',
+    loadComponent: () => import('./bin/bin-list/bin-list').then((m) => m.BinList),
+  },
+  {
+    path: 'bin/:id',
+    loadComponent: () => import('./bin/bin-details/bin-details').then((m) => m.BinDetails),
+  },
+  {
+    path: 'tour-overview',
+    loadComponent: () => import('./tour/tour-overview/tour-overview').then((m) => m.TourOverview),
+  },
+  {
+    path: 'tour/:id',
+    loadComponent: () => import('./tour/tour-details/tour-details').then((m) => m.TourDetails),
+  },
 ];
