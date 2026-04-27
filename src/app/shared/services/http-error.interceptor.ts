@@ -23,7 +23,7 @@ function getErrorMessage(error: HttpErrorResponse): string {
   }
 
   const backendMessage = getBackendErrorMessage(error);
-  return backendMessage ? `${detail} (Nachricht: "${backendMessage}")` : detail;
+  return backendMessage ? `${detail}\n(Nachricht: "${backendMessage}")` : detail;
 }
 
 export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
