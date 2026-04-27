@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -39,7 +38,7 @@ import { BIEL_CENTER_COORDS, MUEVE_COORDS } from '../../shared/constants/constan
   templateUrl: './tour-overview.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TourOverview implements OnInit, AfterViewInit {
+export class TourOverview implements OnInit {
   private readonly markerClass = 'pi text-white rounded-full p-1 rounded';
   private readonly destroyRef = inject(DestroyRef);
 
@@ -122,12 +121,6 @@ export class TourOverview implements OnInit, AfterViewInit {
           this.tourOverviewLoading.set(false);
         },
       });
-  }
-
-  ngAfterViewInit(): void {
-    if (this.selectedToursAcrossPages.length > 0) {
-      this.alignMap();
-    }
   }
 
   protected get selectedToursAcrossPages(): TourOverviewDTO[] {
