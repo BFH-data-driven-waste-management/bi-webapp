@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { MenuItem } from 'primeng/api';
+import { Toast } from 'primeng/toast';
 import { Menu } from 'primeng/menu';
 import { Toolbar } from 'primeng/toolbar';
 import { FormsModule } from '@angular/forms';
@@ -10,7 +11,7 @@ import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Menu, Toolbar, FormsModule, NgClass],
+  imports: [RouterOutlet, Menu, Toolbar, FormsModule, NgClass, Toast],
   templateUrl: './app.html',
   styleUrl: './app.css',
   changeDetection: ChangeDetectionStrategy.OnPush
