@@ -7,13 +7,13 @@ import { MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
 import { definePreset } from '@primeuix/themes';
-import { httpErrorToastInterceptor } from './shared/services/http-error-toast.interceptor';
+import { httpErrorInterceptor } from './shared/services/http-error.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withComponentInputBinding()),
-    provideHttpClient(withInterceptors([httpErrorToastInterceptor])),
+    provideHttpClient(withInterceptors([httpErrorInterceptor])),
     MessageService,
     providePrimeNG({
       theme: {

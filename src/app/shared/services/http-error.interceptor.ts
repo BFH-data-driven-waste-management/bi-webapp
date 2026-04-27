@@ -15,7 +15,7 @@ function getErrorMessage(error: HttpErrorResponse): string {
   return 'Der Dienst ist aktuell nicht erreichbar. Bitte erneut versuchen.';
 }
 
-export const httpErrorToastInterceptor: HttpInterceptorFn = (req, next) => {
+export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
   const messageService = inject(MessageService);
 
   return next(req).pipe(
