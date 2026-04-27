@@ -35,18 +35,33 @@
   <p-card>
     <div class="flex flex-col gap-3">
       <div class="flex flex-col">
+        <strong>Id</strong>
+        @if (loading()) {
+          <p-skeleton width="3rem" height="1.5rem" />
+        } @else {
+          <span>{{ bin()?.binId }}</span>
+        }
+      </div>
+
+
+      <div class="flex flex-col">
         <strong>Typ</strong>
         @if (loading()) {
-          <p-skeleton width="10rem" height="1.5rem" />
-        } @else {
-          <span>{{ bin()?.binType }}</span>
+          <p-skeleton width="6rem" height="1.5rem" />
+        } @else if (bin(); as bin) {
+          <span>
+            {{ bin.binType }}
+            @if (bin.volumeLiters != null) {
+              ({{ bin.volumeLiters }} l)
+            }
+          </span>
         }
       </div>
 
       <div class="flex flex-col">
         <strong>Aktiv</strong>
         @if (loading()) {
-          <p-skeleton width="5rem" height="1.5rem" />
+          <p-skeleton width="2rem" height="1.5rem" />
         } @else {
           <span>{{ bin()?.active ? 'Ja' : 'Nein' }}</span>
         }
