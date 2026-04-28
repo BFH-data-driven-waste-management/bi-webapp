@@ -6,7 +6,7 @@ import {
   inject,
   OnInit,
   resource,
-  signal
+  signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Card } from 'primeng/card';
@@ -32,9 +32,14 @@ import {
   BIN_VISIT_ACTION_LABELS,
   BIN_VISIT_ACTION_TAG_SEVERITIES,
   BIN_VISIT_FILL_LEVEL_LABELS,
-  BIN_VISIT_FILL_LEVEL_TAG_CLASSES
+  BIN_VISIT_FILL_LEVEL_TAG_CLASSES,
 } from '../../tour/tour.presentation';
-import { BIEL_CENTER_COORDS, LOCALE } from '../../shared/constants/constants';
+import {
+  BIEL_CENTER_COORDS,
+  FORMAT_DATE,
+  LOCALE,
+  TIMEZONE,
+} from '../../shared/constants/constants';
 import { DetailsPageHeader } from '../../shared/components/details-page-header/details-page-header';
 import { MessageService } from 'primeng/api';
 
@@ -114,6 +119,16 @@ export class BinDetails implements OnInit {
       }
       return 'Übervoll';
     },
+  });
+
+  readonly lastVisitLabel = computed(() => {
+    const lastVisitDateKey = this.bin()?.lastVisitDateKey;
+    return lastVisitDateKey ? this.dateTimeService.formatDateKey(lastVisitDateKey) : '-';
+  });
+
+  readonly lastEmptyingLabel = computed(() => {
+    const lastEmptyingDateKey = this.bin()?.lastEmptyingDateKey;
+    return lastEmptyingDateKey ? this.dateTimeService.formatDateKey(lastEmptyingDateKey) : '-';
   });
 
   readonly fillLevelData = computed<ChartData<'line'>>(() => {
@@ -404,4 +419,6 @@ export class BinDetails implements OnInit {
 
   // used for access in template
   protected readonly LOCALE = LOCALE;
+  protected readonly FORMAT_DATE = FORMAT_DATE;
+  protected readonly TIMEZONE = TIMEZONE;
 }

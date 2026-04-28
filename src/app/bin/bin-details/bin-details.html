@@ -33,7 +33,7 @@
   </p-card>
 
   <p-card>
-    <div class="flex flex-col gap-3">
+    <div class="flex flex-col h-64 gap-3">
       <div class="flex flex-col">
         <strong>Id</strong>
         @if (loading()) {
@@ -112,6 +112,36 @@
     </div>
   </p-card>
 
+  <p-card header="Letzte Aktivität">
+    <div class="flex flex-col h-64 mt-5 gap-4">
+      <div class="flex-1 p-4 bg-gray-50 rounded-2xl">
+        <div class="mb-2 flex items-center gap-2 text-xl text-surface-500">
+          <span>Letzter Besuch</span>
+        </div>
+        @if (loading()) {
+          <p-skeleton width="8rem" height="2rem" />
+        } @else {
+          <div class="text-3xl font-extrabold tracking-tight">
+            {{ lastVisitLabel() }}
+          </div>
+        }
+      </div>
+
+      <div class="flex-1 p-4 bg-gray-50 rounded-2xl">
+        <div class="mb-2 flex items-center gap-2 text-xl text-surface-500">
+          <span>Letzte Leerung</span>
+        </div>
+        @if (loading()) {
+          <p-skeleton width="8rem" height="2rem" />
+        } @else {
+          <div class="text-3xl font-extrabold tracking-tight">
+            {{ lastEmptyingLabel() }}
+          </div>
+        }
+      </div>
+    </div>
+  </p-card>
+
   <app-trend-metric-card
     header="⌀ wöchentliche Besuche (letzte 90 Tage)"
     [loading]="loading()"
@@ -155,7 +185,7 @@
     [value]="bin()?.binDayFeaturesResponse?.emptyingRank90d ?? 0" />
 
   <p-card header="Wetter Sensitivität">
-    <div class="flex flex-col h-full mt-5 gap-4">
+    <div class="flex flex-col h-64 mt-5 gap-4">
       <div class="flex-1 p-4 bg-gray-50 rounded-2xl">
         <div class="mb-2 flex items-center gap-2 text-xl text-surface-500">
           <i class="pi pi-sun text-amber-400"></i>
