@@ -142,48 +142,6 @@
     </div>
   </p-card>
 
-  <app-trend-metric-card
-    header="⌀ wöchentliche Besuche (letzte 90 Tage)"
-    [loading]="loading()"
-    [value]="bin()?.binDayFeaturesResponse?.baselineAvgVisitsPerWeek90d?.value"
-    [trendValue]="bin()?.binDayFeaturesResponse?.baselineAvgVisitsPerWeek90d?.deltaRelative" />
-
-  <app-trend-metric-card
-    header="⌀ wöchentliche Leerungen (letzte 90 Tage)"
-    [loading]="loading()"
-    [value]="bin()?.binDayFeaturesResponse?.baselineAvgEmptyingsPerWeek90d?.value"
-    [trendValue]="bin()?.binDayFeaturesResponse?.baselineAvgEmptyingsPerWeek90d?.deltaRelative" />
-
-  <p-card header="Besuchsfrequenz" class="md:col-span-1 xl:col-span-2">
-    @if (loading()) {
-      <p-skeleton height="16rem"/>
-    } @else {
-      <p-chart
-        type="line"
-        [data]="visitFrequencyData()"
-        [options]="dailyFrequencyOptions"
-        class="h-64 mt-2" />
-    }
-  </p-card>
-
-  <p-card header="Leerungsfrequenz" class="md:col-span-1 xl:col-span-2">
-    @if (loading()) {
-      <p-skeleton height="16rem"/>
-    } @else {
-      <p-chart
-        type="line"
-        [data]="emptyingFrequencyData()"
-        [options]="dailyFrequencyOptions"
-        class="h-64 mt-2" />
-    }
-  </p-card>
-
-  <app-simple-metric-card
-    header="Rang nach Leerungen (letzte 90 Tage)"
-    icon="list"
-    [loading]="loading()"
-    [value]="bin()?.binDayFeaturesResponse?.emptyingRank90d ?? 0" />
-
   <p-card header="Wetter Sensitivität">
     <div class="flex flex-col h-64 mt-5 gap-4">
       <div class="flex-1 p-4 bg-gray-50 rounded-2xl">
@@ -215,6 +173,49 @@
       </div>
     </div>
   </p-card>
+
+  <p-card header="Besuchsfrequenz" class="md:col-span-1 xl:col-span-2">
+    @if (loading()) {
+      <p-skeleton height="16rem"/>
+    } @else {
+      <p-chart
+        type="line"
+        [data]="visitFrequencyData()"
+        [options]="dailyFrequencyOptions"
+        class="h-64 mt-2" />
+    }
+  </p-card>
+
+  <p-card header="Leerungsfrequenz" class="md:col-span-1 xl:col-span-2">
+    @if (loading()) {
+      <p-skeleton height="16rem"/>
+    } @else {
+      <p-chart
+        type="line"
+        [data]="emptyingFrequencyData()"
+        [options]="dailyFrequencyOptions"
+        class="h-64 mt-2" />
+    }
+  </p-card>
+
+  <app-trend-metric-card
+    header="⌀ wöchentliche Besuche (letzte 90 Tage)"
+    [loading]="loading()"
+    [value]="bin()?.binDayFeaturesResponse?.baselineAvgVisitsPerWeek90d?.value"
+    [trendValue]="bin()?.binDayFeaturesResponse?.baselineAvgVisitsPerWeek90d?.deltaRelative" />
+
+  <app-trend-metric-card
+    header="⌀ wöchentliche Leerungen (letzte 90 Tage)"
+    [loading]="loading()"
+    [value]="bin()?.binDayFeaturesResponse?.baselineAvgEmptyingsPerWeek90d?.value"
+    [trendValue]="bin()?.binDayFeaturesResponse?.baselineAvgEmptyingsPerWeek90d?.deltaRelative" />
+
+
+  <app-simple-metric-card
+    header="Rang nach Leerungen (letzte 90 Tage)"
+    icon="list"
+    [loading]="loading()"
+    [value]="bin()?.binDayFeaturesResponse?.emptyingRank90d ?? 0" />
 
   <app-simple-metric-card
     header="Event Sensitivtät"
