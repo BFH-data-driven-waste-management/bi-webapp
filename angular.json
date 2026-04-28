@@ -7,7 +7,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "dss-webapp": {
+    "bi-webapp": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -70,10 +70,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "dss-webapp:build:production"
+              "buildTarget": "bi-webapp:build:production"
             },
             "development": {
-              "buildTarget": "dss-webapp:build:development"
+              "buildTarget": "bi-webapp:build:development"
             }
           },
           "defaultConfiguration": "development"

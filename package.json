@@ -1,5 +1,5 @@
 {
-  "name": "dss-webapp",
+  "name": "bi-webapp",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",

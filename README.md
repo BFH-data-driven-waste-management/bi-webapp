@@ -1,4 +1,4 @@
-# DSS Webapp
+# BI Webapp
 
 ## Dev Setup
 
