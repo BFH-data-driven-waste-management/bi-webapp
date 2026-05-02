@@ -1,9 +1,17 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  { path: '', loadComponent: () => import('./dashboard/dashboard').then((m) => m.Dashboard) },
-  { path: 'dashboard', redirectTo: '', pathMatch: 'full' },
-  { path: 'bin-map', loadComponent: () => import('./bin/bin-map/bin-map').then((m) => m.BinMap) },
+  {
+    path: '',
+    loadComponent: () => import('./dashboard/dashboard').then((m) => m.Dashboard)
+  },
+  {
+    path: 'dashboard', redirectTo: '', pathMatch: 'full'
+  },
+  {
+    path: 'bin-map',
+    loadComponent: () => import('./bin/bin-map/bin-map').then((m) => m.BinMap)
+  },
   {
     path: 'bin-list',
     loadComponent: () => import('./bin/bin-list/bin-list').then((m) => m.BinList),
