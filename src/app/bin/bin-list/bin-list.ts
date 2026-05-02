@@ -42,13 +42,13 @@ export class BinList implements OnInit {
   readonly activeHeuristic = signal<BinHeuristicToggle | null>(null);
 
   readonly filteredBins = computed(() => {
-    const bins = this.bins();
-    const activeHeuristic = this.activeHeuristic();
-    if (!activeHeuristic) {
-      return bins;
+    const binList = this.bins();
+    const heuristic = this.activeHeuristic();
+    if (!heuristic) {
+      return binList;
     }
 
-    return filterBinsByHeuristic(bins, activeHeuristic.filters);
+    return filterBinsByHeuristic(binList, heuristic.filters);
   });
 
   readonly binRows = computed<FullBinVM[]>(() =>
@@ -96,8 +96,8 @@ export class BinList implements OnInit {
       .getBinList()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (bins) => {
-          this.bins.set(bins);
+        next: (response) => {
+          this.bins.set(response);
           this.loading.set(false);
         },
         error: () => {
