@@ -62,7 +62,7 @@ This invokes `ng serve` via the project's npm script, so no global Angular CLI i
 Alternatively, run `npx ng serve` or, if the Angular CLI is installed globally, `ng serve` directly.
 
 Expected result:
-- The development server runs at `http://localhost:4200/` and reloads automatically on source changes.
+- The development server runs at http://localhost:4200/ and reloads automatically on source changes.
 - The webapp loads in the browser and renders data fetched from the BI Service (visible as populated dashboard, bin, and tour views).
 
 ---
