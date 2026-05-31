@@ -45,7 +45,7 @@ export class BinMap {
   readonly mapViewOptions: { label: string; value: BinMapView }[] = [
     { label: 'Standard', value: 'default' },
     { label: 'Müllaufkommen', value: 'waste-generation' },
-    { label: 'Letzter Besuch', value: 'last-visit-age' },
+    { label: 'Letzte Leerung', value: 'last-visit-age' },
   ];
 
   readonly activeMapView = signal<BinMapView>('default');
